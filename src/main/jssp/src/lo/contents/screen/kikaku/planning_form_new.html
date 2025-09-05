@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<imart type="head">
+<html lang="jp">
+	<meta charset="utf-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<!--  link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+
+
+	<script type="text/javascript" src="lo_csjs/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/popper.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/ja.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js"></script>
+	<script type="text/javascript" src="lo_csjs/selectize.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/custom.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+	
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	<script type="text/javascript" src="lo_csjs/form-change-trigger.js"></script>
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<!-- workflowOpenPageCsjs -->
+	<imart type="workflowOpenPageCsjs" />
+  	<!-- workflow/csjs/greybox.jsのshowGreyBoxを変更 -->
+  	<script type="text/javascript" src="workflow/csjs/greybox_lo.js"></script>
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcPlannningForm" page="lo/contents/screen/kikaku/planning_form_new" callback="editCallback" onErrorCallback="editError"></IMART>
+	<IMART type="jsspRpc" name="jsspRpcPlannningFormNoCallback" page="lo/contents/screen/kikaku/planning_form_new"></IMART>
+	<title><imart type="message" id="LO.TITLE.KIKAKU.PLANNING_FORM" escapeXml="true" /></title>
+	
+<style>
+	.left-justified {
+		padding-left: 0px !important;
+	}
+	.right-justified {
+		padding-right: 0px !important;
+	}
+	.center {
+		 vertical-align: middle !important;
+	}
+	.brdr_ltgray {
+		border: 1px solid #c8c8cb !important;
+	}
+	.margin-right {
+		margin-right: 0 !important;
+	}
+	.margin-left {
+		margin-left: 0 !important;
+	}
+	.margin-all {
+		margin: 14px !important;
+	}
+	.button_size {
+		width: 160px;
+    	height: 40px;
+	}
+	.mark-req {
+		color: red;
+	}
+	.text-padding {
+		padding-top: 8px;
+    	padding-bottom: 8px;
+	}
+	.raido-padding {
+		padding-top: 4px;
+    	padding-bottom: 4px;
+	}
+	.radio_height {
+		height:40px !important;
+	}
+	#title_cd {
+		padding-left: 0px;
+	}
+	#btn_title_search{
+		margin: 3px 0.5rem;
+		padding: 0.5rem 1rem;
+	}
+	#btn_title_search i{
+		margin-top: -1px;
+	}
+	#btn_title_search span{
+		font-size: 14px;
+	}
+	
+	.item-spec-table, .music-spec-table, .event-spec-table, .eizo-spec-table{
+		table-layout: fixed;
+	}
+	.item-spec-table thead th:nth-child(1),
+	.item-spec-table thead th:nth-child(2),
+	.music-spec-table thead th:nth-child(1),
+	.music-spec-table thead th:nth-child(2),
+	.event-spec-table thead th:nth-child(1),
+	.event-spec-table thead th:nth-child(2),
+	.eizo-spec-table thead th:nth-child(1),
+	.eizo-spec-table thead th:nth-child(2)
+	{
+		width: 50px;
+		min-width: 50px;
+	}
+	.item-spec-table thead th:nth-child(3),
+	.music-spec-table thead th:nth-child(3),
+	.event-spec-table thead th:nth-child(3),
+	.eizo-spec-table thead th:nth-child(3)
+	{
+		width: 100px;
+		min-width: 100px;
+	}
+	.item-spec-table thead th:nth-child(4),
+	.music-spec-table thead th:nth-child(4),
+	.event-spec-table thead th:nth-child(4)
+	{
+		width: 200px;
+		min-width: 200px;
+	}
+	
+	.eizo-spec-table thead th:nth-child(4)
+	{
+		width: 320px;
+		min-width: 320px;
+	}
+	
+	.item-spec-table thead th:nth-child(5),
+	.music-spec-table thead th:nth-child(5),
+	.event-spec-table thead th:nth-child(5),
+	.eizo-spec-table thead th:nth-child(5)
+	{
+		width: 240px;
+		min-width: 240px;
+	}
+	.item-spec-table thead th:nth-child(6),
+	.music-spec-table thead th:nth-child(6),
+	.event-spec-table thead th:nth-child(6),
+	.eizo-spec-table thead th:nth-child(6)
+	{
+		width: 160px;
+		min-width: 160px;
+	}
+	.item-spec-table thead th:nth-child(7),
+	.music-spec-table thead th:nth-child(7),
+	.event-spec-table thead th:nth-child(7),
+	.eizo-spec-table thead th:nth-child(7)
+	{
+		width: 120px;
+		min-width: 120px;
+	}
+	.item-spec-table thead th:nth-child(8),
+	.music-spec-table thead th:nth-child(8),
+	.event-spec-table thead th:nth-child(8),
+	.eizo-spec-table thead th:nth-child(8)
+	{
+		width: 120px;
+		min-width: 120px;
+	}
+	.item-spec-table thead th:nth-child(9),
+	.music-spec-table thead th:nth-child(9),
+	.event-spec-table thead th:nth-child(9),
+	.eizo-spec-table thead th:nth-child(9)
+	{
+		width: 100px;
+		min-width: 100px;
+	}
+	.item-spec-table thead th:nth-child(10),
+	.music-spec-table thead th:nth-child(10),
+	.event-spec-table thead th:nth-child(10),
+	.eizo-spec-table thead th:nth-child(10)
+	{
+		width: 80px;
+		min-width: 80px;
+	}
+	.item-spec-table thead th:nth-child(11),
+	.music-spec-table thead th:nth-child(11),
+	.event-spec-table thead th:nth-child(11)ss	
+	{
+		width: 120px;
+		min-width: 120px;
+	}
+	
+</style>
+	
+</imart>
+<imart type="workflowOpenPage"
+       name="workflowOpenPageForm"
+       id="workflowOpenPageForm"
+       method="POST"
+       target="_top"
+       imwUserDataId=$wf_data.imwUserDataId
+       imwSystemMatterId=$wf_data.imwSystemMatterId
+       imwAuthUserCode=$wf_data.imwAuthUserCode
+       imwApplyBaseDate=$wf_data.imwApplyBaseDate
+       imwNodeId=$wf_data.imwNodeId
+       imwFlowId=$wf_data.imwFlowId
+       imwCallOriginalParams=$wf_data.imwCallOriginalParams
+       imwNextScriptPath=$wf_data.imwCallOriginalPagePath
+       >
+	<!-- ノード設定用パラメータ-->
+	<imart type="hidden" imwNodeSetting=$wf_data.imwNodeSetting escapeJs="false" escapeXml="true"/>
+    <!-- ワークフロー用カスタムロパラメータ -->
+	<input type="hidden" name="imwCustomParam" id="imwCustomParam" >
+    <!-- 処理ステータス -->
+	<input type="hidden" name="item_proc_status" id="item_proc_status" value="">
+    <!-- 処理ステータスコード（DB設定用） -->
+	<input type="hidden" name="item_status_cd" id="item_status_cd" value="">
+    <!-- 処理ステータス名（ボタン名）-->
+	<input type="hidden" name="item_proc_name" id="item_proc_name" value="">
+    <!-- 案件名（企画idを設定） -->
+	<IMART type="hidden" item_matterName=$kikaku_data.kikaku_id />
+    <!-- 戻し先ノード -->
+	<IMART type="hidden" imwBackNodeSetting=$wf_data.imwBackNodeSetting />
+	
+</imart>
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+
+	<!-- 画面遷移用 -->
+	<form id="sendFromIchiran" method="post"
+		action="lo/contents/screen/kikaku/planning_list_new">
+	</form>
+	<form id="sendFrom" method="post"
+		action="lo/contents/screen/kikaku/planning_detail_new">
+		<input type="hidden" name="kikaku_id">
+	</form>
+	<form id="sendFromShinsei" method="get"
+		action="lo/contents/screen/kikaku/planning_form_new">
+		<input type="hidden" name="kikaku_id">
+	</form>
+	<form id="sendFromItem" method="get"
+		action="lo/contents/screen/kikaku/planning_form_item_new">
+		<input type="hidden" name="kikaku_id" />
+	</form>
+	<form id="sendFromItemLink" method="get"
+		action="lo/contents/screen/kikaku/planning_form_item_new">
+		<imart type="hidden" kikaku_id=$kikaku_data.kikaku_id />
+		<imart type="hidden" kikaku_edaban="" />
+	</form>
+
+
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none"> <i
+					class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+				<div class="page-information row my-4">
+					<div class="col-12 col-lg-auto">
+						<h1><imart type="string" value=$kikaku_title_nm nl2br="true"/></h1>
+						<button type="button" class="brdr_orange txt_orange mt-2" onclick="history.back();">
+							<i class="fas fa-caret-left"></i><span>戻る</span>
+						</button>
+					</div>
+					<div class="col-12 col-lg-auto mt-3">
+						<imart type="string" value=$kikakuExplanation />
+					</div>
+				</div>
+				<article class="col-12">
+					<form role="form" id="inputFrom">
+						<div class="col-12 row mt-2 mb-2 newadd-hide">
+							<div class="col-4 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">
+								企画番号
+							</div>
+							<div class="col-5 col-lg-3 t-header brdr_ltgray text-center" id="kikaku_id_div">
+								<imart type="string" value=$kikaku_data.kikaku_id />
+							</div>
+							<div class="col-4 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">
+								ステータス
+							</div>
+							<div class="col-5 col-lg-3 t-header brdr_ltgray text-center">
+								<imart type="condition" validity=$production_flg negative>
+									<span class='kikaku-status li<imart type="string" value=$kikaku_data.kikaku_status />'>
+										<imart type="string" value=$kikaku_data.kikaku_status_name />
+									</span>
+								</imart>
+								<imart type="condition" validity=$production_flg>
+									<span class='kikaku-status pr<imart type="string" value=$kikaku_data.kikaku_status />'>
+										<imart type="string" value=$kikaku_data.kikaku_status_name />
+									</span>
+								</imart>
+								<imart type="hidden" kikaku_id=$kikaku_data.kikaku_id />
+								<imart type="hidden" koushin_bi=$kikaku_data.koushin_bi />
+							</div>
+						</div>
+						<br>
+						<div class="col-12 mt-2 mb-2">
+							<div class="row">
+								<div class="col-12 col-lg-1">
+									<h4 class="indent">基本情報</h4>
+								</div>
+								<div class="col-12 col-lg-3 licensePro-hide mt-3 mb-2">
+									<imart type="message" id="KK02I024" escapeJs="true"></imart>
+								</div>
+								<div class="col-12 col-lg-8 licensePro-hide mt-3 mb-3">
+									<div class="row">
+										<imart type="message" id="KK02I025" escapeJs="true"></imart>
+									</div>
+									<div class="row">
+										<imart type="message" id="KK02I026" escapeJs="true"></imart>
+									</div>
+									<div class="row">
+										<imart type="message" id="KK02I028" escapeJs="true"></imart>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-12 col-lg-6">
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">企画名<span class="mark-req"> *</span></div>
+										<div class="col-8 mb-2 left-justified">
+											<IMART type="imuiTextbox" maxlength="200" class="form-control left-padding" name="kikaku_nm" id="kikaku_nm" value=$kikaku_data.kikaku_nm onchange="kikaku_nm_chk(this.value)"></IMART>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">企画種別<span class="mark-req"> *</span></div>
+										<div class="col-5 mb-2 back-color">
+											<div class="bg_whitesmoke">
+											<imart type="imuiTextbox" class="form-control imui-text-readonly" name="kikaku_shubetsu_nm" id="kikaku_shubetsu_nm" value=$kikaku_shubetsu_nm readonly="true"/>
+											<imart type="imuiTextbox" id="kikaku_shubetsu_cd" name="kikaku_shubetsu_cd" class="form-control" value=$kikaku_shubetsu_cd hidden="true" escapeXml="true"/>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">タイトル<span class="mark-req"> *</span></div>
+										<div class="col-5 mb-2 left-justified">
+											<imart type="imuiTextbox" class="form-control imui-text-readonly left-padding" name="title_nm" id="title_nm" value=$kikaku_data.title_nm readonly="true"></imart>
+											<imart type="imuiTextbox" id="title_cd" name="title_cd" class="form-control" value=$kikaku_data.title_cd hidden="true" escapeXml="true"/>
+										</div>
+										<div class="col-3 mb-2 left-justified text-right">
+											<button type="button" id="btn_title_search" class="bg_orange txt_dark margin-right" href="#">
+												<i class="fas fa-search" aria-hidden="true"></i><span>タイトル検索</span>
+											</button>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-4 mb-3 t-header bg_ltorange brdr_ltgray text-center">IP</div>
+										<div class="col-5 mb-3 back-color">
+											<div class="bg_whitesmoke">
+											<imart type="imuiTextbox" class="form-control imui-text-readonly" name="ip_nm" id="ip_nm" value=$kikaku_data.ip_nm readonly="true"></imart>
+											<imart type="imuiTextbox" id="ip_cd" name="ip_cd" class="form-control" value=$kikaku_data.ip_cd hidden="true" escapeXml="true"/>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 col-lg-6">
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">申請日</div>
+										<div class="col-8 mb-2 text-padding back-color">
+											<IMART type="string" class="form-control" name="shinsei_bi" id="shinsei_bi" value=$kikaku_data.shinsei_bi></IMART>
+											<IMART type="input" style="hidden" id="shinsei_bi" value=$kikaku_data.shinsei_bi></IMART>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">会社名</div>
+										<div class="col-8 mb-2 text-padding back-color">
+											<IMART type="string" class="form-control" name="kaisha_nm" id="kaisha_nm" value=$kikaku_data.kaisha_nm />
+											<IMART type="input" style="hidden" id="kaisha_id" value=$kikaku_data.kaisha_id></IMART>
+											<IMART type="input" style="hidden" id="kaisha_nm" value=$kikaku_data.kaisha_nm></IMART>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">ライセンシー担当者</div>
+										<div class="col-8 mb-2 text-padding back-color">
+											<IMART type="string" class="form-control" name="tantou_sha" id="tantou_sha" value=$kikaku_data.tantou_sha />
+											<IMART type="input" style="hidden" id="tantou_sha" value=$kikaku_data.tantou_sha></IMART>
+										</div>
+									</div>
+									<div class="row">
+										<IMART type="input" style="hidden" id="busyo_id" name="busyo_id" value=$kikaku_data.busyo_id></IMART>
+										<IMART type="input" style="hidden" id="busyo_nm" name="busyo_nm" value=$kikaku_data.busyo_nm></IMART>
+									</div>									
+								</div>
+							</div>
+						</div>
+						<div class="col-12 licensee-hide">
+							<div class="col-12 row">
+								<h4 class="indent">ライセンスプロダクション担当情報</h4>
+							</div>
+							<div class="row">
+								<!--  
+								<div class="col-6 left-justified">
+									<div class="t-header bg_ltorange brdr_ltgray text-center">タグ</div>
+									<div class="t-header brdr_ltgray">
+										<div class="mb-4 control-group select_items">
+											<IMART type="imuiTextbox" class="input-tags demo-default select_items" name="tag" id="tag" value=$kikaku_data.tag></IMART>
+										</div>
+									</div>
+								</div>
+								-->
+								<div class="col-6">
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">確認日</div>
+										<div class="col-4 mb-2 input-group date left-justified" id="datetimepicker2"
+											data-target-input="nearest">
+											<IMART type="imuiTextbox" class="form-control text-padding datetimepicker-input" data-target="#datetimepicker2" name="kakunin_bi"
+												id="kakunin_bi" value=$kikaku_data.kakunin_bi></IMART>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-4 mb-2 t-header bg_ltorange brdr_ltgray text-center">BNE担当者</div>
+										<div class="col-4 mb-2 left-justified">
+											<input type="text" class="form-control text-padding" name="bne_tantou_sha"
+												id="bne_tantou_sha" value="" readonly>
+										</div>
+										<div class="col-4 ml-0 text-right">
+											<button type="button" id="js-show-popup2"
+												class="bg_orange txt_dark mb-2 ml-0 margin-right" href="#">
+												<i class="fas fa-search" aria-hidden="true"></i><span>担当者検索</span>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<section class="show">
+							<div class="col-12 row mt-2 mb-2">
+							<IMART type="decision" case="1" value=$kikaku_shubetsu_cd >
+								<h4>商品仕様</h4>
+							</IMART>
+							<IMART type="decision" case="2" value=$kikaku_shubetsu_cd >
+								<h4>商品仕様</h4>
+							</IMART>
+							<IMART type="decision" case="3" value=$kikaku_shubetsu_cd >
+								<h4>商品仕様</h4>
+							</IMART>
+							<IMART type="decision" case="4" value=$kikaku_shubetsu_cd >
+								<h4>利用内容</h4>
+							</IMART>
+							</div>
+							<div class="row">
+								<IMART type="hidden" shohin_siyo=$list_str></IMART>
+								<div class="col-12 mt-2 responsive-table-wrapper">
+									<!------------------------ 商品 ----------------------------------------->
+									<IMART type="decision" case="1" value=$kikaku_shubetsu_cd >
+										<table class="table table_border_radius brdr_ltgray tbl_col bnadium-table item-spec-table">
+											<thead>
+												<tr>
+													<th>
+														<input type="checkbox" name="" id="checkall">
+													</th>
+													<th>#</th>
+													<th>審査結果</th>
+													<th>企画商品名</th>
+													<th>発売時期</th>
+													<th>告知開始時期</th>
+													<th>価格</th>
+													<th>数量</th>
+													<th>地域</th>
+												</tr>
+											</thead>
+											<tbody class="text-break">
+												<!-- 商品数分ループ -->
+												<IMART type="decision" case="0" value=$list_num >
+													<tr class="brdr_ltgray">
+														<td class="brdr_ltgray txt_dark" colspan="9">
+															追加ボタンから追加してください
+														</td>
+													</tr>
+												</IMART>
+												<IMART type="decision" case="1" value=$list_num >
+													<IMART type="repeat" list=$shohin_list item="item" index="idx">
+														<tr class="brdr_ltgray">
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="imuiCheckbox" name="chk_no" id="chk_no" value=item.chk_no />
+																<imart type="hidden" kikaku_edaban=item.kikaku_edaban />
+																<imart type="hidden" koushin_bi=item.koushin_bi />	
+															</td>
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="string" name="list_num" value=item.list_num escapeXml="true"/>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.ok_ng_nm escapeXml="true"/></td><!-- OKNG -->
+															<td class="brdr_ltgray txt_dark">
+																<a href="javascript:void(0);" onclick="sendFromItemLink('<imart type="string" value=item.kikaku_edaban/>')">
+																	<imart type="string" value=item.shohin_nm escapeXml="true"/><!-- 商品名 -->
+																</a>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.hanbai_jiki escapeXml="true"/></td><!-- 発売時期 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.jyouhou_syosyutu_jiki escapeXml="true"/></td><!-- 告知時期 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value=item.zeinuki_jodai escapeXml="true"/></td><!-- 価格 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value=item.shokai_seisanyotei_su escapeXml="true"/></td><!-- 数量 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.chiiki_nm escapeXml="true"/></td><!-- 地域 -->
+														</tr>
+													</IMART>
+												</IMART>
+											</tbody>
+										</table>
+									</IMART>
+									<!------------------------ 楽曲 ----------------------------------------->
+									<IMART type="decision" case="2" value=$kikaku_shubetsu_cd >
+										<table class="table table_border_radius brdr_ltgray tbl_col bnadium-table music-spec-table">
+											<thead>
+												<tr>
+													<th>
+														<input type="checkbox" name="" id="checkall">
+													</th>
+													<th>#</th>
+													<th>審査結果</th>
+													<th>シングル/アルバム名</th>
+													<th>発売時期</th>
+													<th>告知開始時期</th>
+													<th>価格</th>
+													<th>数量</th>
+													<th>地域</th>
+												</tr>
+											</thead>
+											<tbody class="text-break">
+												<!-- 商品数分ループ -->
+												<IMART type="decision" case="0" value=$list_num >
+													<tr class="brdr_ltgray">
+														<td class="brdr_ltgray txt_dark" colspan="9">
+															追加ボタンから追加してください
+														</td>
+													</tr>
+												</IMART>
+												<IMART type="decision" case="1" value=$list_num >
+													<IMART type="repeat" list=$gakkyoku_list item="item" index="idx">
+														<tr class="brdr_ltgray">
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="imuiCheckbox" name="chk_no" id="chk_no" value=item.chk_no />
+																<imart type="hidden" kikaku_edaban=item.kikaku_edaban />
+																<imart type="hidden" koushin_bi=item.koushin_bi />	
+															</td>
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="string" name="list_num" value=item.list_num escapeXml="true"/>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.ok_ng_nm escapeXml="true"/></td><!-- OKNG -->
+															<td class="brdr_ltgray txt_dark">
+																<a href="javascript:void(0);" onclick="sendFromItemLink('<imart type="string" value=item.kikaku_edaban/>')">
+																	<imart type="string" value=item.gakkyoku_nm escapeXml="true"/><!-- 楽曲名 -->
+																</a>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.hanbai_jiki escapeXml="true"/></td><!-- 発売時期 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.jyouhou_syosyutu_jiki escapeXml="true"/></td><!-- 告知時期 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value=item.kakaku escapeXml="true"/></td><!-- 価格 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value=item.mokuhyo_hambai_su escapeXml="true"/></td><!-- 数量 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.chiiki_nm escapeXml="true"/></td><!-- 地域 -->
+														</tr>
+													</IMART>
+												</IMART>
+											</tbody>
+										</table>
+									</IMART>
+									<!------------------------ イベント ----------------------------------------->
+									<IMART type="decision" case="3" value=$kikaku_shubetsu_cd >
+										<table class="table table_border_radius brdr_ltgray tbl_col bnadium-table event-spec-table">
+											<thead>
+												<tr>
+													<th>
+														<input type="checkbox" name="" id="checkall">
+													</th>
+													<th>#</th>
+													<th>審査結果</th>
+													<th>イベント名</th>
+													<th>発売時期</th>
+													<th>告知開始時期</th>
+													<th>価格</th>
+													<th>数量</th>
+													<th>地域</th>
+												</tr>
+											</thead>
+											<tbody class="text-break">
+												<!-- 商品数分ループ -->
+												<IMART type="decision" case="0" value=$list_num >
+													<tr class="brdr_ltgray">
+														<td class="brdr_ltgray txt_dark" colspan="9">
+															追加ボタンから追加してください
+														</td>
+													</tr>
+												</IMART>
+												<IMART type="decision" case="1" value=$list_num >
+													<IMART type="repeat" list=$event_list item="item" index="idx">
+														<tr class="brdr_ltgray">
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="imuiCheckbox" name="chk_no" id="chk_no" value=item.chk_no />
+																<imart type="hidden" kikaku_edaban=item.kikaku_edaban />
+																<imart type="hidden" koushin_bi=item.koushin_bi />	
+															</td>
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="string" name="list_num" value=item.list_num escapeXml="true"/>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.ok_ng_nm escapeXml="true"/></td><!-- OKNG -->
+															<td class="brdr_ltgray txt_dark">
+																<a href="javascript:void(0);" onclick="sendFromItemLink('<imart type="string" value=item.kikaku_edaban/>')">
+																	<imart type="string" value=item.event_campaign_nm escapeXml="true"/><!-- イベント名 -->
+																</a>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.hanbai_jiki escapeXml="true"/></td><!-- 発売時期 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.jyouhou_syosyutu_jiki escapeXml="true"/></td><!-- 告知時期 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value=item.ticket_kakaku escapeXml="true"/></td><!-- 価格 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value="" escapeXml="true"/></td><!-- 数量 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value="" escapeXml="true"/></td><!-- 地域 -->
+														</tr>
+													</IMART>
+												</IMART>
+											</tbody>
+										</table>
+									</IMART>
+									<!------------------------ 映像 ----------------------------------------->
+									<IMART type="decision" case="4" value=$kikaku_shubetsu_cd >
+										<table class="table table_border_radius brdr_ltgray tbl_col bnadium-table eizo-spec-table">
+											<thead>
+												<tr>
+													<th>
+														<input type="checkbox" name="" id="checkall">
+													</th>
+													<th>#</th>
+													<th>審査結果</th>
+													<th>ゲームコラボ名</th>
+													<th>利用時期</th>
+													<th>告知開始時期</th>
+													<th>使用料</th>											
+													<th colspan="2">地域</th>
+												</tr>
+											</thead>
+											<tbody class="text-break">
+												<!-- 商品数分ループ -->
+												<IMART type="decision" case="0" value=$list_num >
+													<tr class="brdr_ltgray">
+														<td class="brdr_ltgray txt_dark" colspan="9">
+															追加ボタンから追加してください
+														</td>
+													</tr>
+												</IMART>
+												<IMART type="decision" case="1" value=$list_num >
+													<IMART type="repeat" list=$eizo_list item="item" index="idx">
+														<tr class="brdr_ltgray">
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="imuiCheckbox" name="chk_no" id="chk_no" value=item.chk_no />
+																<imart type="hidden" kikaku_edaban=item.kikaku_edaban />
+																<imart type="hidden" koushin_bi=item.koushin_bi />	
+															</td>
+															<td class="brdr_ltgray text-center txt_dark">
+																<imart type="string" name="list_num" value=item.list_num escapeXml="true"/>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.ok_ng_nm escapeXml="true"/></td><!-- OKNG -->
+															<td class="brdr_ltgray txt_dark">
+																<a href="javascript:void(0);" onclick="sendFromItemLink('<imart type="string" value=item.kikaku_edaban/>')">
+																	<imart type="string" value=item.shiyou_youto_nm escapeXml="true"/><!-- 映像名 -->
+																</a>
+															</td>
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.hanbai_jiki escapeXml="true"/></td><!-- 発売時期 -->
+															<td class="brdr_ltgray txt_dark"><imart type="string" value=item.jyouhou_syosyutu_jiki escapeXml="true"/></td><!-- 告知時期 -->
+															<td class="brdr_ltgray txt_dark text-right"><imart type="string" value=item.riyou_ryo escapeXml="true"/></td><!-- 使用料 -->															
+															<td class="brdr_ltgray txt_dark" colspan="2"><imart type="string" value=item.chiiki_nm escapeXml="true"/></td><!-- 地域 -->
+														</tr>
+													</IMART>
+												</IMART>
+											</tbody>
+										</table>
+									</IMART>
+									
+								</div>
+							</div>
+							<div class="form-group row ml-2 mb-2">
+							<IMART type="decision" case="1" value=$kikaku_shubetsu_cd >
+								<span>※商品に紐づくキャラクター名は、商品仕様の備考欄または添付資料に記載ください</span>
+							</IMART>
+							<IMART type="decision" case="2" value=$kikaku_shubetsu_cd >
+								<span>※商品に紐づくキャラクター名は、商品仕様の備考欄または添付資料に記載ください</span>
+							</IMART>
+							<IMART type="decision" case="3" value=$kikaku_shubetsu_cd >
+								<span>※商品に紐づくキャラクター名は、商品仕様の備考欄または添付資料に記載ください</span>
+							</IMART>
+							<IMART type="decision" case="4" value=$kikaku_shubetsu_cd >
+								<span></span>
+							</IMART>								
+							</div>
+						</section>
+						<div class="col-12 mt-2 mb-2 text-right right-justified">
+							<button type="button" class="bg_orange txt_dark" id="tuika">
+								<i class="fas fa-check-circle"></i><span>追加</span>
+							</button>
+							<button type="button" class="bg_orange txt_dark" id="copy">
+								<i class="fas fa-copy"></i><span>複製</span>
+							</button>
+							<button type="button" class="brdr_orange txt_orange margin-right" id="delete">
+								<i class="fas fa-trash-alt"></i><span>削除</span>
+							</button>
+						</div>
+						<div class="col-12 mt-2 mb-2 text-right right-justified">
+						<IMART type="decision" case="1" value=$kikaku_shubetsu_cd >
+							<span class="pr-4">※追加ボタンから商品情報の登録をお願いします</span>
+						</IMART>
+						<IMART type="decision" case="2" value=$kikaku_shubetsu_cd >
+							<span class="pr-4">※追加ボタンから商品情報の登録をお願いします</span>
+						</IMART>
+						<IMART type="decision" case="3" value=$kikaku_shubetsu_cd >
+							<span class="pr-4">※追加ボタンから商品情報の登録をお願いします</span>
+						</IMART>
+						<IMART type="decision" case="4" value=$kikaku_shubetsu_cd >
+							<span class="pr-4">※追加ボタンから利用内容の登録をお願いします</span>
+						</IMART>
+						</div>
+						
+						<div class="col-12 mt-2 mb-2">							
+							<h4 class="indent">請求書送付先</h4>
+						</div>
+						<div class="row" style="width: 100%;">
+							<div class="col-12 mt-2 responsive-table-wrapper">
+							<table id="seikyusho_sofusaki_table" class="table table_border_radius text-break" style="width: 100%;">
+								<colgroup>
+									<col style="width:30%;" />
+									<col style="width:20%;" />
+									<col style="width:20%;" />
+									<col style="width:15%;" />
+									<col style="width:15%;" />
+								</colgroup>
+								<thead>
+									<tr>
+										<th class="bg_ltorange brdr_ltgray text-center align-middle">
+											担当者・部署
+										</th>
+										<th class="bg_ltorange brdr_ltgray text-center align-middle">
+											E-Mail（To）
+										</th>
+										<th class="bg_ltorange brdr_ltgray text-center align-middle">
+											E-Mail（Cc1）
+										</th>
+										<th class="bg_ltorange brdr_ltgray text-center align-middle">
+											E-Mail（Cc2）
+										</th>
+										<th class="bg_ltorange brdr_ltgray text-center align-middle">
+											E-Mail（Cc3）
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							</div>	
+						</div>					
+						<div class="col-12 mt-2 mb-2">
+							<div class="col-12 row">
+								<h4 class="indent">添付資料</h4>
+								<span class="margin-all"><imart type="string" value=$tmpFileStr /></span>
+							</div>
+							<div class="row">
+								<div class="fileupload-area">
+									<div class="filesSelect imui-fileupload-area" id="before_file_select">
+										<div class="fileupload-input-caption">ファイルをドラッグ&ドロップしてください</div>
+										<button type="button" id="file_upload_btn" for="file_upload" class="filesUploadLabel">ファイルを選択</button>
+									</div>
+									<div class="form-group row mt-2 mb-2">
+										<span class="col-12"><imart type="string" value=$extstr /></span>
+										<span class="col-12"><imart type="message" id="IN01I007" escapeJs="true" /></span>
+									</div>
+									<div id="after_file_select_area">
+										<div id="after_file_select_template">
+											<div class="afterFileSelect" style="display: none">
+												<dl>
+													<dt class="upfilename">
+														<span class="upfilenametext"><imart type="string" value="" /></span>
+													</dt>
+													<imart type="hidden" item_upFile_name="" />
+													<imart type="hidden" item_upFile_resname="" />
+													<dd>
+														<a href="javascript: void(0);" onclick="upFileDel(this)">
+															<span class="fas fa-trash-alt fa-1x"></span>
+														</a>
+													</dd>
+												</dl>
+											</div>
+										</div>
+										<div id="after_file_select">
+											<imart type="repeat" list=$fileList item="item" index="idx">
+												<div class="afterFileSelect">
+													<dl>
+														<dt class="upfilename">
+															<a href='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />&fileName=<imart type="string" value=item.file_name escapeXml="true"/>' download>
+																<span class="upfilenametext"><imart type="string" value=item.file_name escapeXml="true"/></span>
+															</a>
+														</dt>
+														<imart type="hidden" item_upFile_name=item.file_name escapeXml="true"/>
+														<imart type="hidden" item_upFile_resname=item.file_path />
+														<dd>
+															<a href="javascript: void(0);" onclick="upFileDel(this)">
+																<span class="fas fa-trash-alt fa-1x"></span>
+															</a>
+														</dd>
+													</dl>
+												</div>
+											</imart>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="commentArea" class="row">
+							<div class="col-12">
+								<h4>コメント</h4>
+								<div class="col-12 mt-2 mb-2">
+									<IMART type="include" page="lo/contents/screen/common/comment" ticketId=$ticketId ></IMART>
+								</div>
+							</div>
+						</div>
+						<!-- エラー表示エリア -->
+						<div class="row">
+							<div id="error-messages" class="col-12 mt-4 mb-2">
+							</div>
+						</div>
+						<div class="col-12 row mt-4 mb-2">
+							<div class="flex_btn">
+								<div class="col-12">
+									<button type="button" class="brdr_orange txt_orange mb-2" id="kikaku_delete" name="kikaku_delete" style="display:none">
+										<i class="fas fa-trash-alt"></i><span>削除</span>
+									</button>
+									<button type="button" class="bg_orange txt_dark mb-2" id="itizihozon" name="itizihozon">
+										<i class="fas fa-check-circle fa-2x"></i><span>一時保存</span>
+									</button>
+									<button type="button" class="bg_orange txt_dark mb-2" id="shinsei" name="shinsei">
+										<i class="fas fa-check-circle fa-2x"></i><span>登録</span>
+									</button>
+									<button type="button" class="bg_orange txt_dark mb-2" id="btn_jitai" name="btn_jitai" data-whatever="btn_jitai" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>辞退</span></button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form id="filesForm" name="filesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+		<div style="display:none;">
+			<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+			<imart type="imuiFileUpload" storeTo="/lo/upload"
+				autoUpload="true" uniqueFileName="true" id="imui-upload"
+				onBeforeSend="onBeforeSendFiles" 
+				onSuccess="onSuccessFiles"
+				onError="onErrorFiles" 
+				outerFormId="filesForm"
+				dropZone="#before_file_select" />
+				<imst:imSecureToken />
+		</div>
+	</form>
+
+	<form id="tempuFilesForm" name="tempuFilesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+		<div style="display:none;">
+			<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+			<imart type="imuiFileUpload" storeTo="/lo/upload"
+				autoUpload="true" uniqueFileName="true" id="imui-upload-tempu"
+				onBeforeSend="onBeforeSendTempuFiles" 
+				onSuccess="onSuccessTempuFiles"
+				onError="onErrorTempuFiles" 
+				outerFormId="tempuFilesForm"
+				dropZone="#before_tempu_file_select" />
+				<imst:imSecureToken />
+		</div>
+	</form>
+
+<!-- コメント表示 -->
+	<div id="modal-comment-list" class="modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="row">
+					<div class="col">
+						<IMART type="include" page="lo/contents/screen/common/comment" ticketId=$ticketId ></IMART>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col ml-2 mr-2"><hr></div>
+				</div>
+				<section class="show">
+					<div class="row">
+						<div class="flex_btn center-block">
+							<button type="button" class="brdr_orange txt_orange" data-dismiss="modal"><i class="fas fa-caret-left fa-2x"></i><span>閉じる</span></button>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+<!-- コメント表示 -->
+	
+	<div class="popup" id="js-popup">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/title_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg"></div>
+	</div>
+
+	<script type="text/javascript">
+
+	var validationErrorMessages = <imart type="string" value=$validationErrorMessages />;
+	// 入力チェック
+	function validate() {
+		var validationRules = [
+			{type: "single", dataCategory: "basic",
+				items: [
+					{name: "kikaku_nm", validations:[{type: "required", messageId: "KK02E001"}]},
+					{name: "title_cd", validations:[{type: "required", messageId: "KK02E002"}]},
+					{name: "shohin_siyo", validations:[{type: "required", messageId: "KK02E003"}]},
+					{name: "seikyusho_sofusaki_eda", validations:[{type: "invaliduser", messageId: "KK02E022"}]}
+				]
+			}
+		];
+		
+		var validateItem = function(itemName, $item, validations, index) {
+			var result = [];
+			if ($item.is(':disabled')) {
+				return result;
+			}
+			for (var validationIndex in validations) {
+				var validation = validations[validationIndex];
+				var messageId = null;
+				// 必須チェック
+				if (validation.type == "required") {
+					if ($item.length == 0 || $item.val() == '') {
+						messageId = validation.messageId;
+					}
+				}
+				// 同一値のチェック（unique：重複エラー、　simplex：異なっていたらエラー）
+				if (validation.type == "simplex" || validation.type == "unique") {
+					var uniqueArray = [];
+					$item.each(function(index, element) {
+						var $element = $(element);
+						if (uniqueArray.indexOf($element.val()) < 0) {
+							uniqueArray.push($element.val());
+						}
+					});
+					if (validation.type == "unique") {
+						if ($item.length != uniqueArray.length) {
+							messageId = validation.messageId;
+						}
+					}
+					if (validation.type == "simplex") {
+						if (uniqueArray.length > 1) {
+							messageId = validation.messageId;
+						}
+					}
+				}
+				// 【無効】が付いているユーザを選択時はエラー
+				if (validation.type == "invaliduser") {
+					if (!$item.val() == '' && $item.find('option:selected').text().indexOf('【無効】') >= 0) {
+                		messageId = validation.messageId;
+                	}
+				}				
+				if (messageId != null) {
+					var errorMessage = validationErrorMessages[messageId];
+					if (typeof index != "undefined") {
+						errorMessage = errorMessage.replace("{0}", "#" + (index + 1));
+					}
+					result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});
+					break;
+				}
+			}
+			return result;
+		}
+
+		var validateItems = function($container, items, index) {
+			var allResult = [];
+			for (var itemKey in items) {
+				var validationItem = items[itemKey];
+				var itemName = validationItem.name;
+				var validations = validationItem.validations;
+				var $item = $container.find('[name="' + itemName + '"]');
+				var result = validateItem(itemName, $item, validations, index);
+				allResult = allResult.concat(result);
+			}
+			return allResult;
+		}
+
+		var validateResult = {
+			isError: false,
+			itemResults: []
+		};
+		for (var typeKey in validationRules) {
+			var ruleType = validationRules[typeKey];
+			if (ruleType.type == 'grid') {
+				var $rows = $(ruleType.rowSelector);
+				$rows.each(function(index, element) {
+					var $row = $(element);
+					var result = validateItems($row, ruleType.items, index);
+					validateResult.itemResults = validateResult.itemResults.concat(result);
+				});
+			} else {
+				var $body = $("body");
+				var result = validateItems($body, ruleType.items);
+				validateResult.itemResults = validateResult.itemResults.concat(result);
+			}
+		}
+		if (validateResult.itemResults.length > 0) {
+			validateResult.isError = true;
+		}
+		return validateResult;
+	}
+	
+	function validateAndShowMessage() {
+		var $errorMessages = $("#error-messages");
+		$errorMessages.empty();
+		var validateResult = validate();
+		if (validateResult.isError == false) {
+			// ボタン活性化
+			document.getElementById("shinsei").disabled = false;
+			document.getElementById("shinsei").className = "bg_orange txt_dark mb-2";
+			return validateResult;
+		}
+		var showMessages = [];
+		validateResult.itemResults.forEach(function(currentValue, index, array){
+			if (showMessages.indexOf(currentValue.errorMessage) < 0) {
+				showMessages.push(currentValue.errorMessage);
+			}
+		});
+		for (var index in showMessages) {
+			var message = showMessages[index];
+			var messageHtml = '<div class="mark-req">' + message + '</div>';
+			$errorMessages.append(messageHtml);
+		}
+		validateResult.showMessages = showMessages;
+		
+		// ボタン非活性化
+		if (showMessages.length > 0){
+			document.getElementById("shinsei").disabled = true;
+			document.getElementById("shinsei").className = "bg_ltgray txt_dark mb-2";
+		}
+		return validateResult;
+	}
+	
+	
+	var $fileList = []; // 編集時のファイル格納用
+	var $tempUpFileCount = 0;
+	var $tempUpFileSuccessCount = 0;
+	var $tempUpFileErrotCount = 0;
+	var $tempUpTempuFileCount = 0;
+	var $tempUpTempuFileSuccessCount = 0;
+	var $tempUpTempuFileErrotCount = 0;
+	
+	var clickedElm = null;
+	
+	const emptySeikyushoSofusakiData = {
+		sofusaki_eda: ""
+		, seikyusho_sofusaki_nm: ""
+		, email_address_to: ""
+		, email_address_cc1: ""
+		, email_address_cc2: ""
+		, email_address_cc3: ""
+	};
+
+	//初期表示
+	function initDisp() {
+		// ライセンスプロダクションでない場合
+		<IMART type="condition" validity=$production_flg negative>
+			$('.licensee-hide').hide(); // ライセンスプロダクション用の項目を非表示
+		</IMART>
+		
+		// 新規追加の場合
+		<IMART type="condition" validity=$newadd_flg>
+			$('.newadd-hide').hide(); // ライセンスプロダクション用の項目を非表示
+		</IMART>
+		
+		// URLにパラメータを付与
+		var kikaku_id = '<imart type="string" value=$kikaku_data.kikaku_id />';
+		<IMART type="condition" validity=$addParamFlg>
+			let crntUrl = window.location.pathname;
+			let crntParamIdx = crntUrl.indexOf('?');
+			if(crntParamIdx > 0) crntUrl = crntUrl.substring(0,crntParamIdx);
+			window.history.replaceState(null,null,crntUrl + '?kikaku_id=' + kikaku_id);
+		</IMART>
+			
+		// 企画ステータス取得
+		var kikaku_status = '<imart type="string" value=$kikaku_data.kikaku_status />';
+		
+		if (kikaku_status == "1") {
+			$('#kikaku_delete').show();
+		}
+		if (kikaku_status == "3"){
+			$('#btn_jitai').show();
+		}
+		
+		// 商品種別
+		var shubetsu_cd = <imart type="string" value=$kikaku_shubetsu_cd />;
+		// 商品種別毎に画面遷移の設定
+		var action_url = 'lo/contents/screen/kikaku/planning_form_item_new';
+		if (shubetsu_cd == 2){
+			action_url = 'lo/contents/screen/kikaku/planning_form_music_new';
+		}else if (shubetsu_cd == 3){
+			action_url = 'lo/contents/screen/kikaku/planning_form_event_new';
+		}else if (shubetsu_cd == 4){
+			action_url = 'lo/contents/screen/kikaku/planning_form_eizo_new';
+		}
+		$('#sendFromItem').attr("action",action_url);
+		$('#sendFromItemLink').attr("action",action_url);
+		
+		// 必須項目チェック
+    	validateAndShowMessage();
+	}
+	
+	//商品仕様のリンク押下
+	function sendFromItemLink(edaban){
+		$('#sendFromItemLink').find('input[name=kikaku_edaban]').val(edaban);
+		$('#sendFromItemLink').submit();
+	}
+	
+
+	//登録後処理
+	function editCallback(ret){
+		if (ret.error){
+			if(clickedElm) {
+				clickedElm.prop('disabled',false);
+				clickedElm = null;
+			}
+			alert(ret.msg);
+		}else{
+			// URLにパラメータ付与
+			let crntUrl = window.location.pathname;
+			let crntParamIdx = crntUrl.indexOf('?');
+			if(crntParamIdx > 0) crntUrl = crntUrl.substring(0,crntParamIdx);
+			window.history.replaceState(null,null,crntUrl + '?kikaku_id=' + ret.kikaku_id);
+			
+			if (ret.flag == 1) {
+				// THATS_RIGHTS-1312 【UAT指摘】ダイアログ「更新しました」は余計
+				//alert(ret.altmsg);
+				// 参照画面へ遷移
+	    		$('#sendFrom').find('input[name=kikaku_id]').val(ret.kikaku_id);
+	    		$('#sendFrom').submit();
+			} else if (ret.flag == 2) {
+				alert(ret.altmsg);
+				// 一覧画面へ遷移
+	    		$('#sendFromIchiran').submit();
+			} else if (ret.flag == 3) {
+				// 商品編集画面へ遷移
+				$('#sendFromItem').find('input[name=kikaku_id]').val(ret.kikaku_id);
+				$('#sendFromItem').submit();
+			} else {
+				alert(ret.altmsg);
+				// 商品申請画面へ遷移
+				$('#sendFromShinsei').find('input[name=kikaku_id]').val(ret.kikaku_id);
+				$('#sendFromShinsei').submit();
+			}
+		}
+	}
+	// 登録時エラー
+	function editError(ex) {
+		if(clickedElm) {
+			clickedElm.prop('disabled',false);
+			clickedElm = null;
+		}
+		imuiShowErrorMessage(ex.message, [], true, 5000, true);
+	}
+	
+	var seikyushoSofusakiTable = null;
+	var seikyushoSofusakiEda = "<imart type="string" value=$kikaku_data.seikyusho_sofusaki_id />";
+	var seikyushoSofusakiData = [];
+
+    $(function () {
+    	
+    	// 初期表示
+		initDisp();   	
+		
+
+		// タグ
+		/*
+		$('.input-tags').selectize({
+			plugins: ['remove_button'],
+			persist: false,
+			create: true,
+			render: {
+				item: function(data, escape) {
+					return '<div>"' + escape(data.text) + '"</div>';
+				}
+			}
+		});
+		*/
+        
+        // 申請ボタン押下時
+        $('#shinsei,#itizihozon,#tuika').click(function () {
+        	clickedElm = $(this);
+			clickedElm.prop('disabled',true);
+			
+        	var num = 1;
+        	var btn_id = $(this).attr('id');
+        	if (btn_id == 'itizihozon'){
+            	num = 2;
+        	}else if (btn_id == 'tuika'){
+            	num = 3;
+        	}
+        	
+        	if (btn_id == 'tuika') {
+        		// 商品仕様上限確認
+			    var elements = document.getElementsByName("chk_no");
+			    var shohinshiyoMax = '<imart type="number" value=$shohinshiyoMax />';
+			    if (shohinshiyoMax <= elements.length) {
+			    	alert('<imart type="string" value=$shohinshiyoMaxStr />');
+			    	return;
+			    }
+        	}
+        	
+        	if (btn_id == 'shinsei') {
+        		if(!jsspRpcPlannningFormNoCallback.chkTitle($('#title_cd').val())){
+        			alert('<imart type="string" value=$titleNoExists />');
+    		    	validateAndShowMessage();
+    		    	return;
+        		}        		
+        	}
+
+        	// 入力値格納
+        	var param = {
+        		"kikaku_id":($('#inputFrom').find('input[name=kikaku_id]').val() === undefined)?null:($.trim($('#inputFrom').find('input[name=kikaku_id]').val())),
+        		"kikaku_nm":($("#kikaku_nm").val() === undefined)?null:($("#kikaku_nm").val()),
+        		"kikaku_shubetsu_cd":($("#kikaku_shubetsu_cd").val() === undefined)?null:($.trim($("#kikaku_shubetsu_cd").val())),
+        		"kikaku_status":"1",
+        		"ip_cd":($("#ip_cd").val() === undefined)?null:($.trim($("#ip_cd").val())),
+				"ip_nm":($("#ip_nm").val() === undefined)?null:($.trim($("#ip_nm").val())),
+        		"title_cd":($("#title_cd").val() === undefined)?null:($.trim($("#title_cd").val())),
+        		"title_nm":($("#title_nm").val() === undefined)?null:($.trim($("#title_nm").val())),
+        		"shinsei_bi":$.trim($("#shinsei_bi").val()),
+        		"kaisha_id":($("#kaisha_id").val() === undefined)?null:($.trim($("#kaisha_id").val())),
+        		"kaisha_nm":($("#kaisha_nm").val() === undefined)?null:($.trim($("#kaisha_nm").val())),
+        		"busyo_id":($("#busyo_id").val() === undefined)?null:($.trim($("#busyo_id").val())),
+        		"busyo_nm":($("#busyo_nm").val() === undefined)?null:($.trim($("#busyo_nm").val())),
+        		"tantou_sha":($("#tantou_sha").val() === undefined)?null:($.trim($("#tantou_sha").val())),
+        		"tag":($("#tag").val() === undefined)?null:($.trim($("#tag").val())),
+        		"bne_tantou_sha":($("#bne_tantou_sha").val() === undefined)?null:($.trim($("#bne_tantou_sha").val())),
+        		"koushin_bi":$('#inputFrom').find('input[name=koushin_bi]').val()
+			};
+            
+        	// フォーム内にあるname属性と入力値を一括で取得する
+			//var param = $('#inputFrom').serializeObject();
+        	
+        	// 添付ファイル
+        	var tempu_file_list = [];
+			var fileNo = 0;
+			$("#after_file_select > .afterFileSelect").each(function(index, element) {
+				var $element = $(element);
+				fileNo++;
+				var tempu_file = {
+					file_no: fileNo
+					, file_name: $.trim($element.find('input[name="item_upFile_name"]').val())
+					, file_path: $.trim($element.find('input[name="item_upFile_resname"]').val())
+				};
+				tempu_file_list.push(tempu_file);
+			});
+			param.tempu_file_list = tempu_file_list;
+			
+			// 請求書送付先を更新用オブジェクトに設定
+			param.seikyusho_sofusaki_eda = '';
+			if (seikyushoSofusakiTable && seikyushoSofusakiTable.data().length > 0) {
+				// データテーブルにデータがあった場合、さらに上書き
+				param.seikyusho_sofusaki_eda = seikyushoSofusakiTable.data()[0].sofusaki_eda;
+			}
+
+
+        	// 入力値格納
+        	formParams = param;
+        	
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+		    		    
+		    jsspRpcPlannningForm.insertKikakuInfo(formParams, num);
+        });
+		
+		// ブラウザバック時対応
+		setTimeout(function(){
+			validateAndShowMessage();
+		},1);
+        
+     	// 削除ボタンをクリック
+		$("#delete").on("click", function() {
+			var elements = document.getElementsByName("chk_no");
+			var list= [];
+			var edabanList = [];
+			var num = 0;
+			var flag = false;
+			var altmsg = '<imart type="message" id="KK02E014" escapeJs="true"></imart>';
+			for (let i=0; i<elements.length; i++){
+				if (elements[i].checked){
+					var str = elements[i].value;
+					if (str.indexOf('OK') == -1 && str.indexOf('NG') == -1) {
+						edabanList[num] = str.replace('未確認', '');
+						list[num] = i + 1;
+						num++;
+						flag = true;
+					} else {
+						flag = false;
+						altmsg = '<imart type="message" id="KK02E015" escapeJs="true"></imart>';
+						break;
+					}
+				}
+			}
+			if (flag) {
+				clickedElm = $(this);
+				clickedElm.prop('disabled',true);
+				
+			    // 入力監視を解除
+			    terminateFormChangeTrigger();
+				
+	        	// 入力値格納
+        		var param = {
+        			"kikaku_id":$('#inputFrom').find('input[name=kikaku_id]').val(),
+        			"koushin_bi":$('#inputFrom').find('input[name=koushin_bi]').val()
+				};
+	        	// DB更新（削除フラグ変更）
+	        	jsspRpcPlannningForm.deleteShohinshiyo(param, list, edabanList);
+			} else {
+				alert(altmsg);
+			}
+		});
+     	
+		// 複製ボタンをクリック
+		$("#copy").on("click", function() {
+			var elements = document.getElementsByName("chk_no");
+			var list = [];
+			var edabanList = [];
+			var num = 0;
+			var flag = false;
+			var altmsg = '<imart type="message" id="KK02E014" escapeJs="true"></imart>';
+			for (let i=0; i<elements.length; i++){
+				if (elements[i].checked){
+					var str = elements[i].value;
+					if (str.indexOf('OK') == -1 && str.indexOf('NG') == -1) {
+						edabanList[num] = str.replace('未確認', '');
+						list[num] = i + 1;
+						num++;
+						flag = true;
+					} else if (str.indexOf('OK') == -1 && str.indexOf('未確認') == -1) {
+						edabanList[num] = str.replace('NG', '');
+						list[num] = i + 1;
+						num++;
+						flag = true;
+					} else {
+						edabanList[num] = str.replace('OK', '');
+						list[num] = i + 1;
+						num++;
+						flag = true;
+					}
+				}
+			}
+			if (flag) {
+			    // 商品仕様上限確認
+			    var maxNum = list.length;
+			    var shohinshiyoMax = '<imart type="number" value=$shohinshiyoMax />';
+			    if (shohinshiyoMax < maxNum + elements.length) {
+			    	alert('<imart type="string" value=$shohinshiyoMaxStr />');
+			    } else {
+			    	clickedElm = $(this);
+			    	clickedElm.prop('disabled',true);
+			    	
+			    	// 入力監視を解除
+				    terminateFormChangeTrigger();
+					
+		        	// 入力値格納
+	        		var param = {
+	        			"kikaku_id":$('#inputFrom').find('input[name=kikaku_id]').val(),
+	        			"koushin_bi":$('#inputFrom').find('input[name=koushin_bi]').val()
+					};
+		        	// 商品仕様の複製
+		        	jsspRpcPlannningForm.hukusei(param, list, edabanList);
+			    }
+			} else {
+				alert(altmsg);
+			}
+		});
+		
+		// 企画削除ボタンをクリック
+		$("#kikaku_delete").on("click", function() {
+			if(window.confirm('<imart type="message" id="KK02C001" escapeJs="true"></imart>')){
+				clickedElm = $(this);
+		    	clickedElm.prop('disabled',true);
+				
+			    // 入力監視を解除
+			    terminateFormChangeTrigger();
+				
+				var param = {
+	       			"kikaku_id":$('#inputFrom').find('input[name=kikaku_id]').val(),
+	       			"koushin_bi":$('#inputFrom').find('input[name=koushin_bi]').val()
+				};
+				jsspRpcPlannningForm.deleteKikaku(param);
+			}
+		});
+		
+		// 辞退ボタン
+    	$('#btn_jitai').click(function(){
+            // 処理用ページを変更する
+            var nodeSetting = {};
+    		nodeSetting.procPage = "im_workflow/common/proc/lo/reapply/reapply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+    		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+    		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+    		$('#item_proc_status').val("discontinue");// 処理ステータス：辞退(仮)
+    		$('#item_proc_name').val($(this).text());
+    		$('#item_status_cd').val("7"); // ステータスコードを設定
+    		// 処理者設定
+    		workflowOpenPage('3');
+    		return false;
+        });
+		
+     	// ファイル選択ボタンをクリック
+		$("#file_upload_btn").on("click", function() {
+			var $form = $("#filesForm");
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+		});
+
+		// ファイル選択ボタンをクリック
+		$("#tempu_file_upload_btn").on("click", function() {
+			var $form = $("#tempuFilesForm");
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+		});
+		
+		// ファイル選択ボタンをクリック
+		$("#tempu_file_upload_btn").on("click", function() {
+			var $form = $("#tempuFilesForm");
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+		});
+		
+		// 「全選択」する
+		$('#checkall').on('click', function() {
+			$("input[name='chk_no']").prop('checked', this.checked);
+		});
+
+		/**
+		 * タイトル検索ボタンクリックイベント
+		 */ 
+		$("#btn_title_search").click(function(e, data){
+			$('#js-popup').addClass('is-show');
+		});
+
+		/**
+		 * タイトル検索画面、タイトル選択イベント
+		 */
+		$("#js-popup").on("selectedTitleDatas", function(e, selectedTitleDatas) {
+			$('#js-popup').removeClass('is-show');
+			if (selectedTitleDatas.length > 0) {
+				var selectedTitleData = selectedTitleDatas[0];
+				$("#title_cd").val(selectedTitleData.title_cd);
+				$("#title_nm").val(selectedTitleData.title_nm);
+				$("#ip_cd").val(selectedTitleData.ip_cd);
+				$("#ip_nm").val(selectedTitleData.ip_nm);
+			}
+            validateAndShowMessage();
+        });
+		
+		/****************************************
+		 * 請求書送付先情報設定
+		 ****************************************/ 		
+		$(document).on("change", '[name="seikyusho_sofusaki_eda"]', function(e) {
+			var $this = $(this);
+			seikyushoSofusakiEda = $this.val();
+			var seikyushoSofusakiDatas = seikyushoSofusakiData.filter(function(element, index, array){
+				return element.sofusaki_eda == seikyushoSofusakiEda;
+			});
+			if (seikyushoSofusakiDatas.length == 0) {
+				seikyushoSofusakiDatas.push(emptySeikyushoSofusakiData);
+			}
+			if (seikyushoSofusakiTable != null) {
+				seikyushoSofusakiTable.clear();
+			}
+			seikyushoSofusakiTable.rows.add(seikyushoSofusakiDatas).draw();
+			
+			validateAndShowMessage();
+		});
+		
+		refleshSeikyushoSofusakiTable($.trim($("#kaisha_id").val()));
+		$('[name="seikyusho_sofusaki_eda"]').val(seikyushoSofusakiEda);
+		$('[name="seikyusho_sofusaki_eda"]').trigger("change");
+	});
+    
+    function refleshSeikyushoSofusakiTable(kaisha_id) {
+		seikyushoSofusakiData = [];
+		if (kaisha_id) {
+			// 検索条件取得
+			var whereParamSeikyushoKaisha = {
+				"kaisha_id": kaisha_id
+			};
+			try {
+				ret = jsspRpcPlannningFormNoCallback.retrieveSeikyushoSofusakiList(whereParamSeikyushoKaisha);
+			} catch (ex) {
+				imuiShowErrorMessage(ex.message, [], true, 5000, true);
+				return;
+			}
+			
+			if (ret.countRow > 0) {
+				$.each(ret.data,  function(index, elem) {
+					seikyushoSofusakiData.push(mergeDeeply(emptySeikyushoSofusakiData, elem, {concatArray: true}));
+				});
+			}
+			
+		}
+		// 表のクリア
+		if ($.fn.dataTable.isDataTable('#seikyusho_sofusaki_table')) {
+			$('#seikyusho_sofusaki_table').DataTable().clear();
+			$('#seikyusho_sofusaki_table').DataTable().destroy();
+		}
+		seikyushoSofusakiTable = $('#seikyusho_sofusaki_table').DataTable({
+			data: [emptySeikyushoSofusakiData],
+			// 件数切替機能 無効
+			lengthChange: false,
+			// 検索機能 無効
+			searching: false,
+			// ソート機能 無効
+			ordering: false,
+			// 情報表示 無効
+			info: false,
+			// ページング機能 無効
+			paging: false,
+			// 横スクロールバー 無効 (scrollXはtrueかfalseで有効無効を切り替えます)
+			scrollX: false,
+			"language": {
+				"processing":   "処理中...",
+				"lengthMenu":   "_MENU_ 件表示",
+				"zeroRecords":  "データはありません。",
+				"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+				"infoEmpty":    " 0 件中 0 から 0 まで表示",
+				"infoFiltered": "（全 _MAX_ 件より抽出）",
+				"infoPostFix":  "",
+				"search":       "検索:",
+				"url":          "",
+				"paginate": {
+					"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+					"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+					"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+					"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+				}
+			},
+			autoWidth: false,
+			responsive: false,
+			columns: [
+				{data: "sofusaki_eda",
+					createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+						$(cell).addClass("brdr_ltgray");
+						$(cell).addClass("padding-row-select");
+					},
+					render:function(data, type, row, meta) {
+						var html = '';
+						html += '<select class="form-control form-control-sm" name="seikyusho_sofusaki_eda" id="seikyusho_sofusaki_eda">';
+						var options = '<option value=""></option>';
+						$.each(seikyushoSofusakiData,  function(index, elem) {
+							options = options + '<option value="' + elem.sofusaki_eda + '"';
+							if (data == elem.sofusaki_eda) {
+								options = options + " selected "	
+							}
+							options = options + '>' + elem.seikyusho_sofusaki_nm +  '</option>';
+						});
+						html += options;
+						html += '</select>';						
+						return html;
+					}
+				},
+				{data: "email_address_to",
+					createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+						$(cell).addClass("brdr_ltgray");
+					},
+					render: $.fn.dataTable.render.text()
+				},
+				{data: "email_address_cc1",
+					createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+						$(cell).addClass("brdr_ltgray");
+					},
+					render: $.fn.dataTable.render.text()
+				},
+				{data: "email_address_cc2",
+					createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+						$(cell).addClass("brdr_ltgray");
+					},
+					render: $.fn.dataTable.render.text()
+				},
+				{data: "email_address_cc3",
+					createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+						$(cell).addClass("brdr_ltgray");
+					},
+					render: $.fn.dataTable.render.text()
+				}
+			]
+		});
+	};
+ 	
+    // 必須項目チェック
+    function kikaku_nm_chk(value) {
+    	validateAndShowMessage();
+    }
+    function title_chk(value) {
+    	validateAndShowMessage();
+    }
+    
+    // ---- 詳細資料ファイル -------
+	// ファイルアップロード前処理用
+	function onBeforeSendFiles(e, data) {
+		// ファイル数制限
+		var uploadedNum = $("#after_file_select .afterFileSelect").size();
+		var max_file_num = <imart type="string" value=$maxFileNum />;
+		if(uploadedNum + $tempUpFileCount + data.files.length >= max_file_num) {
+			return false;
+		}
+    	
+		var str = '<imart type="string" value=$extListstr />';
+		var max_file_size = <imart type="string" value=$maxFileSize />;
+		var acceptExt =str.split("/");
+		for (var fIdx = 0; fIdx < data.files.length; fIdx++) {
+			// ファイルサイズチェック
+			if(data.files[fIdx].size > max_file_size) {
+				alert('<imart type="message" id="ER01E005" escapeJs="true"></imart>');
+				return false;
+			}
+			
+			// 拡張子チェック
+			var ext = getFileExtension(data.files[fIdx].name);
+			if (!acceptExt.includes(ext)) {
+				var altstr = '<imart type="message" id="KK02E012" escapeJs="true"></imart>';
+				altstr = altstr.replace("{0}", data.files[fIdx].name);
+				alert(altstr);
+				return false;
+			}
+		}
+		// TODO:アップロードするファイルのサイズや拡張子をチェック
+		// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		showIndicator();
+		$tempUpFileCount += data.files.length;
+		return true;
+	}
+	// ファイルアップロード成功時
+	function onSuccessFiles(e, data) {
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpFileSuccessCount += data.result.length;
+
+		$.each(data.result, function(index, res) {
+			var src ="lo/contents/screen/ses_file_dl?filePath=" + res.physicalName + "&fileName=" + res.name;
+			var a_src = $('<a>').attr({'href':src, 'download':''});
+			var clon = $("#after_file_select_template > .afterFileSelect").clone(true);
+			clon.find(".upfilenametext").text(res.name);
+			clon.find('input[name="item_upFile_name"]').val(res.name);
+			clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+			clon.find(".upfilenametext").wrap(a_src);
+			clon.show();
+			clon.appendTo("#after_file_select");
+		});
+
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+			$tempUpFileCount = 0;
+			$tempUpFileSuccessCount = 0;
+			$tempUpFileErrotCount = 0;
+			hideIndicator();
+		}
+	}
+
+	// アップロード失敗
+	function onErrorFiles(e, data) {
+		// TODO:失敗時の処理をいれる
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpFileErrotCount += data.files.length;
+		if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+			$tempUpFileCount = 0;
+			$tempUpFileSuccessCount = 0;
+			$tempUpFileErrotCount = 0;
+			hideIndicator();
+		}
+	}
+	// ---- 詳細資料ファイル -------
+
+	// ---- ファイルアップロード共通 -------
+	// アップロード削除
+	function upFileDel(targetEl){
+		// TODO:確認メッセージを表示
+		var targetObj = $(targetEl).closest("div");
+		targetObj.remove();
+	}
+	// ---- ファイルアップロード共通 -------
+
+	// ---- 添付ファイル -------
+	// ファイルアップロード前処理用
+	function onBeforeSendTempuFiles(e, data) {
+		showIndicator();
+		// TODO:アップロードするファイルのサイズや拡張子をチェック
+		// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpTempuFileCount += data.files.length;
+		return true;
+	}
+	// ファイルアップロード成功時
+	function onSuccessTempuFiles(e, data) {
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpTempuFileSuccessCount += data.result.length;
+
+		$.each(data.result, function(index, res) {
+			var clon = $("#after_tempu_file_select_template > .afterFileSelect").clone(true);
+			clon.find(".upfilename").text(res.name);
+			clon.find('input[name="item_upFile_name"]').val(res.name);
+			clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+			clon.show();
+			clon.appendTo("#after_tempu_file_select_area");
+		});
+
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		if ($tempUpTempuFileCount == $tempUpTempuFileSuccessCount + $tempUpTempuFileErrotCount) {
+			$tempUpTempuFileCount = 0;
+			$tempUpTempuFileSuccessCount = 0;
+			$tempUpTempuFileErrotCount = 0;
+			hideIndicator();
+		}
+	}
+
+	// アップロード失敗
+	function onErrorTempuFiles(e, data) {
+		// TODO:失敗時の処理をいれる
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpTempuFileErrotCount += data.files.length;
+		if ($tempUpTempuFileCount == $tempUpTempuFileSuccessCount + $tempUpTempuFileErrotCount) {
+			$tempUpTempuFileCount = 0;
+			$tempUpTempuFileSuccessCount = 0;
+			$tempUpTempuFileErrotCount = 0;
+			hideIndicator();
+		}
+	}
+	
+	function registerCallback() {
+		alert("コールバック正常");
+	}
+	function registerError() {
+		alert("コールバック異常");
+	}
+	$(window).on("load", function() {
+		document.getElementById('body').style.display = 'block';
+	});
+</script>
+</body>
+</html>

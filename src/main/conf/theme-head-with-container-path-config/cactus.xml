@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme-head-with-container-path-config xmlns="http://www.intra-mart.jp/theme/theme-head-with-container-path-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.intra-mart.jp/theme/theme-head-with-container-path-config theme-head-with-container-path-config.xsd ">
+	<!--  add suzuki ヘッダフッダを非表示 -->
+    <path>cactus/contents/screen/apply</path>
+    <path>cactus/contents/screen/fin</path>
+    <path>cactus/contents/screen/detail</path>
+    <path>cactus/contents/screen/approve</path>
+    
+     <!-- im_work外だと頭に/必要? -->
+    <path>/cactus/contents/screen/top</path>
+    <path>/cactus/contents/screen/myProcess_list</path>    
+    <path>/cactus/contents/screen/allProcess_list</path>    
+</theme-head-with-container-path-config>

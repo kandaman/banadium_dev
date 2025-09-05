@@ -1,0 +1,294 @@
+
+<IMART type="jsspRpc" name="searchUserObject"
+	page="cactus/contents/screen/searchUser"></IMART>
+
+<script>
+//取得したDBデータ
+var $searchUserData;
+//取得したデータの格納先id
+var $searchUserRetarnid;
+//ページ情報
+var $searchUserPageInfo={
+	maxRow: 10 //１ページの最大行数
+	,MaxLinks:5 //リンク表示の最大数
+	//,nowPage:1 /現在のページ
+	//,totalCount:1 //データ数
+	,totalPage:1 //ページ数（件数/最大行数）
+};
+
+//画面終了時(データ選択時)のコールバック関数
+var $searchUserEndFunction;
+
+//　ユーザ検索ダイアログを開く
+function openSearchUserDialog(returnid,returnFunction) {
+
+	// IEだとデフォルト引数に不具合があるようなのでundefined判定で空文字入れる
+	if (returnid === undefined) returnid = "";
+	if (returnFunction === undefined) returnFunction="";
+
+	// 選択したときの処理を格納
+	$searchUserEndFunction = returnFunction;
+
+	// 取得したいDBの値とセットするidを指定(引数｛id：カラム名｝の連想配列)
+	$searchUserRetarnid = returnid;
+
+	$("#searchUserResultTable").hide();
+	//中身をクリア
+	$("#searchUserList").children().remove();
+	//ページャクリア
+	$("#searchUserPager").children().remove();
+	//件数クリア
+	$("#searchUserDataCount").text("");
+
+	// 画面を開く
+	$('#searchUser_dialog').imuiDialog('open');
+}
+
+
+//コールバック関数実行用
+var searchUserCallback = function(func) {
+	func();
+};
+
+
+// 選択ボタン押下時の処理
+function setSearchUserData() {
+
+	//選択行を取得
+	var rownum = $("#searchUserList").find('input[name=res]:checked').val();
+	if(typeof rownum === 'undefined'){
+		alert("対象データが選択されてません");
+		return false;
+	}
+
+	// 選択行のインデックスに紐付くデータを取得し、設定されたidに返す
+	var dataObj = $searchUserData[Number(rownum)];
+
+	if ($searchUserRetarnid !=""){
+		// 設定されたidにデータを格納
+		$.each($searchUserRetarnid, function( key, value ) {
+			if($("#"+key).prop("tagName")=="INPUT"){
+				$("#"+key).val(dataObj[value]);
+			}else{
+				$("#"+key).text(dataObj[value]);
+			}
+    	});
+	}
+
+	if ($searchUserEndFunction !=""){
+		// コールバック関数に取得データをバインドし実行
+		searchUserCallback($searchUserEndFunction.bind(this, dataObj));
+	}
+
+	// 画面クローズ
+	$('#searchUser_dialog').imuiDialog('close');
+
+}
+
+
+$(function() {
+
+	$(document).on("click",'#searchUserPager li',function(event){
+		var pageNum =$(this).attr('page');
+		// ページャー移動
+		onPagerMove('searchUserPager',pageNum);
+		// 表示データ
+		//userlistDraw(pageNum);
+		onPagerlistDraw("searchUserList",pageNum,$searchUserPageInfo.maxRow);
+	});
+
+
+	// ラジオボタン変更時
+	$( 'input[name="searchUser_target"]:radio' ).change( function() {
+		if ($(this).val()=="user"){
+			$('.searchUser_type_user').show();
+			$('.searchUser_type_group').hide();
+		}else{
+			$('.searchUser_type_user').hide();
+			$('.searchUser_type_group').show();
+		}
+	});
+
+
+	// 検索処理
+	$("#btn_searchUser").click(function() {
+		//中身をクリア
+		$("#searchUserList").children().remove();
+
+		//var ret;
+		// ユーザ検索
+		//if ($('input[name=searchUser_target]:checked').val()=="user") {
+			// 検索条件
+			var where = {
+				"user_name": $.trim($("#searchUser_name").val()),
+				"post": $.trim($("#searchUser_post").val()),
+				"company_name": $.trim($("#searchUser_company").val()),
+				"department_inc_name": $.trim($("#searchUser_department").val()),
+				"shain_no": $.trim($("#searchUser_no").val()),
+				"mail": $.trim($("#searchUser_mail").val())
+			};
+			//検索
+		var	ret = searchUserObject.getUserList(where);
+
+		/*}else{
+			// グループ検索
+			// 検索条件
+			var where = {
+				"department": $.trim($("#searchUser_group").val())
+			};
+			//検索
+			ret = searchUserObject.getGroupList(where);
+		}*/
+
+		if (ret.countRow > 0){
+			$searchUserData = ret.data;
+			$searchUserPageInfo.totalPage = Math.ceil(ret.countRow / $searchUserPageInfo.maxRow);
+			clreatePager('searchUserPager',$searchUserPageInfo.totalPage,$searchUserPageInfo.MaxLinks);
+
+			$("#searchUserResultTable").show();
+		}else{
+			clreatePager('searchUserPager',0,$searchUserPageInfo.MaxLinks);
+		}
+
+		if (ret.countRow > 0){
+			// data配列を順に処理
+			$.each(ret.data,function(index, elem) {
+				var str = '';
+				str += '<td class="check-box"><input type="radio" name="res" value="'+ index +'"></td>';
+				str += '<td>'+ elem.user_name + '<br>'+elem.shain_no + '</td>';
+				str += '<td>'+ elem.company_name +'</td>';
+				str += '<td>'+ elem.department_inc_name +'</td>';
+				str += '<td>'+ elem.post +'</td>';
+
+				str += '<input type="hidden" class="rownum" value="'+ index +'">';
+				// 末尾に追加
+				if (index < $searchUserPageInfo.maxRow){
+				    $('<tr></tr>').append(str).appendTo('#searchUserList');
+				}else{
+				    $('<tr hidden></tr>').append(str).appendTo('#searchUserList');
+				}
+			});
+		}
+
+		// 件数表示
+		$("#searchUserDataCount").text("検索結果 ： " + ret.countRow + "件");
+	});
+});
+
+</script>
+
+<!-- ***************************************** ↓ 子画面　↓ ***************************************** -->
+<!-- ユーザ検索子画面 -->
+<imart type="imuiDialog" autoOpen="false" id="searchUser_dialog"
+	name="userForm" position="center" title="ユーザ検索" resizable="false"
+    width="1500" height="950"> <!-- 検索条件 -->
+
+<!-- 検索条件 -->
+<div class="form-group" style="margin-top: 30px;">
+	<div class="panel panel-default">
+        <table class="table table-condensed search-form">
+			<!--
+			<tr>
+                <th style="border-left:none" width="20%">検索対象</th>
+				<td>
+					<div class="radio">
+						<label><input type="radio" name="searchUser_target"
+							value="user" checked> ユーザ</label> &nbsp;&nbsp;&nbsp;&nbsp; <label><input
+							type="radio" name="searchUser_target" value="group"> グループ</label>
+					</div>
+				</td>
+			</tr>-->
+			<tr class="searchUser_type_user">
+                <th style="border-left:none">名前</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_name" /></td>
+				<th>社員番号</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_no"></td>
+			</tr>
+			<tr class="searchUser_type_user">
+                <th style="border-left:none">会社名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_company" /></td>
+				<th>事業部署名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_department" /></td>
+			</tr>
+			<tr class="searchUser_type_user">
+                <th style="border-left:none;border-bottom:none;">役職</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_post" /></td>
+                <th style="border-bottom:none;">メールアドレス</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_mail"></td>
+			</tr>
+
+			<tr class="searchUser_type_group" hidden>
+				<th>グループ名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUser_group" /></td>
+			</tr>
+		</table>
+	</div>
+	<button type="button" class="btn btn-hensyu" id="btn_searchUser">検索</button>
+</div>
+<!-- @end 検索条件 -->
+<hr>
+
+<!-- 検索結果表示 -->
+<div class="form-group" id="searchUserResultTable" style="width: 80%">
+	<div style="float: left;">
+		<label id="searchUserDataCount">検索結果 ： 0件</label>
+	</div>
+	<!-- ページャー -->
+	<div id="searchUserPager" style="float: right;"></div>
+	<!-- <div style="max-height: 350px; overflow: auto; clear: both;"> -->
+    <div style="clear: both;">
+        <div class="panel">
+			<table class="table table-striped res-table table-condensed">
+				<thead>
+					<tr>
+                        <th rowspan="2" class="check-box" width="5%"></th>
+                        <th>名前</th>
+                        <th>会社名</th>
+                        <th>事業部署名</th>
+                        <th>役職</th>
+					</tr>
+				</thead>
+				<!--
+					<tbody id="templist" hidden>
+						<tr>
+							<td class="check-box"><input type="radio" name="res" id="1" value="1"></td>
+							<td>佐藤 秀俊 Hidetoshi Sato</td>
+							<td>CS事業部 第1制作宣伝部 1課</td>
+							<td>アシスタントマネージャー</td>
+							<td>株式会社バンダイナムコエンターテインメント</td>
+						</tr>
+					</tbody>
+					-->
+				<!-- 結果表示部 -->
+				<tbody id="searchUserList">
+					<!-- <tr>
+							<td class="check-box"><input type="radio" name="res"
+								id="1" value="1"></td>
+							<td>佐藤 秀俊 Hidetoshi Sato<br>h-sato
+							</td>
+							<td>CS事業部 第1制作宣伝部 1課</td>
+							<td>アシスタントマネージャー</td>
+							<td>株式会社バンダイナムコエンターテインメント</td>
+						</tr>
+						 -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="button">
+		<button type="button" class="btn btn-hensyu"
+			onclick="setSearchUserData();clearSearchForm();" style="width: 20%">選択</button>
+		<button type="button" class="btn btn-hensyu btn_dialog_close" onclick="clearSearchForm()" style="width: 20%">閉じる</button>
+	</div>
+
+</div>
+<!-- @end 検索結果表示 --> <!-- @end ユーザ検索子画面 --> <!-- ***************************************** ↑ 子画面　↑ ***************************************** -->
+</imart>

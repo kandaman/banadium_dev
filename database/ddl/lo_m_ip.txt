@@ -1,0 +1,11 @@
+create table lo_m_ip (
+  ip_cd character varying(128) not null
+  , ip_nm character varying(1024) not null
+  , sort_no integer
+  , sakujo_flg character(1)
+  , torokusha character varying(100)
+  , toroku_bi timestamp(6) without time zone
+  , koshinsha character varying(100)
+  , koshin_bi timestamp(6) without time zone
+  , primary key (ip_cd)
+);

@@ -1,0 +1,12 @@
+create table lo_t_keiyaku_naiyo_comment (
+  keiyaku_naiyo_id character varying(20) not null 
+  , task_id  character varying(20) not null 
+  , koukai_hani character varying(100) 
+  , naiyo character varying(1000) 
+  , sakujo_flg character varying(20) 
+  , touroku_sha character varying(100) 
+  , touroku_bi timestamp(6) without time zone 
+  , koushin_sha character varying(100) 
+  , koushin_bi timestamp(6) without time zone 
+  , primary key (keiyaku_naiyo_id, task_id) 
+);

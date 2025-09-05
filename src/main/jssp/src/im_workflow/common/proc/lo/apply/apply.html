@@ -1,0 +1,946 @@
+<imart type="head">
+<title>
+	<imart type="string" value=oCaption.titleWithNodeName escapeXml="false" escapeJs="false" />
+</title>
+
+<imart type="jsspRpc" name="jsActionFile" page="im_workflow/common/unit/file/file_upload" />
+<imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag>
+<imart type="jsspRpc" name="jsActionApplyAsync" page="im_workflow/common/proc/exec/async/apply_async_jssp" />
+</imart>
+<imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag negative>
+<imart type="jsspRpc" name="jsActionApply" page="im_workflow/common/proc/exec/apply_jssp" />
+</imart>
+<imart type="jsspRpc" name="jsActionSession" page="im_workflow/common/session_timeout_check/session_timeout_check" />
+<imart type="imwCommonJs" />
+<imart type="include" page="im_workflow/common/parts/window_popup/imw_window_popup" detailFlag="0" flowFlag="1" historyFlag="0" />
+
+<script type="text/javascript" src="csjs/im_json.js"></script>
+<script type="text/javascript" src="csjs/im_window.js"></script>
+<script type="text/javascript" src="workflow/csjs/workflow_proc.js"></script>
+<link rel="stylesheet" type="text/css" href="im_workflow/css/im_workflow.css" />
+
+
+
+<!-- add lo_system-->
+	<!-- <link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">-->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+<!-- end lo_system-->
+
+
+<script type="text/javascript">
+
+var executingFlag = false;
+
+var applyParamObj;
+var displayInfoObj;
+var negoMailInfoObj;
+var defineObj;
+var messageObj;
+var validateMessages;
+var workflowParams;
+<imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+var stampData = new Object();
+</imart>
+var deleteAttachFileName;
+
+var separator     = '<imart type="string" value=separator />';
+var nodeSeparator = '<imart type="string" value=nodeSeparator />';
+
+function initParseJSON() {
+    applyParamObj   = ImJson.parseJSON(document.form4JSON.applyParamObj.value);
+    displayInfoObj  = ImJson.parseJSON(document.form4JSON.displayInfoObj.value);
+    negoMailInfoObj = ImJson.parseJSON(document.form4JSON.negoMailInfoObj.value);
+    defineObj       = ImJson.parseJSON(document.form4JSON.defineObj.value);
+    messageObj      = ImJson.parseJSON(document.form4JSON.messageObj.value);
+    validateMessages= ImJson.parseJSON(document.form4JSON.validateMessages.value);
+    workflowParams  = ImJson.parseJSON(document.form4JSON.workflowParams.value);
+}
+
+function closeWindow() {
+
+    if (executingFlag) {
+        return;
+    }
+    setInputValue();
+    workflowParams[document.procForm.imwPageType.value] = applyParamObj;
+    <imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+    workflowParams.stampData = stampData;
+    </imart>
+
+    parent.closeImwProcScreen(ImJson.toJSONString(workflowParams));
+}
+
+function callProc() {
+    if(executingFlag) {
+        return;
+    }
+
+    setInputValue();
+
+    var result = inputCheck();
+    if(!result.resultFlag) {
+    	imwShowErrorMessage('imui-container',escapeHTML(result.messageList.join("\n"),true));
+        backToTop();
+        return;
+    }
+
+    <imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+    parent.userParams.imwStampId = stampData.stampId; 
+    </imart>
+
+    var oReqParam = {
+            "applyParams"   : applyParamObj,
+            "userParams"    : parent.userParams
+    };
+
+    executingFlag = true;
+
+    try {
+        <imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag>
+        var res = jsActionApplyAsync.applyAsync(oReqParam);
+        </imart>
+        <imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag negative>
+        var res = jsActionApply.apply(oReqParam);
+        </imart>
+        if (!res.resultFlag) {
+        	imwShowErrorMessage('imui-container',res.errorMessage);
+            backToTop();
+            executingFlag = false;
+            return;
+        }
+    } catch (ex) {
+    	imwShowErrorMessage('imui-container',ex.message);
+        executingFlag = false;
+        return;
+    }
+
+    var data = {
+        systemMatterId : res.data.systemMatterId,
+        userDataId     : res.data.userDataId
+    };
+    parent.goNext(data);
+}
+
+function setInputValue() {
+
+    var doc = document.procForm;
+
+    var cnt1;
+    var cnt2;
+    var targetNode;
+
+    applyParamObj.matterName     = doc.matterName.value;
+    applyParamObj.applyAuthOrgz  = doc.applyAuthOrgz.value;
+
+    if(!isBlank(applyParamObj.applyAuthOrgz)) {
+        var tmpOrgzInfo = applyParamObj.applyAuthOrgz.split(separator);
+        applyParamObj.applyAuthCompanyCode = tmpOrgzInfo[0];
+        applyParamObj.applyAuthOrgzSetCode = tmpOrgzInfo[1];
+        applyParamObj.applyAuthOrgzCode    = tmpOrgzInfo[2];
+    }
+
+    applyParamObj.processComment = doc.processComment.value;
+    applyParamObj.priorityLevel  = doc.priorityLevel.value;
+
+    if(displayInfoObj.dispRouteSelectFlag) {
+
+        applyParamObj.branchSelectModels = new Array();
+
+        var branchStartNodeId;
+        var branchStartNodeName;
+        var forwardNodeIds;
+        var forwardParentNodeIds;
+        var branchSelectModel;
+        var work;
+
+        for(cnt1=0; cnt1<displayInfoObj.dispRouteSelectInfo.length; cnt1++) {
+            branchStartNodeId   = displayInfoObj.dispRouteSelectInfo[cnt1].nodeId;
+            branchStartNodeName = displayInfoObj.dispRouteSelectInfo[cnt1].nodeName;
+            targetNode          = document.getElementsByName(displayInfoObj.uiPartsIdMap[branchStartNodeId]);
+
+            forwardNodeIds = new Array();
+            forwardParentNodeIds = new Array();
+            for(cnt2=0; cnt2<targetNode.length; cnt2++) {
+                if (targetNode[cnt2].getAttribute("imwRouteSetting") != "1") {
+                    continue;
+                }
+                if(targetNode[cnt2].checked) {
+                    work = targetNode[cnt2].value.split(nodeSeparator);
+                    forwardNodeIds.push(work[0]);
+                    forwardParentNodeIds.push(work[1]);
+                }
+            }
+            branchSelectModel = { "branchStartNodeId" : branchStartNodeId,
+                                  "forwardNodeIds"      : forwardNodeIds,
+                                  "forwardParentNodeIds": forwardParentNodeIds
+            };
+            applyParamObj.branchSelectModels.push(branchSelectModel);
+        }
+    }
+
+    if(negoMailInfoObj.dispNegoMailFlag) {
+
+        var negoMail = new Object();
+        negoMail.subject = "";
+        negoMail.cc      = new Array();
+        negoMail.bcc     = new Array();
+        if(!negoMailInfoObj.dispNegoOnlyImboxFlag) {
+            negoMail.subject = doc.subject.value;
+            negoMail.cc      = getSelectValueMultiple(document.getElementById("negoMailCc"));
+            negoMail.bcc     = getSelectValueMultiple(document.getElementById("negoMailBcc"));
+        }
+        negoMail.to   = getSelectValueMultiple(document.getElementById("negoMailTo"));
+        negoMail.text = doc.text.value;
+
+        applyParamObj.negoMail = negoMail;
+    }
+}
+
+function inputCheck() {
+
+    var objResult = { "resultFlag"  : true,
+                      "messageList": new Array() };
+
+    var doc = document.procForm;
+
+    var cnt1;
+    var cnt2;
+    var targetNode;
+
+    checkRequire(objResult.messageList, applyParamObj, "matterName");
+    checkLength(objResult.messageList, applyParamObj, "matterName");
+    checkRequire(objResult.messageList, applyParamObj, "applyAuthOrgz");
+    checkLength(objResult.messageList, applyParamObj, "processComment");
+    if(displayInfoObj.dispFlowSettingFlag) {
+        checkFlowSetting(objResult.messageList, applyParamObj, displayInfoObj, messageObj.flowSettingError);
+    }
+    if(displayInfoObj.dispRouteSelectFlag) {
+        checkRoute(objResult.messageList, applyParamObj, messageObj.routeSelectError);
+    }
+
+    <imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+    if(isBlank(stampData.stampId)) {
+        objResult.messageList[objResult.messageList.length] = messageObj.selectedStampId;
+    }
+    </imart>
+
+    if (objResult.messageList.length > 0) {
+        objResult.resultFlag = false;
+    }
+
+    return objResult;
+}
+
+function addAttachFile(fileObj) {
+
+    var addFileObj = { "systemFileName" : fileObj.systemFileName,
+                       "realFileName"   : fileObj.realFileName,
+                       "fileSize"       : fileObj.fileSize
+    };
+    applyParamObj.attachFile.push(addFileObj);
+
+    createAttachFileRecord(fileObj, "_list_table_attach_file_record");
+}
+
+function deleteAttachFile() {
+	systemFileName = deleteAttachFileName;
+	
+    if(executingFlag) {
+        return;
+    }
+    var oReqParam = { "tempDirKey"     : applyParamObj.tempDirKey,
+                      "systemFileName" : systemFileName };
+
+    try {
+        var res = jsActionFile.deleteAttachFileFromTemp(oReqParam);
+        if (!res.resultFlag) {
+        	imwShowErrorMessage('imui-container',res.resultStatus.message);
+            backToTop();
+            return;
+        }
+    } catch (ex) {
+    	return imwShowErrorMessage('imui-container',ex.message);
+    }
+
+    for(var cnt=0; cnt<applyParamObj.attachFile.length; cnt++) {
+        if(applyParamObj.attachFile[cnt].systemFileName == systemFileName) {
+            applyParamObj.attachFile = removeArrayIndex(applyParamObj.attachFile, cnt);
+            break;
+        }
+    }
+
+    deleteAttachFileRecord(systemFileName);
+}
+
+function nodeConfig(aTagObj) {
+
+    if(executingFlag) {
+        return;
+    }
+
+    if (false == imwCheckSessionTimeoutActionGreyBox(jsActionSession)) {
+        return false;
+    }
+
+    var nextElmWork = getNextElement(aTagObj);
+    var targetNodeId = nextElmWork.value;
+    nextElmWork = getNextElement(nextElmWork);
+    var targetNodeType = nextElmWork.value
+
+    setInputValue();
+
+    workflowParams[document.procForm.imwPageType.value] = applyParamObj;
+    <imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+    workflowParams.stampData = stampData;
+    </imart>
+    var imwWorkflowParams = ImJson.toJSONString(workflowParams);
+
+    var targetForm;
+
+    switch (targetNodeType) {
+        case defineObj.nodeTyp_Dynamic:
+        case defineObj.nodeTyp_Confirm:
+            targetForm = document.nodeConfigSingleForm;
+            break;
+
+        case defineObj.nodeTyp_Horizontal:
+        case defineObj.nodeTyp_Vertical:
+            targetForm = document.nodeConfigMultiForm;
+            break;
+
+        default:
+            return;
+    }
+
+    targetForm.imwCallType.value = "1";
+
+    targetForm.imwWorkflowParams.value = imwWorkflowParams;
+    targetForm.imwTargetNodeId.value   = targetNodeId;
+    targetForm.submit();
+}
+
+<imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+function stamp_list() {
+    if (false == imwCheckSessionTimeout(jsActionSession)) {
+        return false;
+    }
+    var el = document.getElementById("stampConfigListSelect");
+    var id = el.options[el.selectedIndex].value;
+    var stamp_form = document.forms.stamp_select_form;
+    stamp_form.arg_select.value = id;
+    stampData.stampTag = id;
+    stamp_form.submit();
+
+}
+
+function setStampId(stampId) {
+    stampData.stampId = stampId;
+    document.forms.stamp_select_form.selectedStampId.value = stampId;
+}
+</imart>
+
+function displayControl(target, displayTarget) {
+	
+	if ($(target).css("display") != "none") {
+		$(displayTarget).removeClass("im-ui-icon-common-16-collapse");
+		$(displayTarget).addClass("im-ui-icon-common-16-expand");
+		$(target).slideUp();
+	} else {
+		$(displayTarget).removeClass("im-ui-icon-common-16-expand");
+		$(displayTarget).addClass("im-ui-icon-common-16-collapse");
+		$(target).slideDown();
+	}
+}
+
+function displayControlForBack(target, displayTarget) {
+	
+	if ($(target).css("display") != "none") {
+		$(displayTarget).removeClass("im-ui-icon-common-16-collapse");
+		$(displayTarget).addClass("im-ui-icon-common-16-expand");
+		$(target).hide();
+	} else {
+		$(displayTarget).removeClass("im-ui-icon-common-16-expand");
+		$(displayTarget).addClass("im-ui-icon-common-16-collapse");
+		$(target).show();
+	}
+}
+
+$(function(){
+	initParseJSON();
+	setListTableEvent();
+	setVisibility('allBlock','visible');
+	initFileFrame('imwFileFrame');
+
+	<imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+	stamp_list();
+	</imart>
+	$("#proc").click(function(){
+	    $.imuiFormUtil.confirm(messageObj.applyConfirm, '<imart type="string" value=oCaption.confirmProcTitle/>', function() {callProc()});
+		return false;
+    });
+
+	$("#flow").click(function(){
+		openPopupWindowFlow(flowForm);
+		return false;
+    });
+	$("#close").click(function(){
+		closeWindow();
+		return false;
+    });
+	$("#processCommentDisplay").click(function(){
+		displayControl($("#processComment"), $("#processCommentDisplay"))
+		return false;
+    });
+	<imart type="condition" validity=oDisplayInfo.commentOpenedFlag>
+	displayControlForBack($("#processComment"), $("#processCommentDisplay"))
+	</imart>
+	$("#attachFileDisplay").click(function(){
+		displayControl($("#attachFIleContainer"), $("#attachFileDisplay"))
+		return false;
+    });
+	<imart type="condition" validity=oDisplayInfo.attachFileOpenedFlag>
+	displayControlForBack($("#attachFIleContainer"), $("#attachFileDisplay"))
+	</imart>
+	$("#negoDisplay").click(function(){
+		displayControl($("#negoContainer"), $("#negoDisplay"))
+		return false;
+    });
+	<imart type="condition" validity=oNegoMailInfo.negoMailOpenedFlag>
+	displayControlForBack($("#negoContainer"), $("#negoDisplay"))
+	</imart>
+	$("#displayCcNego").click(function(){
+		displayControl($("#cc_table"), $("#displayCcNego"))
+		return false;
+    });
+	<imart type="condition" validity=oNegoMailInfo.negoMailCcOpenedFlag>
+	displayControlForBack($("#cc_table"), $("#displayCcNego"))
+	</imart>
+	$("#displayBccNego").click(function(){
+		displayControl($("#bcc_table"), $("#displayBccNego"))
+		return false;
+    });
+	<imart type="condition" validity=oNegoMailInfo.negoMailBccOpenedFlag>
+	displayControlForBack($("#bcc_table"), $("#displayBccNego"))
+	</imart>
+	
+	// add lo_system 案件名に初期値設定
+	var matterName = '<imart type="string" value=oUserParams.item_matterName />'
+	$('#matterName').val(matterName);
+	
+});
+
+function deleteAttachFileConfirmDialog(fileName, newFileFlag) {
+	$.imuiFormUtil.confirm(messageObj.deleteFileConfirm,  '<imart type="string" value=oCaption.deleteDialogTitle/>', function() {deleteAttachFile()});
+	return false;
+}
+</script>
+</imart>
+
+<body style="min-width:0px;">
+	<div class="imui-title">
+		<h1 style="min-width:0px;"><imart type="string" value=oCaption.titleWithNodeName escapeXml="false" escapeJs="false" /></h1>
+	</div>
+	<div id="imui-container" style="min-width:0px; min-height:0px;">
+		<div id="allBlock" style="visibility: hidden;">
+			<div class="imui-toolbar-wrap">
+			    <div class="imui-toolbar-inner" style="min-width:0px;">
+			        <ul class="imui-list-toolbar">
+					      <li style="display:none"　>
+					        <imart type="tag" tagname="a" href="javascript: void(0);" id="flow" class="imui-toolbar-icon" title=oCaption.flow>
+					          <span class="im-ui-icon-common-16-preview mr-5"></span><imart type="string" value=oCaption.flow />
+					        </imart>
+					      </li>
+			        </ul>
+			        <ul class="imui-list-toolbar-utility">
+					      <li>
+					        <imart type="tag" tagname="a" href="javascript: void(0);" id="close" class="imui-toolbar-icon" title=oCaption.close >
+					          <span class="im-ui-icon-common-16-close"></span>
+					        </imart>
+					      </li>
+			        </ul>
+			    </div>
+			</div>
+			
+			<!--lo_system　表示画面 -->			
+			<div id="applyConfirm">
+    			<IMART type="include" page="im_workflow/common/proc/lo/commentForm" oUserParams=oUserParams oProcParams=oProcParams></IMART>
+    		</div>
+			<!--lo_system　表示画面 -->			
+    		
+
+			<!-- 入力フォームは隠しておく-->			
+			<div class="imui-form-container-wide" style="display:none">
+			<!-- <div class="imui-form-container-wide">-->
+			<form name="procForm" onsubmit="return false;" method="POST">
+				<table class="imui-form" >
+					<tbody>
+					    <tr>
+					        <th class="wd-150px">
+					            <label class="imui-required"><imart type="string" value=oCaption.matterName /></label>
+					        </th>
+					        <td>
+					            <imart type="imuiTextbox" value=oNotEscapeDispInfo.matterName id="matterName" name="matterName" style="width:330px" />
+					        </td>
+					    </tr>
+					    <tr>
+					        <th>
+					            <label><imart type="string" value=oCaption.applyUser /></label>
+					        </th>
+					        <td>
+					        	<imart type="string" value=oDisplayInfo.applyAuthUserName />
+					        </td>
+					    </tr>
+					    <tr>
+					        <th>
+					            <label><imart type="string" value=oCaption.applyBaseDate /></label>
+					        </th>
+					        <td>
+					        	<imart type="string" value=oDisplayInfo.applyBaseDate  />
+					        </td>
+					    </tr>
+					    <tr>
+					        <th>
+					            <label class="imui-required"><imart type="string" value=oCaption.applyAuthOrgz /></label>
+					        </th>
+					        <td>
+					            <imart type="imuiSelect"
+					                   name="applyAuthOrgz"
+					                   list=oNotEscapeDispInfo.dispApplyAuthOrgzInfos>
+					            </imart>
+					        </td>
+					    </tr>
+					    <tr>
+					        <th>
+					            <label><imart type="string" value=oCaption.priorityLevel /></label>
+					        </th>
+					        <td>
+					            <imart type="imuiSelect" class="default" name="priorityLevel" list=oDisplayInfo.priorityCombo  />
+					        </td>
+					    </tr>
+					    
+						<imart type="condition" validity=oNotEscapeDispInfo.dispStampFlag>
+					    <tr>
+					        <th>
+					            <label class="imui-required"><imart type="string" value=oCaption.stamp /></label>
+					        </th>
+					        <td>
+							        <label><imart type="string" value=oCaption.tag /></label>
+									<imart type="imuiSelect"
+									         id="stampConfigListSelect"
+									       name="stampConfigListSelect"
+									       list=oNotEscapeDispInfo.dispStampTags
+									     onChange="stamp_list"  />
+									<div class="mt-10">
+							        <iframe name="stamp_select_frame" id="stamp_select_frame"  class="imui-no-resize-iframe" style="width:480px;height:140px; border:0px; display:block;" frameborder="0"></iframe>
+							    </div>
+					        </td>
+					    </tr>
+						</imart>
+
+					    <tr>
+					        <th class="cf">
+					        	<label class="float-L imui-form-th-icon-16">
+					        	    <span id="processCommentDisplay"class="im-ui-icon-common-16-expand"></span>
+					        	    <imart type="string" value=oCaption.comment />
+					        	</label>
+					        </th>
+					        <td>
+								<textarea id="processComment" name="processComment" style="display:none;width:436px;height:65px;"><imart type="string" value=oApplyParams.processComment /></textarea>
+					        </td>
+					    </tr>
+
+						<imart type="condition" validity=oDisplayInfo.dispAttachFileFlag>
+				        	<tr>
+					            <th class="cf">
+					            	<label class="float-L imui-form-th-icon-16">
+					            	    <span id="attachFileDisplay" class="im-ui-icon-common-16-expand"></span>
+					            	    <imart type="string" value=oCaption.attachFile />
+					            	</label>
+								</th>
+					            <td>
+                                    <div id="attachFIleContainer" style="display:none;">
+			                                <imart type="condition" validity=oDisplayInfo.dispAttachFileFlag>
+			                                    <iframe width="450px" height="150px" marginwidth="0px" marginheight="0px" frameborder="0" scrolling="auto"
+			                                            name="imwFileFrame" id="imwFileFrame" class="imui-no-resize-iframe"
+			                                            src='<imart type="string" value=fileUploadURL />'
+			                                            onload="checkFileFrame('imwFileFrame', document.imwFileUploadErrorForm);"></iframe>
+			                                </imart>
+			                                <table id="_list_table_attach_file_record"  class="imui-table-box" >
+			                                    <tbody>
+				                                    <tr>
+				                                        <th>
+				                                            <imart type="string" value=oCaption.fileName />
+				                                        </th>
+				                                        <th style="width:80px;">
+				                                            <imart type="string" value=oCaption.size />
+				                                        </th>
+				                                        <th>
+				                                            <imart type="string" value=oCaption.createUser />
+				                                        </th>
+				                                        <th>
+				                                            <imart type="string" value=oCaption.createDate />
+				                                        </th>
+				                                        <th style="width:40px;">
+				                                            <imart type="string" value=oCaption.cancel />
+				                                        </th>
+				                                    </tr>
+				                                    <imart type="repeat" list=oApplyParams.attachFile item="attachFile">
+			                                        <tr id='<imart type="string" value=attachFile.systemFileName />'>
+			                                            <td>
+			                                            	<imart type="hidden" listParam=attachFile.systemFileName />
+		                                            		<a href="javascript: void(0);"  onclick="var _p1=getPreviousElement(this); downloadTempFile(document.procForm.imwTempDirKey.value, _p1.value); return false;">
+		                                            			<imart type="string" value=attachFile.realFileName />
+		                                            		</a><br>
+			                                            </td>
+			                                            <td style="text-align:right;">
+			                                            	<imart type="string" value=attachFile.fileSize /> KB<br>
+			                                            </td>
+			                                            <td>
+			                                            	<br>
+			                                            </td>
+			                                            <td style="text-align:right;">
+			                                            	<br>
+			                                            </td>
+			                                            <td style="text-align:center;">
+			                                            	<imart type="hidden" listParam=attachFile.systemFileName />
+		                                            		<a href="javascript: void(0);"  onclick="var _p1=getPreviousElement(this); deleteAttachFileName=_p1.value; $.imuiFormUtil.confirm(messageObj.deleteFileConfirm,  '<imart type="string" value=oCaption.deleteDialogTitle/>', function() {deleteAttachFile()}); return false;">
+		                                            			<span class="im-workflow-icon-clear"></span>
+		                                            		</a>
+			                                            </td>
+			                                        </tr>
+				                                    </imart>
+			                                    </tbody>
+			                                </table>
+                                    </div>
+	                            </td>
+                        	</tr>
+                        </imart>
+
+						<imart type="condition" validity=oDisplayInfo.dispFlowSettingFlag>
+						<tr>
+			            	<th>
+			            		<label><imart type="string" value=oCaption.flowSetting /></label>
+			            	</th>
+				            <td>
+				                <table class="imui-table-box">
+				                    <tr>
+				                        <th style="width:40px;"><imart type="string" value=oCaption.edit /></th>
+				                        <th><imart type="string" value=oCaption.nodeName /></th>
+				                        <th><imart type="string" value=oCaption.settingGuide /></th>
+				                        <th style="width:60px;"><imart type="string" value=oCaption.settingStatus /></th>
+				                    </tr>
+				                    <imart type="repeat" list=oDisplayInfo.dispFlowSettingInfo item="targetNode">
+			                        <tr>
+			                            <td class="align-C">
+			                                <a href="javascript: void(0);" onclick="nodeConfig(this); return false;">
+			                                	<span class="im-workflow-icon-node-edit"></span>
+			                                </a>
+			                                	<input type="hidden" value='<imart type="string" value=targetNode.nodeId />'>
+			                                	<input type="hidden" value='<imart type="string" value=targetNode.nodeType />'>
+			                            </td>
+			                            <td>
+			                            	<imart type="string" value=targetNode.nodeName/><br>
+			                            </td>
+			                            <td>
+			                                <imart type="decision" value=targetNode.nodeType case=oDefine.nodeTyp_Dynamic>
+			                                    <imart type="string" value=oCaption.msgNodeDynamic />
+			                                </imart>
+			                                <imart type="decision" value=targetNode.nodeType case=oDefine.nodeTyp_Confirm>
+			                                    <imart type="string" value=oCaption.msgNodeCnfm />
+			                                </imart>
+			                                <imart type="decision" value=targetNode.nodeType case=oDefine.nodeTyp_Horizontal>
+			                                    <imart type="string" value=oCaption.msgNodeHorizontal />
+			                                </imart>
+			                                <imart type="decision" value=targetNode.nodeType case=oDefine.nodeTyp_Vertical>
+			                                    <imart type="string" value=oCaption.msgNodeVertical />
+			                                </imart>
+			                                <imart type="condition" validity=targetNode.isRequired>
+			                                    <font class="attention"><imart type="string" value=oCaption.require /></font>
+			                                </imart>
+			                            </td>
+			                            <td class="align-C">
+			                                <imart type="condition" validity=targetNode.setFlag>
+			                                    <span class="im-ui-icon-common-16-confirmation" title='<imart type="string" value=oCaption.setAlready />'></span>
+			                                </imart>
+			                            </td>
+			                        </tr>
+				                    </imart>
+				                </table>
+				            </td>
+		        		</tr>
+			        	</imart>
+
+						<imart type="condition" validity=oDisplayInfo.dispRouteSelectFlag>
+						<tr>
+				            <th>
+				            	<label class="imui-required"><imart type="string" value=oCaption.routeSelect /></label>
+				            </th>
+				            <td>
+				                <table id="_list_table_route" class="imui-table-box">
+				                    <tr>
+				                        <th>
+				                            <imart type="string" value=oCaption.branchNodeName />
+				                        </th>
+				                        <th>
+				                            <imart type="string" value=oCaption.routeSelect />
+				                        </th>
+				                    </tr>
+				                    <imart type="repeat" list=oNotEscapeDispInfo.dispRouteSelectInfo item="branch">
+			                        <tr>
+			                            <td><imart type="string" value=branch.nodeName escapeXml="true" escapeJs="false" /><br></td>
+			                            <td>
+			                                <imart type="repeat" list=branch.selectableNodes item="node">
+			
+			                                    <imart type="condition" validity=branch.multipleFlag>
+			                                        <imart type="imuiCheckbox" name=branch.uiPartsId label=node.nodeName value=node.nodeId imwRouteSetting="1" checked=node.checkFlag />
+			                                    </imart>
+			
+			                                    <imart type="condition" validity=branch.multipleFlag negative>
+			                                        <imart type="imuiRadio" name=branch.uiPartsId label=node.nodeName value=node.nodeId imwRouteSetting="1" checked=node.checkFlag />
+			                                        
+			                                    </imart>
+                                               <br>
+			                                </imart>
+			                            </td>
+			                        </tr>
+				                    </imart>
+				                </table>
+				            </td>
+			        	</tr>
+						</imart>
+
+						<imart type="condition" validity=oNegoMailInfo.dispNegoMailFlag>
+					    <tr>
+					        <th class="cf">
+					        	<label class="float-L imui-form-th-icon-16">
+					        		<span id="negoDisplay" class="im-ui-icon-common-16-expand"></span>
+					        	    <imart type="string" value=oCaption.negoMail />
+					        	</label>
+					        </th>
+					        <td>
+					        	<div id="negoContainer" style="display:none;">
+											<table  class="imui-table-box" >
+												<tr>
+												<th class="cf wd-20">
+													<span class="float-L"><imart type="string" value=oCaption.to /></span>
+												</th>
+												<td>
+			                                    <table id="to_table" class="imui-table-box">
+			                                        <tr>
+			                                            <td>
+			                                                <imart type="imuiSelect"
+			                                                       id="negoMailTo"
+			                                                       size="5"
+			                                                       width="250"
+			                                                       multiple
+			                                                       list=oNegoMailInfo.negoMailList4Select.to 
+			                                                       escapeXml="false" escapeJs="false" >
+			                                                </imart>
+			                                            </td>
+														<th style="vertical-align:middle;">
+															<div>
+	                                                        	<a href="javascript: void(0);" onClick="showNegoMailTargetTypeList(event, 'negoMailTo'); return false;">
+	                                                        		<span class="im-ui-icon-common-16-search" ></span>&nbsp;
+	                                                        		<imart type="string" value=oCaption.search />
+	                                                        	</a>
+															</div>
+															<div>&nbsp;</div>
+															<div>
+	                                                        	<a href="javascript: void(0);" onClick="deleteNegoMailTarget('negoMailTo'); return false;">
+	                                                        		<span class="im-workflow-icon-clear" ></span>&nbsp;
+	                                                        		<imart type="string" value=oCaption.cancel />
+	                                                        	</a>
+			                                            	</div>
+			                                            </th>
+			                                        </tr>
+			                                    </table>
+			                                    </td>
+			                                    </tr>
+											<imart type="condition" validity=oNegoMailInfo.dispNegoOnlyImboxFlag negative>
+												<tr>
+												<th class="cf wd-20">
+													<span class="float-L imui-form-th-icon-16">
+													    <span id="displayCcNego" class="im-ui-icon-common-16-expand"></span>
+													    <imart type="string" value=oCaption.cc />
+													</span>
+												</th>
+												<td>
+				                                    <table id="cc_table" class="imui-table-box" style="display:none;">
+				                                        <tr>
+				                                            <td>
+				                                                <imart type="imuiSelect"
+				                                                       id="negoMailCc"
+				                                                       size="5"
+			                                                           width="250"
+				                                                       multiple
+				                                                       list=oNegoMailInfo.negoMailList4Select.cc
+				                                                       escapeXml="false" escapeJs="false" />
+				                                            </td>
+															<th style="vertical-align:middle;">
+																<div>
+		                                                        	<a href="javascript: void(0);" onClick="showNegoMailTargetTypeList(event, 'negoMailCc'); return false;">
+		                                                        		<span class="im-ui-icon-common-16-search"></span>&nbsp;
+		                                                        		<imart type="string" value=oCaption.search />
+		                                                        	</a>
+																</div>
+																<div>&nbsp;</div>
+																<div>
+		                                                        	<a href="javascript: void(0);" onClick="deleteNegoMailTarget('negoMailCc'); return false;">
+		                                                        		<span class="im-workflow-icon-clear" ></span>&nbsp;
+		                                                        		<imart type="string" value=oCaption.cancel />
+		                                                        	</a>
+				                                            	</div>
+				                                            </th>
+				                                        </tr>
+				                                    </table>
+				                                </td>
+				                                <tr>
+												<th class="cf wd-20">
+													<span class="float-L imui-form-th-icon-16">
+													    <span id="displayBccNego" class="im-ui-icon-common-16-expand"></span>
+													    <imart type="string" value=oCaption.bcc />
+													</span>
+												</th>
+				                                <td>
+													<table id="bcc_table" class="imui-table-box" style="display:none;">
+				                                        <tr>
+				                                            <td>
+				                                                <imart type="imuiSelect"
+				                                                       id="negoMailBcc"
+				                                                       size="5"
+			                                                           width="250"
+				                                                       multiple
+				                                                       list=oNegoMailInfo.negoMailList4Select.bcc 
+				                                                       escapeXml="false" escapeJs="false" />
+				                                            </td>
+															<th style="vertical-align:middle;">
+																<div>
+		                                                        	<a href="javascript: void(0);" onClick="showNegoMailTargetTypeList(event, 'negoMailBcc'); return false;">
+		                                                        		<span class="im-ui-icon-common-16-search" ></span>&nbsp;
+		                                                        		<imart type="string" value=oCaption.search />
+		                                                        	</a>
+																</div>
+																<div>&nbsp;</div>
+																<div>
+		                                                        	<a href="javascript: void(0);" onClick="deleteNegoMailTarget('negoMailBcc'); return false;">
+		                                                        		<span class="im-workflow-icon-clear" ></span>&nbsp;
+		                                                        		<imart type="string" value=oCaption.cancel />
+		                                                        	</a>
+		                                                        </div>
+				                                            </th>
+				                                        </tr>
+				                                    </table>
+												</td>
+												</tr>
+			                                </imart>
+			                                </table>
+										<table class="imui-table mt-10">
+											<imart type="condition" validity=oNegoMailInfo.dispNegoOnlyImboxFlag negative>
+												<tr>
+													<th class="wd-20"><imart type="string" value=oCaption.subject /></th>
+													<td><input type="text" id ="subject" name="subject" size="50" value='<IMART type="string" value=oApplyParams.negoMail.subject />'></td>
+												</tr>
+											</imart>
+											<tr>
+												<th class="wd-20"><imart type="string" value=oCaption.body /></th>
+												<td><textarea id="text" name="text" style="width:331px;height:130px;"><imart type="string" value=oApplyParams.negoMail.text /></textarea></td>
+											</tr>
+										</table>
+								</div>
+					        </td>
+					    </tr>
+						</imart>
+			        </tbody>
+			    </table>
+				<imart type="hidden"
+				        imwGroupId=oRequest.imwGroupId
+				        imwUserCode=oRequest.imwUserCode
+				        imwPageType=oRequest.imwPageType
+				        imwNodeId=oRequest.imwNodeId
+				        imwAuthUserCode=oRequest.imwAuthUserCode
+				        imwApplyBaseDate=oRequest.imwApplyBaseDate
+				        imwFlowId=oRequest.imwFlowId
+				        imwCallType=oRequest.imwCallType
+				        imwCallOriginalParams=oRequest.imwCallOriginalParams
+				        imwNextScriptPath=oRequest.imwNextScriptPath
+				        imwNextApplicationId=oRequest.imwNextApplicationId
+				        imwNextServiceId=oRequest.imwNextServiceId
+				        imwNextPagePath=oRequest.imwNextPagePath
+				        imwTempDirKey=oApplyParams.tempDirKey />
+			</form>
+			
+		 	<div class="imui-operation-parts">
+				<imart type="imuiButton" value=oNotEscapeDispInfo.applyButtonCaption id="proc" name="proc" class="imui-large-button" escapeXml="true" escapeJs="false" />
+			</div>
+			</div>
+
+			<form name="form4JSON" method="POST">
+			    <imart type="hidden"
+					applyParamObj=oApplyParamsJSON
+					displayInfoObj=oDisplayInfoJSON
+					negoMailInfoObj=oNegoMailInfoJSON
+					defineObj=oDefineJSON
+					messageObj=oMessageJSON
+					validateMessages=oValidationJSON
+					workflowParams=oWorkflowParamsJSON />
+			</form>
+			
+			<form method="POST" name="flowForm" target="IMW_FLOW" action="im_workflow/common/unit/flow/flow">
+				<imart type="hidden"
+					imwFlowId=oRequest.imwFlowId
+						imwApplyBaseDate=oRequest.imwApplyBaseDate />
+			</form>
+			
+			<imart type="condition" validity=oDisplayInfo.dispFlowSettingFlag>
+			    <form id="nodeConfigSingleForm" name="nodeConfigSingleForm" method="post" 
+			          action="im_workflow/common/unit/node_config/node_config_single/encodeImwWorkflowParams/im_workflow/common/proc/apply/apply">
+			        <imart type="hidden" imwNodeId=oRequest.imwNodeId
+			                             imwAuthUserCode=oRequest.imwAuthUserCode
+			                             imwApplyBaseDate=oRequest.imwApplyBaseDate
+			                             imwFlowId=oRequest.imwFlowId
+			                             imwUserDataId=oRequest.imwUserDataId
+			                             imwPageType=oRequest.imwPageType
+			                             imwCallType=oRequest.imwCallType
+			                             imwSysDateTargetExpandFlag=oRequest.imwSysDateTargetExpandFlag />
+			        <INPUT type="hidden" name="imwWorkflowParams" value="">
+			        <INPUT type="hidden" name="imwTargetNodeId" value="">
+			    </form>
+			    <form id="nodeConfigMultiForm" name="nodeConfigMultiForm" method="post"
+			           action="im_workflow/common/unit/node_config/node_config_multi/encodeImwWorkflowParams/im_workflow/common/proc/apply/apply">
+			        <imart type="hidden" imwNodeId=oRequest.imwNodeId
+			                             imwAuthUserCode=oRequest.imwAuthUserCode
+			                             imwApplyBaseDate=oRequest.imwApplyBaseDate
+			                             imwFlowId=oRequest.imwFlowId
+			                             imwUserDataId=oRequest.imwUserDataId
+			                             imwPageType=oRequest.imwPageType
+			                             imwCallType=oRequest.imwCallType
+			                             imwSysDateTargetExpandFlag=oRequest.imwSysDateTargetExpandFlag />
+			        <INPUT type="hidden" name="imwWorkflowParams" value="">
+			        <INPUT type="hidden" name="imwTargetNodeId" value="">
+			    </form>
+			</imart>
+			
+			<imart type="condition" validity=oDisplayInfo.dispAttachFileFlag>
+				<iframe id="fileDownloadIframe" src="<IMART type="string" value=fileDownloadURL></IMART>" style="display: none;"></iframe>
+			</imart>
+			<form name="imwFileUploadErrorForm" action="im_workflow/common/unit/file/file_upload" target="imwFileFrame" method="POST">
+			    <imart type="hidden" tempDirKey=oApplyParams.tempDirKey />
+			    <input type="hidden" name="resultStatus" value="-1">
+			    <input type="hidden" name="messageId" value="IMW.CLI.WRN.3651">
+			</form>
+			
+		    <form name="stamp_select_form" action="im_workflow/user/stamp/stamp_config_list" target="stamp_select_frame" method="POST">
+		        <imart type="hidden" arg_select=oNotEscapeDispInfo.stampTag />
+		        <imart type="hidden" selectedStampId=oNotEscapeDispInfo.stampId />
+		    </form>
+			<imart type="include" page="im_workflow/common/parts/negomail/plugin_negomail_parts" />
+		</div>
+	</div>
+</body>

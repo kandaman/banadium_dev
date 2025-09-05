@@ -1,0 +1,187 @@
+
+
+<script>
+	var onSelectCallback;
+
+	/*
+	 *  検索ダイアログを開く
+	 */
+	function openSelectAreaRadioDialog(args, callback) {
+		// ダイアログを閉じた時に使用する callback をwindowフィールドに控える。
+		onSelectCallback = callback;
+
+		// 画面クリア
+		$("#r_area_select").find('input[name="r_area"]').prop("checked", false);
+		$('#r_area_select input[name="r_area_other"]').val("");
+
+		var cd = args.cd;
+		var nm = args.nm;
+
+		if ("" != cd) {
+
+			// その他の場合：
+			if ("99" == cd) {
+				$('#r_area_select input[name="r_area_other"]').val(nm);
+			}
+
+			var $chk = $('#r_area_select input[name="r_area"][value="' + cd
+					+ '"]');
+			$chk.prop("checked", true);
+		}
+
+		// 画面を開く
+		$('#selectAreaRadio_dialog').imuiDialog('open');
+	}
+
+	//選択ボタン押下時の処理
+	function setSelectAreaRadioDate() {
+
+		// チェックのついている値を取得
+		var $checked = $("#r_area_select input[name=r_area]:checked");
+
+		var cd = $checked.val();
+		if (typeof cd === 'undefined') {
+			alert("対象データが選択されてません");
+			return false;
+		}
+
+		// チェックされたラジオボタンに対するラベルを取得する。
+		var id = $checked.attr("id");
+		var $label = $("#r_area_select label[for='" + id + "']");
+
+		// その他の場合はテキストボックスから、それ以外はラベルから名称を取得する。
+		var nm = "99" == cd ? $('#r_area_select input[name="r_area_other"]')
+				.val() : $label.text();
+		
+		// その他の場合はテキストボックスが空欄でないこと
+		if (cd == "99" && nm == "") {
+			alert("「その他」の場合は地域名・国名を入力してください。");
+			return false;
+		}
+
+		// ダイアログのオープン時に控えておいたコールバック関数にコードと名称を渡す。
+		var callback = onSelectCallback;
+		if (callback) {
+			callback(cd, nm);
+		}
+
+		// 閉じる
+		$('#selectAreaRadio_dialog').imuiDialog('close');
+	}
+
+	$(function() {
+		// TODO 強引にレイアウト修正　もっと良い方法あったら変える
+		$('#r_area_select .childarea').each(function(i, elem) {
+			var thisObj = elem;
+			$(elem).find('.col-md-3').each(function(n, cild) {
+				if ((n % 3) == 0) {
+					$(cild).addClass('col-md-offset-2');
+					var newObj = $('<div class="row"></div>');
+					$(thisObj).after(newObj);
+					thisObj = newObj;
+				}
+				$(cild).appendTo(thisObj)
+			});
+			$(elem).remove();
+		});
+	});
+</script>
+
+<!-- ***************************************** ↓ 子画面　↓ ***************************************** -->
+<!-- 地域選択子画面 -->
+<imart type="imuiDialog" autoOpen="false" id="selectAreaRadio_dialog"
+	name="areaRadioForm" position="center" title="地域選択" resizable="true"
+	width="1280" height="600"> <!-- 地域選択子画面 -->
+<div class="modal-dialog modal-lg">
+	<!-- <div class="modal-header" style="background-color: #fff">
+				<h4 class="modal-title">地域選択</h4>
+			</div> -->
+
+	<div class="modal-body" id="r_area_select"
+		style="background-color: #fff">
+
+		<imart type="repeat" item="area" list=$arealist>
+
+		<div class="row">
+			<div class="col-md-2">
+				<imart type="imuiRadio" name="r_area" value=area.cd label=area.nm />
+			</div>
+		</div>
+		<div class="row childarea">
+			<imart type="repeat" item="reg" list=area.regions index=idx>
+			<div class="col-md-3">
+				<imart type="imuiRadio" name="r_area" value=reg.cd label=reg.nm />
+			</div>
+			</imart>
+		</div>
+		<br>
+		</imart>
+
+		<imart type="condition" validity=$other.is>
+		<div class="row">
+			<div class="col-md-2">
+				<imart type="imuiRadio" name="r_area" value=$other.cd
+					label=$other.nm />
+			</div>
+			<div class="col-md-2">
+				<input type="text" class="form-control" name="r_area_other" maxlength="40">
+			</div>
+		</div>
+		</imart>
+	</div>
+
+	<div class="button">
+		<button type="button" class="btn btn-hensyu"
+			onclick="setSelectAreaRadioDate()" style="width: 20%">選択</button>
+		<button type="button" class="btn btn-hensyu btn_dialog_close" style="width: 20%">閉じる</button>
+	</div>
+
+	<!-- <div class="modal-footer">
+				<div class="button">
+					<button type="button" class="btn btn-hensyu center-block" onclick="setSelectAreaRadioDate()" style="width: 20%">選択</button>
+				</div>
+			</div> -->
+</div>
+<!-- @end 地域選択子画面 --> </imart>
+
+<!--
+	<h4 class="title">地域選択</h4>
+
+	<div class="modal-body" id="r_area_select" >
+
+		<imart type="repeat" item="area" list=$arealist >
+
+			<div class="row" style="width:100%" >
+
+				<imart type="imuiRadio" name="r_area" value=area.cd label=area.nm />
+
+				<div>
+					<imart type ="repeat" item="reg" list=area.regions >
+						<imart type="imuiRadio" name="r_area" value=reg.cd label=reg.nm />
+					</imart>
+				</div>
+
+			</div>
+			<br>
+
+		</imart>
+
+
+		<imart type ="condition" validity=$is999 >
+			<div class="row">
+				<imart type="imuiRadio" name="r_area" value=$other.cd label=$other.nm />
+				<input type="text" class="form-control r_area_other" >
+			</div>
+		</imart>
+
+
+	</div>
+
+	<div class="modal-footer">
+		<div class="button">
+			<button type="button" class="btn btn-hensyu center-block" onclick="setSelectAreaRadioDate()" style="width: 20%">選択</button>
+		</div>
+	</div>
+</imart>
+-->
+<!-- ***************************************** ↑ 子画面　↑ ***************************************** -->

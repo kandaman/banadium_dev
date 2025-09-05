@@ -1,0 +1,11 @@
+create table lo_t_kikaku_sozai_himozuke(
+id  varchar(20)
+,kikaku_id  varchar(20)
+,sozaihi_id  varchar(20)
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+,primary key (id)
+);

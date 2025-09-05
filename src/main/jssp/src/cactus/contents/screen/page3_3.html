@@ -1,0 +1,213 @@
+
+<!--DL申請 ---------------------------------------------------------------------------------------------------------------------->
+
+<script>
+	// 行追加
+	function downloadtbl_addRow(copyId,insertId){
+		var cnt =$('#' + insertId).find('.id_rowno').length;
+		if (cnt > ADD_ROW_MAX){
+			// 処理中断
+			alert(ADD_ROW_MAX + "件を越えて追加できません");
+			return false;
+		}
+		// 行の追加
+		elementCopy(copyId,insertId)
+	}
+	// 行コピー
+	function downloadtbl_copyRow(obj){
+		var insertId = $(obj).closest("table").attr('id');
+		var cnt =$('#' + insertId).find('.id_rowno').length;
+		if (cnt > ADD_ROW_MAX){
+			// 処理中断
+			alert(ADD_ROW_MAX + "件を越えて追加できません");
+			return false;
+		}
+		// 行の追加
+		copyLine(obj)
+	}
+
+	//行番号振り直し
+	function downloadtdl_rowno() {
+		$('#downloadtdl').find('.id_rowno').each(function(i, elem) {
+			$(elem).text(i);
+		});
+	}
+
+	// 初期処理
+	function downloadContentInit() {
+		var sheetType = '<imart type="string" value=$form.item_sheetType />';
+		// ダウンロード申請以外なら一行追加して終了
+		if (sheetType != "3") {
+			$('#btn_dlTableAdd').click();
+			return;
+		}
+
+		// 申請情報を取得
+		var dataObj = [];
+		var contentData = '<imart type="string" value=$form.item_contentDataJSON escapeJs="true" />';
+		if (contentData != "")
+			dataObj = ImJson.parseJSON(contentData); // jsonで配列に戻す
+		// 一行もない場合空行作成して終了
+		if (dataObj.length == 0) {
+			$('#btn_dlTableAdd').click();
+			return;
+		}
+		// 申請書データを設定
+		setContentDataToLine(dataObj, 'downloadtbody', 'downloadtdl');
+
+		// カンマ区切り
+		$('.id_price').blur();
+		// スラッシュ区切り
+		$('.imCalendar').blur();
+
+	}
+
+	$(function() {
+		// イベント設定
+		// 地域変更時
+		$('#downloadContent .id_area_cd').on(
+				'change',
+				function(event) {
+					var tbody = $(this).closest('tbody');
+					if ($(this).val() == CD_KUNI_JPN) {
+						// 日本なら通貨を日本に固定
+						$(tbody).find('.id_currency').val(CD_TUKA_JPN).change();
+						//選択項目以外をdisbleにして固定
+						$(tbody).find('.id_currency').find('option').each(
+								function(i, elem) {
+									if (!$(elem).prop('selected'))
+										$(elem).prop('disabled', true);
+								})
+					} else {
+						//通貨の選択項目disbleを解除
+						$(tbody).find('.id_currency').find('option').prop(
+								'disabled', false);
+					}
+
+					if ($(this).val() == CD_KUNI_JPN || $(this).val() == "") {
+						// 背景色をデフォルトに
+						$(tbody).css('background-color', '');
+					}else{
+						// 日本以外なら背景色を変える
+						$(tbody).css('background-color', '#fffef0');
+					}
+
+				})
+
+		// 通貨変更時
+		$('#downloadContent .id_currency').on('change', function(event) {
+			var tbody = $(this).closest('tbody');
+
+			// その他ならテキストボックス表示
+			if ($(this).val() == CD_TUKA_OTHER) {
+				$(tbody).find('.id_otherCurrency').show();
+				$(tbody).find('.id_otherCurrency').addClass('required');
+			} else {
+				$(tbody).find('.id_otherCurrency').hide();
+				$(tbody).find('.id_otherCurrency').removeClass('required');
+			}
+
+			// 日本／海外で活性非活性を変更
+			// 日本の場合
+			/*if ($(this).val()=="1"){
+				$(tbody).find('.id_price_select').hide();
+				//$('.id_dlTable .id_tax-y').eq(index).parent().show();
+				//$('.id_dlTable .id_tax-n').eq(index).parent().show();
+			}else{
+				$(tbody).find('.id_price_select').show();
+				//$('.id_dlTable .id_tax-y').eq(index).parent().hide();
+				//$('.id_dlTable .id_tax-n').eq(index).parent().hide();
+			}*/
+		})
+
+		// 初期表示時
+		downloadContentInit()
+
+	});
+</script>
+
+
+<!--DL申請 ---------------------------------------------------------------------------------------------------------------------->
+<div id="downloadContent" class="form-group">
+	<!-- プラットフォーム情報確認欄 -->
+	<div>
+		<label>■ダウンロードコンテンツ詳細 <img
+			src="cactus_csjs/images/bikkuri.png"></label>
+	</div>
+	<small>※種類ごとに行を変えてご記入ください。
+		</p>
+	</small>
+	<button type="button" id="btn_dlTableAdd"
+		class="btn btn-hensyu pull-right"
+		onclick="downloadtbl_addRow('downloadtbody','downloadtdl');downloadtdl_rowno()"
+		style="width: auto; height: auto; font-size: 18px; margin-top: -45px;">行追加</button>
+	<div class="panel">
+		<table class="table table-condensed sticky_table"
+			id="downloadtdl">
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>ダウンロードコンテンツ名</th>
+					<th>地域</th>
+					<th width="20%">通貨</th>
+					<th width="15%">配信予定日<small><p>※8ケタの半角数字</p></small></th>
+					<th width="15%">価格(税抜)<small><p>※半角数字のみ</p></small></th>
+					<th colspan="2" width="10%"></th>
+				</tr>
+			</thead>
+			<!-- テンプレート行 -->
+			<tbody id="downloadtbody" hidden="true">
+				<tr>
+					<td rowspan="2" class="id_rowno"></td>
+					<td><input type="text" class="form-control id_content_name count-down-length"
+						name="item_content_name" maxlength="50"
+						oninput="CountDownLengthRow(this,'.id_length_1', 50 );" />
+						<p class="id_length_1">残50文字</p></td>
+					<td>
+						<div class="id_area"></div> <input type="hidden"
+						class="id_area_name" name="item_area_name" value=""> <input
+						type="hidden" class="id_area_cd" name="item_area_cd" value="" />
+						<button type="button" class="btn btn-hensyu btn_setarea"
+							onclick="openAreaRadio(this);" style="width: auto;">地域選択</button>
+					</td>
+					<td><imart class="form-control id_currency" type="imuiSelect"
+							name="item_currency" list=$form.list_m_tuka width="auto" /> <input
+						type="text" class="form-control id_otherCurrency" maxlength="40"
+						name="item_otherCurrency" style="display: none" /></td>
+					<td>
+						<div class="form-inline">
+							<input type="text" value=""
+								class="form-control imCalendar id_sale-date"
+								name="item_sale_date" style="width: 85%" maxlength="10"/>
+						</div>
+					</td>
+					<td><input type="text" class="form-control text-number id_price"
+						name="item_price" /></td>
+					<td rowspan="2">
+						<div style="margin-bottom: 3px">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="downloadtbl_copyRow(this);downloadtdl_rowno()">コピー</button>
+						</div>
+						<div onclick="delTbody(this);downloadtdl_rowno()">
+							<button type="button" class="btn btn-hensyu center-block">削除</button>
+						</div>
+					</td>
+					<td align="center" rowspan="2"><img
+						src="cactus_csjs/images/chevron.png" alt="上へ移動"
+						onclick="upLine(this);downloadtdl_rowno()" /><br> <img
+						src="cactus_csjs/images/chevron-expand.png" alt="下へ移動"
+						onclick="downLine(this);downloadtdl_rowno()" /></td>
+				</tr>
+				<tr>
+					<td colspan="5">備考 <small>※対応するプラットフォームも記入してください。</small><input type="text" class="form-control id_note count-down-length"
+						name="item_note" maxlength="50"
+						oninput="CountDownLengthRow(this,'.id_length_2', 50 );">
+						<p class="id_length_2">残50文字</p></td>
+				</tr>
+				<!-- @end テンプレート行 -->
+			</tbody>
+		</table>
+	</div>
+	<!-- @end DLC詳細行 -->
+</div>
+<!--end DL申請 ----------------------------------------------------------------------->

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routing-jssp-config 
+  xmlns="http://www.intra-mart.jp/router/routing-jssp-config" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.intra-mart.jp/router/routing-jssp-config routing-jssp-config.xsd ">
+
+    <!-- add suzuki カスタム処理画面のパス-->
+    <authz-default mapper="welcome-all" />
+    
+    <file-mapping path="/im_workflow/common/proc/custom/apply/apply" page="im_workflow/common/proc/custom/apply/apply">
+        <authz uri="service://im_workflow/user/apply" action="execute" />
+    </file-mapping>
+    <file-mapping path="/im_workflow/common/proc/custom/approve/approve" page="im_workflow/common/proc/custom/approve/approve">
+        <authz uri="service://im_workflow/user/process" action="execute" />
+    </file-mapping>
+	<file-mapping path="/im_workflow/common/proc/custom/temporary_save/temporary_save" page="im_workflow/common/proc/custom/temporary_save/temporary_save">
+        <authz uri="service://im_workflow/user/apply" action="execute" />
+    </file-mapping>
+    <file-mapping path="/im_workflow/common/proc/custom/reapply/reapply" page="im_workflow/common/proc/custom/reapply/reapply">
+        <authz uri="service://im_workflow/user/process" action="execute" />
+    </file-mapping>
+    
+    <file-mapping path="/im_workflow/common/proc/custom/confirm/confirm" page="im_workflow/common/proc/custom/confirm/confirm" />
+
+	<!-- cuntus用の詳細画面遷移 -->
+    <file-mapping path="/im_workflow/common/switch/switch_content_detail_cactus" page="im_workflow/common/switch/switch_content_detail_cactus">
+        <authz uri="service://workflow/common" action="execute" />
+    </file-mapping>
+    
+    <!-- トップ画面 -->
+    <file-mapping path="/cactus/contents/screen/top" page="cactus/contents/screen/top" />
+    <!-- <file-mapping path="/Cactus/top" page="my_workflow/newItemContents/screen/top" /> -->
+    <!-- <file-mapping path="/Cactus/apply" page="my_workflow/newItemContents/screen/apply" /> -->
+    <!-- 一覧画面 -->
+    <file-mapping path="/cactus/contents/screen/myProcess_list" page="cactus/contents/screen/myProcess_list" />
+    <file-mapping path="/cactus/contents/screen/allProcess_list" page="cactus/contents/screen/allProcess_list" />
+    
+</routing-jssp-config>

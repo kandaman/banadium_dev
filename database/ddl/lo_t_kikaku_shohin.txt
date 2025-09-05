@@ -1,0 +1,56 @@
+create table lo_t_kikaku_shohin(
+kikaku_id  varchar(20)
+,kikaku_edaban  smallint
+,shohin_category  smallint
+,shohin_nm  varchar(255)
+,zeinuki_jodai  numeric(30,6)
+,mokuhyo_hambai_su  integer
+,shokai_seisanyotei_su  integer
+,sku  integer
+,chiiki  char(1)
+,hanbaiyoteikosu_nihon  integer
+,hanbaiyoteikosu_chugoku  integer
+,hanbaiyoteikosu_asia  integer
+,hanbaiyoteikosu_chunanbei  integer
+,hanbaiyoteikosu_europe  integer
+,hanbaikoku_shosai  varchar(4000)
+,localize_shohin_umu char(1)
+,localize_shohin_nm varchar(4000)
+,hanbai_jiki  varchar(20)
+,kokuchi_kaishi_jiki  varchar(20)
+,jyouhou_syosyutu_jiki  varchar(20)
+,uriba_tempo  char(1)
+,uriba_event  char(1)
+,uriba_ecsite  char(1)
+,urikata_ippanryutsu  char(1)
+,urikata_juchuhambai  char(1)
+,urikata_senkohambai  char(1)
+,urikata_tempo_kaijogenteihambai  char(1)
+,hanro  varchar(400)
+,shoshi  char(1)
+,trading  char(1)
+,kakiorosi_kibou_umu  char(1)
+,asobistore  char(1)
+,sendenhansoku_keikaku  varchar(4000)
+,sozai_mitsumori  numeric(30,6)
+,ryouritu  numeric(30,6)
+,sample  integer
+,riyu_joken  varchar(4000)
+,taisho_nenreisou  smallint
+,taisho_seibetsu_otoko  integer
+,taisho_seibetsu_onna  integer
+,shohin_setsumei  varchar(4000)
+,sozai  varchar(1000)
+,size  varchar(1000)
+,kansei_image  varchar(255)
+,comment  text
+,bikou  text
+,ok_ng  varchar(20)
+,royalty_kingaku integer
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+  , primary key (kikaku_id,kikaku_edaban)
+);

@@ -1,0 +1,150 @@
+
+<!-- 販促物----------------------------------------------------------------------------------------------------------------->
+<script>
+	//行番号振り直し
+	function promotbl_rowno() {
+		$('#promotbl').find('.id_rowno').each(function(i, elem) {
+			$(elem).text(i);
+		});
+	}
+
+	// 地域選択ボタン押下
+	/*function openAreaCheck(obj) {
+		// ボタン押下行の.id_areaの場所を取得
+		//var targetid = $(obj).closest('tr').find('.id_area');
+		var targetid = $(obj).closest('tr').find('.item_area_name');
+
+		if (typeof targetid !== 'undefined') {
+			// ダイアログオープン
+			openSelectAreaCheckDialog(targetid);
+		}
+	}*/
+
+	// 初期処理
+	function promoContentInit(formClear) {
+		var sheetType = '<imart type="string" value=$form.item_sheetType escapeJs="true" />';
+		// 販促物以外なら一行追加して終了
+		if (sheetType != TYPE_APPLY_HANSOKU) {
+			//$('#btn_promoTableAdd').click();
+			elementCopy('promotbody', 'promotbl');
+			promotbl_rowno();
+			return;
+		}
+
+		// 申請情報を取得
+		var dataObj = [];
+		var contentData = formClear ? '':'<imart type="string" value=$form.item_contentDataJSON escapeJs="true" />';
+		if (contentData != "")
+			dataObj = ImJson.parseJSON(contentData); // jsonで配列に戻す
+		// 一行もない場合空行作成して終了
+		if (dataObj.length == 0) {
+			//$('#btn_promoTableAdd').click();
+			elementCopy('promotbody', 'promotbl');
+			promotbl_rowno();
+			return;
+		}
+		// 申請書データを設定
+		setContentDataToLine(dataObj, 'promotbody', 'promotbl');
+		
+		// カンマ区切り
+		$('.id_suryo').blur();
+	}
+
+	$(function() {
+		// イベント設定
+		// 地域変更時
+		$('#promoContent .id_area_cd').on('change', function(event) {
+			//var index = $('.id_propmoTable .item_area_name').index(this);
+			// hiddenに入れた値をdivにも表示
+			var tbody = $(this).closest('tbody');
+			//$(tbody).find('.id_area').text($(tbody).find('.id_area_name').val());
+			if ($(this).val() == CD_KUNI_JPN || $(this).val() == "") {
+				// 背景色をデフォルトに
+				$(tbody).css('background-color', '');
+			} else {
+				// 日本以外なら背景色を変える
+				$(tbody).css('background-color', '#fffef0');
+			}
+		})
+
+		// 初期表示時
+		promoContentInit();
+
+	});
+</script>
+
+
+<div id="promoContent" class="form-group">
+	<!-- テーブル行追加ボタン -->
+	<div>
+		<label>■企画/販促物詳細 <img src="cactus_csjs/images/bikkuri.png"></label>
+	</div>
+	<small><p>※販促物の場合は数量を記入してください。</p>
+		<p>※無形の場合は0を記入してください。</p> </small>
+	<!-- <button type="button" id="btn_promoTableAdd"
+		class="btn btn-hensyu pull-right"
+		onclick="elementCopy('promotbody','promotbl');promotbl_rowno()"style="width: 80px;height: 40px;font-size: 16px;">行追加</button>
+	<br> <br><br>
+		 -->
+
+	<!-- テーブル追加 -->
+	<div class="panel">
+		<table class="table table-condensed" id="promotbl">
+			<thead>
+				<tr class="common">
+					<!-- <th>No</th> -->
+					<th>地域</th>
+					<th>実施期間<small><p>記入例)2018/02/01～02/28</p></small></th>
+					<th>イベント名または実施場所<small><p>記入例)東京ゲームショー2018＠幕張メッセ</p></small></th>
+					<th>数量<small><p>※半角数字のみ</p></small></th>
+				</tr>
+			</thead>
+			<tbody id="promotbody" hidden="true">
+				<!-- @テンプレート行 -->
+				<tr>
+					<!-- <td class="id_rowno"></td> -->
+					<td>
+						<div class="id_area" style="width: 100px; word-wrap: break-word;"></div>
+						<input type="hidden" class="id_area_name" name="item_area_name"
+						value=""> <input type="hidden" class="id_area_cd"
+						name="item_area_cd" value="">
+						<button type="button" class="btn btn-hensyu btn_setarea"
+							onclick="openAreaRadio(this);" style="width: auto;">地域選択</button>
+					</td>
+					<td><input type="text" class="form-control id_period count-down-length"
+						id="id_period" name="item_period"  maxlength="50"
+						oninput="CountDownLengthRow(this,'.id_length_2', 50);" />
+						<p class="id_length_2">残50文字</p></td>
+					<td>
+						<!-- <input type="text" class="form-control id_eventname count-down-length" name="item_event_name" oninput="CountDownLengthRow(this,'.id_length_3', 50);"/> -->
+						<input type="text" class="form-control id_eventname count-down-length"
+						name="item_event_name" maxlength="50"
+						oninput="CountDownLengthRow(this,'.id_length_3', 50);" />
+						<p class="id_length_3">残50文字</p>
+					</td>
+					<td><input type="text"
+						class="form-control text-number id_suryo" name="item_suryo">
+					</td>
+					<!-- <td>
+						<div style="margin-bottom: 3px">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="copyLine(this);promotbl_rowno()">コピー</button>
+						</div>
+						<div onclick="delTbody(this);promotbl_rowno()">
+							<button type="button" class="btn btn-hensyu center-block">削除</button>
+						</div>
+					</td>
+					<td align="center"><img
+						src="cactus_csjs/images/chevron.png" alt="上へ移動"
+						onclick="upLine(this);promotbl_rowno()" /><br> <img
+						src="cactus_csjs/images/chevron-expand.png" alt="下へ移動"
+						onclick="downLine(this);promotbl_rowno()" /></td> -->
+				</tr>
+				<!-- @end テンプレート行 -->
+			</tbody>
+		</table>
+	</div>
+	<!-- @end テーブル追加 -->
+
+</div>
+<!-- end 販促物----------------------------------------------------------------------------------------------------------------->

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+
+	<title>素材費申請　詳細画面</title>
+	<style type="text/css">
+		.contractfileSelect {
+			border: 2px dotted #B2B2B2;
+			border-radius: 10px;
+			padding: 2px;
+			background: #EEEEEE;
+			height: 40px;
+			vertical-align: middle;
+		}
+		
+		.contractfileSelect p {
+			margin-top: 2px;
+			text-align: left;
+			color: #7d7d7d;
+		}
+		
+		.contractFileUploadLabel {
+			cursor: pointer;
+			border-radius: 7px;
+			box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+			padding: 1px 40px 1px 40px !important;
+			border: 1px solid #DDDDDD;
+			font-size: 16px;
+			box-sizing: border-box;
+			background: #FFFFFF;
+			color: #000000;
+			margin-left: 10px;
+		}
+		
+		.afterFileSelect {
+			display: block;
+			margin-left: 10px;
+		}
+		
+		.afterFileSelect dl {
+			margin-bottom : 0px;
+		}
+		
+		.afterFileSelect dl dt {
+			display: inline-block;
+			min-height: 30px;
+			max-width: 640px;
+			vertical-align: middle;
+			word-wrap:break-word;
+		}
+		
+		.afterFileSelect dl dd {
+			display: inline-block;
+			padding-top: 2px;
+		}
+		
+	</style>
+	
+	<script>
+	$(function() {
+		// ファイル選択ボタンをクリック
+		$("#file_upload_btn").on("click", function() {
+			var $form = $("#excelUpfileForm");
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+		});
+	});
+	
+	// ファイルアップロード前処理用
+	function onP4upd_preupload(e, data) {
+		var file = data.files[0];
+		var file_size_mb;
+		var max_file_size_mb;
+		return true;
+	}
+	// ファイルアップロード成功時
+	function onP4upd_success(e, data) {
+		var file = data.files[0];
+		var res = data.result[0];
+
+		$("#upfilename").text(file.name);
+//		$uploadFileInfo.itemUpFileName = file.name; // 元のファイル名セット
+//		$uploadFileInfo.itemUpFileResname = res.physicalName; // ストレージに格納されたファイル名セット
+
+		$("#after_file_select").show();
+		$("#before_file_select").hide();
+//		hideIndicator();
+	}
+
+	// アップロード失敗
+	function onP4upd_error(e, data) {
+//		showMessageModalWithAdjustHeight(MESSAGE_ID_UPLOAD_ERROR); // アップロードでエラーが発生しました。
+//		hideIndicator();
+	}
+
+	// アップロード削除
+	function upFileDel(){
+//		showMessageModalWithAdjustHeight(MESSAGE_ID_DELETE_FILE_CONFIRM);
+//		$("#modalMsg").contents().find("#btn-ok2").off();
+//		$("#modalMsg").contents().find("#btn-ok2").click(function() {
+//			closeModal();
+//			clearFileInfo();
+//		});
+	}
+
+	// ファイル関連の情報を初期化する
+	function clearFileInfo() {
+		$("#contractRegEditBtnDiv").hide();
+		$("#after_file_select").hide();
+		$("#before_file_select").show();
+		$("#upfilename").text("");
+		$uploadFileInfo.itemUpFileName = null;
+		$uploadFileInfo.itemUpFileResname = null;
+
+		// エラー表示エリアのクリア
+		$("#regEdit_err_area").hide();
+		$("#regEdit_err_area").find('tr:not("#tempCopyTr")').remove();
+	}
+
+	</script>
+</imart>
+<body>
+	<IMART type="include" page="lo/contents/screen/common/sidemenu"></IMART>
+	<div id="header">
+		<article>
+		<section class="show">
+			<h1>素材費申請　詳細画面</h1>
+		</section>
+		</article>
+	</div>
+	<div id="main">
+	<article>
+		<section class="show">
+			<div class="container">
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>ライセンシー情報</h2>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">ライセンシー名</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="株式会社バンダイナムコ" readonly="true"></imart>
+								</div>
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">部署名</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="営業2課" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">担当者名</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="鈴木　一郎" readonly="true"></imart>
+								</div>
+								<div class="col-6"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>基本情報</h2>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">素材申請番号</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="SO0000001" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">素材申請対象企画</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="PR00001" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">企画名</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="デレステ　ギフトフォーアンサー　フィギュア化" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">タイトル</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="アイドルマスター　シンデレラガールズ　ライトステージ" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">キャラクタ</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="森久保乃々" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">描下ろし希望有無</div>
+								<div class="col-4">
+									あり
+								</div>
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">BNE担当者</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="宇野　真基" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>素材情報</h2>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">素材依頼</div>
+								<div class="col-10">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="SSR [ギフト・フォー・アンサー]　森久保乃々" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">使用素材内容</div>
+								<div class="col-10">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="ステッカー用" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">依頼回数</div>
+								<div class="col-4 inputRadio">
+									初回
+								</div>
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">支払期限</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="2020/09/30" readonly="true"></imart>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">使用点数</div>
+								<div class="col-4">
+									<div class="input-group">
+										<imart type="imuiTextbox" class="form-control imui-text-readonly" value="2000" readonly="true"></imart>
+										<div class="input-group-append">
+											<span class="input-group-text" id="fca5">個</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">素材見積もり</div>
+								<div class="col-4">
+									<div class="input-group">
+										<imart type="imuiTextbox" class="form-control imui-text-readonly" value="2000" readonly="true"></imart>
+										<div class="input-group-append">
+											<span class="input-group-text" id="fca6">円</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">進捗状況</div>
+								<div class="col-4">
+									<imart type="imuiTextbox" class="form-control imui-text-readonly" value="申請" readonly="true"></imart>
+								</div>
+								<div class="col-6"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>コメント</h2>
+						<div class="col-12 mt-2 mb-2">
+							<table>
+								<tr style="border: 1px solid gray;">
+									<td class="bg_ltorange" style="border: 1px solid gray;">
+										　　　　鈴木　一郎　　　　
+									</td>
+									<td style="border: 1px solid gray;">
+										　　2020/08/28 13:00:05　　
+									</td>
+									<td style="border: 1px solid gray;">
+										ご確認よろしくお願いします。　　　　　　　　　　　　　　　　　　　　　　　　　<br>
+										新規提出です。
+									</td>
+									<td style="border: 1px solid gray;">
+										　　<span class="fas fa-file-alt fa-1x"></span>　　
+									</td>
+								</tr>
+								<tr style="border: 1px solid gray;">
+									<td style="background-color: #99cc00;">
+										　　　　宇野　真基　　　　
+									</td>
+									<td style="border: 1px solid gray;">
+										　　2020/08/30 09:45:05　　
+									</td>
+									<td style="border: 1px solid gray;">
+										見積もり金額の修正をお願いします。
+									</td>
+									<td style="border: 1px solid gray;">
+									　　－　　
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+			</div>
+		</section>
+		<div class="row">
+			<div class="col-1"></div>
+			<div class="col-10"><hr></div>
+			<div class="col-1"></div>
+		</div>
+		<section class="show">
+			<div class="row">
+				<div class="flex_btn center-block">
+					<button type="button" class="brdr_orange txt_orange"><i class="fas fa-caret-left fa-2x"></i><span>戻る</span></button>
+					<button type="button" class="bg_orange txt_dark"><i class="fas fa-check-circle fa-2x"></i><span>登録</span></button>
+					<button type="button" class="bg_orange txt_dark" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-check-circle fa-2x"></i><span>修正依頼</span></button>
+					<button type="button" class="bg_orange txt_dark"><i class="fas fa-check-circle fa-2x"></i><span>受理</span></button>
+				</div>
+			</div>
+		</section>
+	</article>
+	</div>
+
+	<div class="modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>コメント入力</h2>
+						<div class="col-12 mt-2 mb-2">
+							<imart type="imuiTextArea" class="form-control" value="修正しました。ご確認ください。"></imart>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>添付資料</h2>
+						<div class="col-12 mt-2 mb-2">
+							<div class="contractfileSelect imui-fileupload-area">
+								<p>
+									ファイルをドラッグ&ドロップしてください または
+									<label for="file_upload" class="contractFileUploadLabel">ファイルを選択</label>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10"><hr></div>
+					<div class="col-1"></div>
+				</div>
+				<section class="show">
+					<div class="row">
+						<div class="flex_btn center-block">
+							<button type="button" class="brdr_orange txt_orange" data-dismiss="modal"><i class="fas fa-caret-left fa-2x"></i><span>戻る</span></button>
+							<button type="button" class="bg_orange txt_dark" data-dismiss="modal"><i class="fas fa-check-circle fa-2x"></i><span>提出</span></button>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

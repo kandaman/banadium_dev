@@ -1,0 +1,240 @@
+
+
+<script>
+
+//取得したデータの格納先id
+var $selectAreaCheckRetarnObj;
+
+/*
+*  検索ダイアログを開く
+*/
+function openSelectAreaCheckDialog(returnObj) {
+	
+	// 取得結果を戻すタグオブジェクトを取得
+	$selectAreaCheckRetarnObj = returnObj;
+	
+	// 画面クリア
+	$("#c_area_select").find('input[name="chk_area"]').prop("checked",false);
+	$('#c_area_select input[name="c_area_other"]').val("");
+	
+	//現在の選択内容をチェックに反映
+	var val = "";
+	if($($selectAreaCheckRetarnObj).prop("tagName")=="INPUT"){
+		val = $($selectAreaCheckRetarnObj).val();
+	}else{
+		val = $($selectAreaCheckRetarnObj).text();
+	}
+	if (val !=""){
+		var arr = val.split("/");
+		$.each(arr, function(i, value) {
+			var elem = $('#c_area_select input[name="chk_area"][value="' +value +  '"]');
+			if (typeof $(elem).val() === 'undefined'){
+				$('#c_area_select input[name="chk_area"][value="その他"]').prop("checked",true);
+				$('#c_area_select input[name="c_area_other"]').val(value);
+			}else{
+				$(elem).prop("checked",true);				
+			}
+	    });
+	}
+	
+	// 画面を開く
+	$('#selectAreaCheck_dialog').imuiDialog('open');
+}
+
+//選択ボタン押下時の処理
+function setSelectAreaCheckDate() {
+
+	// チェックのついている値を取得
+	var str ="";
+	$('#c_area_select input[name="chk_area"]').each(function(i, elem) {
+		if ($(elem).prop("checked")){
+			var val = $(elem).val()
+			if (val =="その他"){
+				// その他ならテキストボックスから取得
+				val = $('#c_area_select input[name="c_area_other"]').val();
+				if (val.trim() == ""){
+					//continue;	
+					return true;
+				}
+			}
+			// 複数ある場合/区切りで表示
+			if (str == ""){
+				str = val;
+			}else{
+				str += "/" + val;
+			}
+		}
+	});
+	
+	if(str === ""){
+		alert("対象データが選択されてません");
+		return false;
+	}
+	
+	//　対象箇所ににセット
+	if($($selectAreaCheckRetarnObj).prop("tagName")=="INPUT"){
+		$($selectAreaCheckRetarnObj).val(str).change();
+	}else{
+		$($selectAreaCheckRetarnObj).text(str);
+	}
+	// 閉じる
+	$('#selectAreaCheck_dialog').imuiDialog('close');
+}
+
+
+$(function() {
+	// 日本にチェックが付いたら日本以外のチェックを外す。日本以外にチェックがついたら日本を外す	
+	$('#c_area_select input[name="chk_area"]').on("click", function(){
+		var val = $(this).val();
+		if (val=="日本（国内）" && $(this).prop('checked')){
+			$('#c_area_select input[name="chk_area"]').prop('checked',false);
+			$('#c_area_select input[value="日本（国内）"]').prop('checked',true);
+		}else{
+			$('#c_area_select input[value="日本（国内）"]').prop('checked',false);
+		}
+	});
+});
+
+</script>
+
+	<!-- ***************************************** ↓ 子画面　↓ ***************************************** -->
+	<!-- ユーザ検索子画面 -->
+<imart type="imuiDialog" autoOpen="false" id="selectAreaCheck_dialog" name="areacheckForm" position="center" title="地域選択" resizable="false" width="1280" height="600">
+
+	<h4 class="title">地域選択</h4>
+
+	<div class="modal-body" id="c_area_select" >
+		<div class="row">
+			<div class="col-md-5">
+				<label><input type="checkbox" name="chk_area" id="0" value="日本（国内）">
+					日本（国内）</label>
+			</div>
+		</div>
+		
+		<br>
+
+		<div class="row">
+			<div class="col-md-1">
+				<label><input type="checkbox" name="chk_area" id="1" value="アジア">
+					アジア</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-offset-1 col-md-2">
+				<label><input type="checkbox" name="chk_area" id="2" value="中国">
+					中国</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="香港">
+					香港</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="4" value="台湾">
+					台湾</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="5" value="韓国">
+					韓国</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="6" value="フィリピン">
+					フィリピン</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-offset-1 col-md-2">
+				<label><input type="checkbox" name="chk_area" id="7" value="シンガポール">
+					シンガポール</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="8" value="インドネシア">
+					インドネシア</label>
+			</div>
+
+		</div>
+
+		<br>
+
+		<div class="row">
+			<div class="col-md-5">
+				<label><input type="checkbox" name="chk_area" id="3" value="北中南米">
+					北中南米</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-offset-1 col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="アメリカ">
+					アメリカ</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="カナダ">
+					カナダ</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="メキシコ">
+					メキシコ</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="ブラジル">
+					ブラジル</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="アルゼンチン">
+					アルゼンチン</label>
+			</div>
+		</div>
+
+		<br>
+
+		<div class="row">
+			<div class="col-md-1">
+				<label><input type="checkbox" name="chk_area" id="3" value="欧州">
+					欧州</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-offset-1 col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="イギリス">
+					イギリス</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="フランス">
+					フランス</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="ドイツ">
+					ドイツ</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="イタリア">
+					イタリア</label>
+			</div>
+			<div class="col-md-2">
+				<label><input type="checkbox" name="chk_area" id="3" value="スペイン">
+					スペイン</label>
+			</div>
+		</div>
+		<br>
+
+		<div class="row">
+			<div class="col-md-1">
+				<label><input type="checkbox" name="chk_area" id="3" value="その他">
+					その他</label>
+			</div>
+			<div class="col-md-2">
+				<input type="text" class="form-control" name="c_area_other" >
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<div class="button">
+			<button type="button" class="btn btn-primary btn-lg" onclick="setSelectAreaCheckDate()">選択</button>
+			<button type="button" class="btn btn-sm" id="chk_area_all_clear" onclick="setSelectAreaCheckClear()" >クリア</button>
+		</div>
+	</div>
+	<!-- ***************************************** ↑ 子画面　↑ ***************************************** -->
+</imart>	

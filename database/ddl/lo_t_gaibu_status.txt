@@ -1,0 +1,14 @@
+CREATE TABLE lo_t_gaibu_status
+ (
+  bunsho_no varchar(20) not null,
+  ringi_status char(1),
+  ringi_no varchar(20),
+  keiyaku_hokan_no varchar(20),
+  keijo_status char(1),
+  sakujo_flg varchar(1024),
+  torokusha varchar(100),
+  toroku_dt varchar(1024),
+  koshinsha varchar(100),
+  koshin_dt varchar(1024)
+ );
+CREATE INDEX i01_lo_t_gaibu_status ON lo_t_gaibu_status (bunsho_no);

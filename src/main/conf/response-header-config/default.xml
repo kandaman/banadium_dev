@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response-header-config
+ xmlns="http://intra-mart.co.jp/system/servlet/filter/xml/response_header/response-header-config"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://intra-mart.co.jp/system/servlet/filter/xml/response_header/response-header-config response-header-config.xsd ">
+   <!-- Avoid IE Content Sniffing XSS Attacks -->
+   <static-response-header name="X-Content-Type-Options" value="nosniff"/>
+   <static-response-header name="X-Frame-Options" value="sameorigin"/>
+   <!-- noindex を使用して検索インデックス登録をブロックする -->
+   <static-response-header name="X-Robots-Tag" value="noindex"/>
+</response-header-config>

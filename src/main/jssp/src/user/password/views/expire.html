@@ -1,0 +1,83 @@
+<imart type="head">
+  <title><imart type="message" id="CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.TITLE" escapeXml="true" escapeJs="false"/></title>
+  <script src="ui/libs/jquery-validation-1.9.0/jquery.validate.js"></script>
+  <script type="text/javascript">
+  jQuery(function($){
+    var validateMessages = <imart type="string" value=$password.validateMessages />;
+    var rules = {
+      newPasswordConfirm: {
+        equalTo:'#new-password'
+      }
+    };
+    var messages = {
+      newPasswordConfirm: {
+        equalTo: validateMessages.newPasswordConfirm
+      }
+    };
+    $('#password-form').imuiDisableOnSubmit();
+    $('#update-password').click(function() {
+        if(!imuiValidate('#password-form', rules, messages)) {
+          return;
+        }
+        var dialogMessages = <imart type="string" value=$password.dialogMessages />;
+        imuiConfirm(
+          dialogMessages.updateConfirmMessage,
+          dialogMessages.updateConfirmTitle,
+          function() {
+            imuiResetForm('#password-form');
+            imuiAjaxSubmit('#password-form', 'POST', 'json', '<imart type="string" value=$password.redirectUrl />', ['im_page_key'], $.noop, $.noop, true, 0);
+          }
+        );
+    });
+  });
+  </script>
+</imart>
+
+<div id="imui-container">
+
+<div class="imui-title">
+  <h1><imart type="message" id="CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.TITLE" escapeXml="true" escapeJs="false"/></h1>
+</div>
+
+<div class="imui-toolbar-wrap">
+  <div class="imui-toolbar-inner">
+  </div>
+</div>
+
+<div class="imui-box-information mt-20">
+  <p>
+    <imart type="string" value=$password.informationMessage escapeXml="true" escapeJs="false"/><br/>
+    <imart type="string" value=$password.informationDetail escapeXml="true" escapeJs="false"/>
+  </p>
+</div>
+
+<div class="imui-form-container-narrow">
+  <div class="imui-chapter-title">
+    <h2><imart type="message" id="CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.SECTION.TITLE" escapeXml="true" escapeJs="false"/></h2>
+  </div>
+  <form id="password-form" name="passwordForm" action="user/password/expire/update">
+    <imart type="imSecureToken" />
+    <table class="imui-form">
+      <tbody>
+        <tr>
+          <th class="wd-10"><label><imart type="message" id="CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.CURRENT.PASSWORD" escapeXml="true" escapeJs="false"/></label></th>
+          <td><imart type="imuiPassword" id="current-password" name="currentPassword" value="" style="width:310px" maxlength="255" autofocus /></td>
+        </tr>
+        <tr>
+          <th><label><imart type="message" id="CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.NEW.PASSWORD" escapeXml="true" escapeJs="false"/></label></th>
+          <td><imart type="imuiPassword" id="new-password" name="newPassword" value="" style="width:310px" maxlength="255" /></td>
+        </tr>
+        <tr>
+          <th><label><imart type="message" id="CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.NEW.PASSWORD.CONFIRM" escapeXml="true" escapeJs="false"/></label></th>
+          <td><imart type="imuiPassword" id="new-password-confirm" name="newPasswordConfirm" value="" style="width:310px" maxlength="255" /></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="imui-operation-parts">
+      <imart type="imuiButton" id="update-password" value="%CAP.Z.IWP.CERTIFICATION.PASSWORD.EXPIRE.UPDATE.BUTTON" class="imui-large-button" />
+    </div>
+    <imart type="hidden" loginUserCd=$password.loginUserCd tenantId=$password.tenantId im_page_key=$password.pageKey />
+  </form>
+</div>
+<div class="imui-operation-parts">7文字以上50文字以内の、英文字と数字が含まれたパスワードを設定下さい</div>
+</div>

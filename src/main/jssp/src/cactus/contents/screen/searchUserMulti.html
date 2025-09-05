@@ -1,0 +1,489 @@
+
+<IMART type="jsspRpc" name="searchUserMultiObject"
+	page="cactus/contents/screen/searchUserMulti"></IMART>
+
+<script>
+	//取得したDBデータ
+	var $searchUserMultiData;
+
+	//取得したデータの格納先id
+	var $searchUserMultiRetarnid;
+	//ページ情報
+	var $searchUserMultiPageInfo = {
+		maxRow : 10 //１ページの最大行数
+		,
+		MaxLinks : 5 //リンク表示の最大数
+		//,nowPage:1 /現在のページ
+		//,totalCount:1 //データ数
+		,
+		totalPage : 1
+	//ページ数（件数/最大行数）
+	};
+
+	//画面終了時(データ選択時)のコールバック関数
+	var $searchUserMultiEndFunction;
+	// 呼び出し元オブジェクト
+	var $thisObj;
+
+	//コールバック関数実行用
+	var searchUserMultiCallback = function(func) {
+		func();
+	};
+
+	// ユーザ検索ダイアログを開く
+	function openSearchUserMultiDialog(thisObj, userCds, returnFunction) {
+		// IEだとデフォルト引数に不具合があるようなのでundefined判定で空文字入れる
+		if (returnFunction === undefined)returnFunction = "";
+
+		// 呼び出し元オブジェクト
+		$thisObj = thisObj;
+
+		// 選択したときの処理を格納
+		$searchUserMultiEndFunction = returnFunction;
+
+		//検索結果一覧をクリア
+		$("#searchUserMultiList").children().remove();
+		$("#userChkAll1").prop("checked", false);
+		$("#userChkAll2").prop("checked", false);
+
+		//ページャクリア
+		$("#searchUserMultiPager").children().remove();
+		$("#searchUserMultiPager2").children().remove();
+		//件数クリア
+		$("#searchUserMultiDataCount").text("");
+
+		//追加一覧をクリア
+		$("#addUserMultiList").children().remove();
+		//追加一覧初期表示
+		addUserMultlist(userCds);
+		// 画面を開く
+		$('#searchUserMulti_dialog').imuiDialog('open');
+	}
+
+	//追加情報を設定
+	function addUserMultlist(userData) {			
+		if (userData.length > 0) {
+			// undefind表示回避
+			if(userData.length == 1 && ImJson.parseJSON(userData[0]).user_name == "") {
+				return;
+			}
+			
+			// data配列を順に処理
+			$.each(userData,function(index, data) {
+					var elem = ImJson.parseJSON(data);
+					var str = "";
+					str += '<td class="check-box"><input type="checkbox" name="res" value="'+ index +'"></td>';
+					str += '<td class="listno"></td>';
+					str += '<td>' + elem.user_name + '<br>'+elem.shain_no + '</td>';
+					str += '<td>' + elem.company_name + '</td>';
+					str += '<td>' + elem.department_inc_name+ '</td>';
+					str += '<td>' + elem.post + '</td>';
+					// 各種フラグ
+					str += '<input type="hidden" class="keyNo" value="'+ elem.user_cd + elem.department_cd + '">';
+					str += '<input type="hidden" class="addflg" value="0">';
+					//str += '<input type="hidden" class="rownum" value="'+ index +'">';
+					str += '<input type="hidden" class="user_data" value="">';
+					// 末尾に追加
+					var obj = $('<tr></tr>').append(str);
+					obj.find('.user_data').val(data); // データをjsonて格納
+					obj.appendTo('#addUserMultiList');
+			});
+			// no振り直し
+			$("#addUserMultiList").children().each(function(i, elem) {
+				$(elem).find('.listno').text(i + 1);
+			});
+		}
+	}
+	
+	$(function() {
+		// ページャークリック
+		$(document).on("click",'#searchUserMultiPager li,#searchUserMultiPager2 li',function(event) {
+			var pageNum = $(this).attr('page');
+			// ページャー移動
+			onPagerMove('searchUserMultiPager', pageNum);
+			onPagerMove('searchUserMultiPager2', pageNum);
+			// 表示データ
+			onPagerlistDraw("searchUserMultiList", pageNum,$searchUserMultiPageInfo.maxRow);
+		});
+
+		// ラジオボタン変更時
+		$('input[name="searchUserMulti_target"]:radio').change(function() {
+			if ($(this).val() == "user") {
+				$('.searchUserMulti_type_user').show();
+				$('.searchUserMulti_type_group').hide();
+			} else {
+				$('.searchUserMulti_type_user').hide();
+				$('.searchUserMulti_type_group').show();
+			}
+		});
+
+		/*
+		 *  検索ボタンクリック処理
+		 */
+		$("#btn_searchUserMulti")
+				.click(
+						function() {
+							// リストの中身をクリア
+							$("#searchUserMultiList").children().remove();
+
+								var where = {
+									"user_name" : $.trim($("#searchUserMulti_name").val()),
+									"post" : $.trim($("#searchUserMulti_post").val()),
+									"company_name" : $.trim($("#searchUserMulti_company").val()),
+									"department_inc_name" : $.trim($("#searchUserMulti_department").val()),
+									"shain_no" : $.trim($("#searchUserMulti_no").val()),
+									"mail": $.trim($("#searchUserMulti_mail").val())
+								};
+								//検索
+							var	ret = searchUserMultiObject.getUserList(where);
+
+							// 検索件数とページャー表示
+							if (ret.countRow > 0) {
+								$searchUserMultiData = ret.data;
+								$searchUserMultiPageInfo.totalPage = Math.ceil(ret.countRow/ $searchUserMultiPageInfo.maxRow);
+								clreatePager('searchUserMultiPager',$searchUserMultiPageInfo.totalPage,$searchUserMultiPageInfo.MaxLinks);
+								clreatePager('searchUserMultiPager2',$searchUserMultiPageInfo.totalPage,$searchUserMultiPageInfo.MaxLinks);
+							} else {
+								clreatePager('searchUserMultiPager', 0,$searchUserMultiPageInfo.MaxLinks);
+								clreatePager('searchUserMultiPager2', 0,$searchUserMultiPageInfo.MaxLinks);
+							}
+
+							if (ret.countRow > 0) {
+								// data配列を順に処理
+								$.each(ret.data,function(index, elem) {
+										var str = '';
+										str += '<td class="check-box"><input type="checkbox" name="res" value="'+ index +'"></td>';
+										str += '<td>'+ elem.user_name + '<br>'+ elem.shain_no + '</td>';
+										str += '<td>'+ elem.company_name+ '</td>';
+										str += '<td>'+ elem.department_inc_name+ '</td>';
+										str += '<td>' + elem.post + '</td>';
+
+										// 各種フラグ
+										str += '<input type="hidden" class="keyNo" value="'+ elem.user_cd + elem.department_cd + '">';
+										str += '<input type="hidden" class="addflg" value="0">';
+										//str += '<input type="hidden" class="rownum" value="'+ index +'">';
+										str += '<input type="hidden" class="user_data" value="">';
+
+										// 末尾に追加
+										var obj = $('<tr></tr>').append(str);
+										if (index >= $searchUserMultiPageInfo.maxRow) {
+											obj.hide(); //最大表示数以上のデータは隠しておく
+										}
+										obj.find('.user_data').val(ImJson.toJSONString(elem)); // データをjsonで変換して格納
+										obj.appendTo('#searchUserMultiList');
+								});
+							}
+
+							// 追加済みチェック
+							chkSearchUserMultiAdd();
+
+							// 件数表示
+							$("#searchUserMultiDataCount").text(
+									"検索結果 ： " + ret.countRow + "件");
+						});
+
+		/*
+		 *  追加済みチェック  移動削除がされた場合の処理
+		 */
+		function chkSearchUserMultiAdd() {
+			// 追加リストのkeyを取得
+			$("#addUserMultiList").find('.keyNo').each(
+					function(i, elem) {
+						// 検索結果リストをkeyで検索
+						var list = $("#searchUserMultiList").find('.keyNo[value="' + $(elem).val() + '"]').closest('tr');
+						// 存在していたら検索結果画面からグレーアウトする
+						if ($(list).length) {
+							$(list).css({"background" : "#C0C0C0"});
+							$(list).find('.addflg').val("1");
+						}
+					});
+		}
+
+		/*
+		 *  追加ボタン処理
+		 */
+		$("#btn_searchUserMultiList_Add").click(
+				function() {
+					//子要素ループ
+					$("#searchUserMultiList").children(':visible').each(
+							function(i, elem) {
+								// チェックボックスがチェックされていたら移動
+								if ($(elem).find('.addflg').val() == "0"
+										&& $(elem).find(
+												'input[type="checkbox"]').prop(
+												"checked")) {
+									var coln = $(elem).clone(true);
+									coln.find('.check-box').after(
+											'<td class="listno"></td>')
+									coln.appendTo("#addUserMultiList");
+									// グレーアウト
+									$(elem).css({
+										"background" : "#C0C0C0"
+									});
+									$(elem).find('.addflg').val("1");
+								}
+							});
+					// 追加側のチェッククリア
+					$("#addUserMultiList").find('input[type="checkbox"]').prop(
+							"checked", false);
+					$("#userChkAll1").prop("checked", false);
+
+					// no振り直し
+					$("#addUserMultiList").children().each(function(i, elem) {
+						$(elem).find('.listno').text(i + 1);
+					});
+
+				});
+
+		/*
+		 *  削除ボタン処理
+		 */
+		$("#btn_searchUserMultiList_Del").click(
+				function() {
+					//子要素ループ
+					$("#addUserMultiList").children(':visible').each(
+							function(i, elem) {
+								// チェックボックスがチェックされていたら削除
+								if ($(elem).find('input[type="checkbox"]')
+										.prop("checked")) {
+
+									var keyNo = $(elem).find('.keyNo').val();
+									// 元リストの同一idを復活させる
+									var list = $("#searchUserMultiList").find(
+											'.keyNo[value="' + keyNo + '"]')
+											.closest('tr');
+									if ($(list).length) {
+										list.css({
+											"background" : "#FFF"
+										});
+										list.find('input[type="checkbox"]')
+												.prop("checked", false);
+										list.find('.addflg').val("0");
+									}
+									$(elem).remove();
+								}
+							});
+					$("#userChkAll2").prop("checked", false);
+
+					// no振り直し
+					$("#addUserMultiList").children().each(function(i, elem) {
+						$(elem).find('.listno').text(i + 1);
+					});
+				});
+
+		/*
+		 *  選択ボタン処理
+		 */
+		$("#btn_selectUserMultiList").click(function() {
+			if ($searchUserMultiEndFunction != "") {
+				var returndata = [];
+				// 行番号順にデータを入れる
+				$("#addUserMultiList").find('.user_data').each(function(i, elem) {
+					returndata[i] = ImJson.parseJSON($(elem).val());
+				});
+				if (returndata.length == 0){
+					//alert("対象データが選択されてません");
+					//return false;
+				} else if (returndata.length > ADD_ROW_MAX){
+					alert("対象データが" + ADD_ROW_MAX + "件を越えています");
+					return false;
+				}
+				// コールバック関数に追加データをバインドし実行
+				searchUserMultiCallback($searchUserMultiEndFunction.bind($thisObj, returndata));
+			}
+			$('#searchUserMulti_dialog').imuiDialog('close');
+		});
+
+		/*
+		 *  チェックボックス オールチェック処理
+		 */
+		$("#userChkAll1").click(
+				function() {
+					if ($("#userChkAll1").prop("checked")) {
+						$("#searchUserMultiList").find('tr:visible').find(
+								'input[type="checkbox"]').prop("checked", true)
+					} else {
+						$("#searchUserMultiList").find('tr:visible').find(
+								'input[type="checkbox"]')
+								.prop("checked", false)
+					}
+				});
+		/*
+		 *  チェックボックス オールチェック処理
+		 */
+		$("#userChkAll2").click(
+				function() {
+					if ($("#userChkAll2").prop("checked")) {
+						$("#addUserMultiList").find('tr:visible').find(
+								'input[type="checkbox"]').prop("checked", true)
+					} else {
+						$("#addUserMultiList").find('tr:visible').find(
+								'input[type="checkbox"]')
+								.prop("checked", false)
+					}
+				});
+
+	});
+</script>
+
+<!-- ***************************************** ↓ 子画面 ↓ ***************************************** -->
+<!-- ユーザ検索子画面 -->
+<imart type="imuiDialog" autoOpen="false" id="searchUserMulti_dialog"
+	name="userForm" position="center" title="ユーザ検索" resizable="false"
+	width="1600" height="920"> <!-- <h4 class="title">ユーザ検索子画面（サンプル）</h4> -->
+
+<!-- 検索条件 -->
+<div class="form-group" style="margin-top: 30px;">
+	<div class="panel panel-default">
+		<table class="table table-bordered table-condensed search-form">
+			<!-- <tr>
+				<th width="20%">検索対象</th>
+				<td>
+					<div class="radio">
+						<label><input type="radio" name="searchUserMulti_target"
+							value="user" checked> ユーザ</label> &nbsp;&nbsp;&nbsp;&nbsp; <label><input
+							type="radio" name="searchUserMulti_target" value="group">
+							グループ</label>
+					</div>
+				</td>
+			</tr>
+			-->
+			<tr class="searchUserMulti_type_user">
+				<th width="20%">名前</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_name" /></td>
+				<th>社員番号</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_no"></td>
+			</tr>
+			<tr class="searchUserMulti_type_user">
+				<th>会社名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_company" /></td>
+				<th>事業部署名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_department" /></td>
+			</tr>
+			<tr class="searchUserMulti_type_user">
+				<th>役職</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_post" /></td>
+				<th>メールアドレス</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_mail"></td>
+			</tr>
+			<tr class="searchUserMulti_type_group" hidden>
+				<th>グループ名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchUserMulti_group" /></td>
+			</tr>
+		</table>
+	</div>
+	<button type="button" class="btn btn-hensyu" id="btn_searchUserMulti">検索</button>
+
+</div>
+<!-- @end 検索条件 -->
+<hr>
+
+<!-- 検索結果表示 -->
+<div class="row" id="searchUserMultiResultTable">
+	<!-- 検索結果画面 -->
+	<div class="col-lg-5">
+		<div class="form-group" style="width: 100%">
+			<!-- 検索件数ー -->
+			<div style="float: left;">
+				<label id="searchUserMultiDataCount"></label>
+			</div>
+			<!-- ページャーー -->
+			<div id="searchUserMultiPager" style="float: right;"></div>
+            <!-- <div style="max-height: 600px; overflow: auto; clear: both;"> -->
+            <div style="clear: both;">
+                <div class="panel">
+                    <table class="table table-bordered table-condensed character-table">
+						<thead>
+							<tr>
+								<th class="check-box" width="5%"><input type="checkbox"
+									id="userChkAll1"></th>
+								<th width="15%">名前</th>
+								<th width="35%">会社名</th>
+								<th width="35%">事業部署名</th>
+								<th width="20%">役職</th>
+							</tr>
+						</thead>
+						<tbody id="searchUserMultiList">
+							<!-- <tr>
+									<td class="check-box"><input type="checkbox"></td>
+									<td>メディア室メディア部 版権営業課</td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>-->
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- ページャーー -->
+			<div id="searchUserMultiPager2" style="float: right;"></div>
+		</div>
+	</div>
+	<!-- @end 検索結果画面 -->
+
+	<!-- 移動ボタン -->
+	<div class="col-lg-1">
+        <div style="margin-top: 40px">
+			<div style="margin-bottom: 10px">
+				<button type="button" class="btn btn-hensyu center-block"
+					id="btn_searchUserMultiList_Add">追加 &gt;</button>
+			</div>
+			<div style="margin-top: 10px">
+				<button type="button" class="btn btn-hensyu center-block"
+					id="btn_searchUserMultiList_Del">&lt; 削除</button>
+			</div>
+		</div>
+	</div>
+	<!-- @end 移動ボタン -->
+
+	<!-- 追加一覧 -->
+	<div class="col-lg-6">
+		<label>追加情報 </label>
+		<div class="form-group" style="width: 100%;">
+			<div class="panel panel-default">
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th class="check-box" width="5%"><input type="checkbox"
+								id="userChkAll2"></th>
+							<th width="5%">No</th>
+							<th width="15%">名前</th>
+							<th width="30%">会社名</th>
+							<th width="35%">事業部署名</th>
+							<th width="20%">役職</th>
+						</tr>
+					</thead>
+					<tbody id="addUserMultiList">
+						<!-- <tr>
+									<td class="check-box"><input type="checkbox"></td>
+									<td class="no">1</td>
+									<td>WF_新商品企画申請書事業支援グループ</td>
+									<td></td>
+									<td></td>
+								</tr> -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- @end 追加一覧 -->
+	</div>
+	<!-- @end 検索結果表示 -->
+	<!-- @end 下部分 -->
+</div>
+<hr>
+<div class="button">
+	<button type="button" class="btn btn-hensyu" onclick="clearSearchForm()" style="width: 20%"
+		id="btn_selectUserMultiList">選択</button>
+	<button type="button" class="btn btn-hensyu btn_dialog_close" onclick="clearSearchForm()" style="width: 20%">閉じる</button>
+</div>
+
+
+<!-- @end 検索結果表示 --> <!-- @end ユーザ検索子画面 --> <!-- ***************************************** ↑ 子画面 ↑ ***************************************** -->
+</imart>

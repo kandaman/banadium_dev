@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<extension point="jp.co.intra_mart.security.user.target_page">
+		<page
+			name="standard"
+			id="lo.plugin.login.LoginPageAfterTagetPageSetting"
+			version="1.0"
+			rank="100">
+			<page-provider-class>lo.plugin.login.LoginPageAfterTagetPageSetting</page-provider-class>
+		</page>
+	</extension>
+</plugin>

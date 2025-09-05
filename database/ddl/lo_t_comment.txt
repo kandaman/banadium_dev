@@ -1,0 +1,26 @@
+create table lo_t_comment(
+ticket_id  varchar(25)
+,comment_id  varchar(25)
+,naiyo varchar(200000)
+,yobi001 varchar(1000)
+,yobi002 varchar(1000)
+,yobi003 varchar(1000)
+,public_group  varchar(128)
+,node_id varchar(50)
+,next_node_id varchar(50)
+,status varchar(50)
+,sosa_nm varchar(50)
+,yakuwari_nm varchar(50)
+,touroku_kaisha_cd  varchar(128)
+,touroku_kaisha_nm  varchar(128)
+,touroku_busho_cd  varchar(128)
+,touroku_busho_nm  varchar(128)
+,touroku_sha_cd  varchar(128)
+,touroku_sha_nm  varchar(128)
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+,primary key (ticket_id, comment_id)
+);

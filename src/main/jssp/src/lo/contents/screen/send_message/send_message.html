@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!--link rel="stylesheet" href="lo_csjs/cform.css" -->
+	
+	<!-- IMART -->
+	<imart type="jsspRpc" name="jsspRpcSendMessage" page="lo/contents/screen/send_message/send_message"></imart>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<!-- link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+
+<imart type="condition" validity=$shanaiShuseiFlg negative>
+	<imart type="workflowOpenPageCsjs" />
+	<script type="text/javascript" src="workflow/csjs/greybox_lo.js"></script>
+</imart>
+
+<style type="text/css">
+#btn_title_search {
+    margin: 3px 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+#btn_title_search span {
+    font-size: 14px;
+}
+
+#btn_kaisha_search {
+    margin: 3px 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+#btn_kaisha_search span {
+    font-size: 14px;
+}
+<!--
+#kikaku_table td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+.margin-all {
+	margin: 28px !important;
+}
+.margin-left {
+	margin-left: 16px !important;
+}
+
+textarea.biko {
+	width: 100%;
+}
+
+.left-justified {
+	padding-left: 0px !important;
+}
+.right-justified {
+	padding-right: 0px !important;
+}
+
+#shinsei_table{
+	table-layout: fixed;
+}
+
+textarea{
+	margin-right: 0;
+}
+-->
+.line-height {
+		line-height: 100px;
+	}
+.padding-top {
+		padding-top: 0.7rem !important;
+	}
+	.full_width {
+		 width: 100% !important;
+	}
+
+.node-name{
+	min-height:35px;
+}
+.node-list{
+	display: flex;
+	align-items: stretch;
+}
+
+.node-list .node-name{
+	border:1px solid #cccccc;
+	width:10%;
+	text-align:center;
+}
+	
+.node-item{	
+	width:10%;
+	height:100%;
+}
+
+.tsuchi-item .node-name{
+	border:1px solid #cccccc;
+	width:100%;
+	padding:5px;
+	background-color: #ffca80 !important;
+	text-align:center;	
+}
+
+.node-tanto{
+	border:1px solid #cccccc;
+	width:10%;
+	padding:5px;	
+	text-align:left;
+	min-height:35px;
+}
+
+.tsuchi-item .node-name{
+	border:1px solid #cccccc;
+	width:100%;
+	padding:5px;
+	background-color: #ffca80 !important;
+	text-align:center;	
+}
+
+.tsuchi-item{	
+	width:10%;
+	margin-right:20px;
+}
+
+.tsuchi-item ul{	
+	border:1px solid #cccccc;
+	width:100%;
+	padding:5px;	
+	text-align:left;
+	min-height:30px;
+}
+
+.tsuchi-item ul li {
+    margin: 0 0 5px 0;
+    padding: 2px 6px;
+}
+
+div {
+  	word-break: break-word;
+	white-space: normal;
+}
+
+</style>
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+
+    <script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js" type="text/javascript"></script>
+	<script type="text/javascript" src="lo_csjs/form-change-trigger.js"></script>
+	<script type="text/javascript" src="lo_csjs/decimal.js"></script>
+
+	<title>メッセージ送信</title>
+</imart>
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<imart type="include" page="lo/contents/screen/header"></imart>
+	</div>
+	<!-- header -->
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<imart type="include" page="lo/contents/screen/sidemenu"></imart>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display:none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<div class="page-information row my-4">
+					<div class="col-12">						
+						<h1>メッセージ送信</h1>						
+						<button type="button" onclick="history.back();return false;" class="brdr_orange txt_orange mt-2">
+							<i class="fas fa-caret-left "></i><span>戻る</span>
+						</button>
+					</div>
+					<div class="col-12 col-lg-7 mt-3">
+						<!-- <imart type="message" id="KY02I015" escapeJs="true"></imart>-->
+					</div>
+				</div>
+				<article>
+					<section class="show">
+						<div class="container">				
+						
+					
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">送信モード</div>
+								<div class="col-2 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiSelect" class="custom-select form-control" id="send_mode" name="send_mode"  list=$form.send_mode />
+									</div>
+								</div>
+								<div class="col-7 mb-2 mt-2 right-justified align-middle">									
+									<span id="msg_mode_bcc">BCCに指定したユーザに一括で送信するモードです（指定件数ごとに分割されます）</span>
+									<span id="msg_mode_to" style="display:none;">TOに入力したメールアドレスに１件ずつ送信するモードです</span>
+									<span id="msg_mode_plain" style="display:none;">入力したとおりに送信するモードです。誤送信に注意してください。</span>
+								</div>							
+							</div>
+							<div class="form-group row" id="div_bcc">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">BCC分割</div>
+								<div class="col-1 mb-2 align-middle">
+									<div class="input-group">
+										<imart type="imuiTextbox" id="bcc_separate_count" name="bcc_separate_count" class="resetTarget" value=$bcc_separate_count  style="width:50px;" />
+									</div>
+								</div>
+								<div class="col-2 mb-2 align-middle　 mt-2">件  (最大<imart type="string" value=$bcc_separate_count />件）</div>						
+							</div>
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">
+								宛先(To)
+								<span class="mode-plain mode-to">
+									<br><br><br><br><br><br>送信件数：　<span id="to_count"></span>件
+								</span>
+								</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextbox" id="mail_to_1" name="mail_to" class="form-control biko resetTarget" value=$form.send_from readonly="true"/>
+										<imart type="imuiTextArea" id="mail_to_2" name="mail_to" class="form-control biko resetTarget" rows="6" maxlength="10000" placeholder="宛先をセミコロン(;)区切りで入力してください" value=$shinsei_data.biko disabled="true"/>
+									</div>
+								</div>								
+							</div>
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">宛先(Cc)</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextArea" id="mail_cc" name="mail_cc" class="form-control biko resetTarget" rows="6" maxlength="10000" placeholder="宛先をセミコロン(;)区切りで入力してください" value=$shinsei_data.biko disabled="true"/>
+									</div>
+								</div>								
+							</div>
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">宛先(Bcc)<br><br><br><br><br><br>送信件数：　<span id="bcc_count"></span>件</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextArea" id="mail_bcc" name="mail_bcc" class="form-control biko resetTarget" rows="6" maxlength="10000" placeholder="宛先をセミコロン(;)区切りで入力してください" value=$shinsei_data.biko />
+									</div>									
+								</div>								
+							</div>
+							<div class="form-group row mode-bcc">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">Bcc共通</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextArea" id="mail_bcc_2" name="mail_bcc_2" class="form-control biko resetTarget" rows="3" maxlength="1000" placeholder="分割されたすべてのメールにBccとして追加するメールアドレスをセミコロン(;)区切りで入力してください" value=$shinsei_data.biko />
+									</div>									
+								</div>								
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">件名</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextbox" id="mail_subject" name="mail_subject" class="form-control biko resetTarget" rows="2" maxlength="10000" placeholder="メール件名を入力してください" value=$shinsei_data.biko />
+									</div>
+								</div>								
+							</div>
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">本文</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextArea" id="mail_body" name="mail_body" class="form-control biko resetTarget" rows="12" maxlength="10000" placeholder="メール本文を入力してください" value=$shinsei_data.biko />
+									</div>
+								</div>								
+							</div>
+							<div class="form-group row">
+								<div class="fileuploder fileuploder-theme-default" style="width: 100%;">
+									<div class="col-12 form-group row mb-2">
+										<div class="fileupload-area">
+											<div class="filesSelect imui-fileupload-area" id="before_file_select">
+												<div class="fileupload-input-caption">ファイルをドラッグ&ドロップしてください</div>
+												<button type="button" id="file_upload_btn" for="file_upload" class="filesUploadLabel">ファイルを選択</button>
+											</div>
+											<div class="form-group row mt-2 mb-2">
+												<span class="col-12"><imart type="string" value=$extstr /></span>
+												<span class="col-12"><imart type="message" id="IN01I007" escapeJs="true" /></span>
+											</div>
+											<div id="after_file_select_area">
+												<div id="after_file_select_template">
+													<div class="afterFileSelect" style="display: none">
+														<dl>
+															<dt class="upfilename">
+																<span class="upfilenametext"><imart type="string" value="" /></span>
+															</dt>
+															<imart type="hidden" item_upFile_name="" />
+															<imart type="hidden" item_upFile_resname="" />
+															<dd>
+																<a href="javascript: void(0);" onclick="upFileDel(this)">
+																	<span class="fas fa-trash-alt fa-1x"></span>
+																</a>
+															</dd>
+														</dl>
+													</div>
+												</div>
+												<div id="after_file_select">
+													<imart type="repeat" list=$fileList item="item" index="idx">
+														<div class="afterFileSelect">
+															<dl>
+																<dt class="upfilename">
+																	<a href='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />&fileName=<imart type="string" value=item.file_name escapeXml="true" />' download>
+																		<span class="upfilenametext"><imart type="string" value=item.file_name escapeXml="true"/></span>
+																	</a>
+																</dt>
+																<imart type="hidden" item_upFile_name=item.file_name />
+																<imart type="hidden" item_upFile_resname=item.file_path />
+																<dd>
+																	<a href="javascript: void(0);" onclick="upFileDel(this)">
+																		<span class="fas fa-trash-alt fa-1x"></span>
+																	</a>
+																</dd>
+															</dl>
+														</div>
+													</imart>
+												</div>
+											</div>
+										</div>
+									</div>	
+								</div>
+							</div>	
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">備考</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextArea" id="biko" name="biko" class="form-control biko resetTarget" rows="4" maxlength="10000" placeholder="メール本文には含まれません。送信完了メールに記載されます。メモとしてご活用ください。" value=$shinsei_data.biko />
+									</div>
+								</div>								
+							</div>
+						</div>
+						<!-- エラー表示エリア -->
+						<div class="row">
+							<div id="error-messages" class="col-12 mt-4 mb-2">
+							</div>
+						</div>						
+						<div class="ml-4">
+							<button type="button" class="brdr_orange txt_orange p-3 mb-2" onclick="moveToPageTop(100);">
+								▲ページ先頭へ戻る
+							</button>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="col-12 mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="flex_btn">	
+											送信メール数： <span id="send_mail_count"></span>件
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>	
+						<div class="row">
+							<div class="col-12">
+								<div class="col-12 mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="flex_btn">																						
+											<button type="button" id="send_btn" class="bg_orange txt_dark mb-2">
+												<i class="fas fa-check-circle fa-2x"></i><span>送信</span>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>						
+					</section>
+				</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+			<!-- main contents -->
+			
+			<div id="imuiCalendar-template" style="display: none;">
+				<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#replaceTemplateId" showMonthAfterYear="true"　onSelect="onSelectCalender" onClose="onSelectCalender" />
+			</div>
+		</div>
+	</div>
+	
+	<form id="filesForm" name="filesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+		<div style="display:none;">
+			<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+			<imart type="imuiFileUpload" storeTo="/lo/upload"
+				autoUpload="true" uniqueFileName="true" id="imui-upload"
+				onBeforeSend="onBeforeSendFiles" 
+				onSuccess="onSuccessFiles"
+				onError="onErrorFiles" 
+				outerFormId="filesForm"
+				dropZone="#before_file_select" />
+				<imst:imSecureToken />
+		</div>
+	</form>	
+
+	<script type="text/javascript">
+		
+		var validationErrorMessages = <imart type="string" value=$validationErrorMessages />;
+		function validate() {			
+			var validationRules = [				
+				{type: "single", dataCategory: "basic",
+					items: [			 
+
+						{selectorType: "name", name: "shinsei_bi", validations:[{type: "required", messageId: "KS02E003"}]},
+						{selectorType: "name", name: "shinsei_bi", validations:[{type: "calender", messageId: "KS02E024"}]},
+						{selectorType: "name", name: "kaisha_nm", validations:[{type: "required", messageId: "KS02E004"}]},						
+
+				 	]
+				},
+				{type: "grid", dataCategory: "goods",  rowSelector: "#kyodaku_shohin_table tbody tr",
+					items: [
+					        
+						{selectorType: "name", name: "shohin_nm", validations:[{type: "required", messageId: "KS02E049"}]},
+						{selectorType: "name", name: "hatsubai_bi", validations:[{type: "required", messageId: "KS02E050"}]},
+						{selectorType: "name", name: "hatsubai_bi", validations:[{type: "calender", messageId: "KS02E083"}]},
+						//{selectorType: "name", name: "chiiki", validations:[{type: "required", messageId: "KS02E082"}]},
+						//{selectorType: "name", name: "zeinuki_jodai", validations:[{type: "required", messageId: "KS02E051"}]},
+						{selectorType: "name", name: "zeinuki_jodai", validations:[{type: "numeric", precision:[9,5], messageId: "KS02E048"}]},
+						{selectorType: "name", name: "zeinuki_jodai", validations:[{type: "space", messageId: "KS02E063"}]},
+						//{selectorType: "name", name: "ryoritsu", validations:[{type: "required", messageId: "KS02E052"}]},
+						{selectorType: "name", name: "ryoritsu", validations:[{type: "num", messageId: "KS02E058"}]},
+						{selectorType: "name", name: "ryoritsu", validations:[{type: "space", messageId: "KS02E064"}]},		
+						
+				 	]
+				},				
+			];
+			
+			
+			
+			var natNgList = chkInputNatOnly();
+			var numNgList = chkInputNumOnly();
+			var spaceNgList = chkInputSpace();
+			
+			var validateItem = function(itemName, $item, validations, index) {
+				var result = [];
+				if ($item.is(':disabled')) {
+					return result;
+				}
+
+				for (var validationIndex in validations) {
+					var validation = validations[validationIndex];
+					var messageId = null;
+					if (validation.type == "required") {
+						if ($item.is(":radio") || $item.is(":checkbox")) {
+							var checked = false;
+							$item.each(function(index, element) {
+								var $element = $(element);
+								if ($element.is(":checked")) {
+									checked = true;
+									return false;
+								}
+							});
+							if (checked == false) {
+								messageId = validation.messageId;
+							}
+						} else {
+							if ($item.length == 0 || $item.val() == '') {
+								messageId = validation.messageId;
+							}
+						}
+					}
+					if (validation.type == "simplex" || validation.type == "unique") {
+						var uniqueArray = [];
+						$item.each(function(index, element) {
+							var $element = $(element);
+							if (uniqueArray.indexOf($element.val()) < 0) {
+								uniqueArray.push($element.val());
+							}
+						});
+						if (validation.type == "unique") {
+							if ($item.length != uniqueArray.length) {
+								messageId = validation.messageId;
+							}
+						}
+						if (validation.type == "simplex") {
+							if (uniqueArray.length > 1) {
+								messageId = validation.messageId;
+							}
+						}
+					}
+					if (validation.type == "nat") {
+						if(natNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+					}
+					if (validation.type == "num") {
+						if(numNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+					}	                
+	                
+	                if (validation.type == "numeric") {
+	                	if(numNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+	                	
+	                	if ($item.val() !="" && $item.val() !=undefined){	                		
+		                	var numbers = String(convertWideToHalf($item.val().replace(/,/g, ''))).split('.');          	 
+		                    var seisu = numbers[0] ? numbers[0].length : 0;
+		                    var shousu = numbers[1] ? numbers[1].length : 0;
+		                    var precision = validation.precision;
+		                    if(seisu > precision[0] || shousu > precision[1]){
+		                    	messageId = validation.messageId;
+		                    }
+	                	}
+	                }
+					if (validation.type == "space") {
+						if(spaceNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+					}
+					if (validation.type == "calender") {
+						if (!$item.val() == '' && !$item.val().match(/^(\d+)\/(\d+)\/(\d+)$/)) {
+	                		messageId = validation.messageId;
+	                	}
+	                }					
+					
+					if (messageId != null) {
+						var errorMessage = validationErrorMessages[messageId];
+						if (typeof index != "undefined") {
+							errorMessage = errorMessage.replace("{0}", "#" + (index + 1));
+						}
+						result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});
+						break;
+					}
+				}
+				return result;
+			}
+
+			var validateItems = function($container, items, index) {
+				var allResult = [];
+				for (var itemKey in items) {
+					var validationItem = items[itemKey];
+					var selectorType = validationItem.selectorType;
+					var itemName = validationItem.name;
+					var validations = validationItem.validations;
+					var $item = $container.find(selectorType == 'class' ? '.' + itemName : '[name="' + itemName + '"]');
+					var result = validateItem(itemName, $item, validations, index);
+					allResult = allResult.concat(result);
+				}
+				return allResult;
+			}
+
+			var validateResult = {
+				isError: false,
+				itemResults: []
+			};
+			for (var typeKey in validationRules) {
+				var ruleType = validationRules[typeKey];
+				if (ruleType.type == 'grid') {
+					var $rows = $(ruleType.rowSelector);
+					$rows.each(function(index, element) {						
+						var $row = $(element);
+						var result = validateItems($row, ruleType.items, index);
+						validateResult.itemResults = validateResult.itemResults.concat(result);
+					});
+				} else {
+					var $body = $("body");
+					var result = validateItems($body, ruleType.items);
+					validateResult.itemResults = validateResult.itemResults.concat(result);
+				}
+			}
+			if (validateResult.itemResults.length > 0) {
+				validateResult.isError = true;
+			}
+			return validateResult;
+			
+		}
+		/*
+		function validateAndShowMessage() {
+			
+			var $errorMessages = $("#error-messages");
+			$errorMessages.empty();
+			var validateResult = validate();
+			if (validateResult.isError == false) {
+				document.getElementById("save_btn").disabled = false;
+				return validateResult;
+			}
+			var showMessages = [];
+			validateResult.itemResults.forEach(function(currentValue, index, array){
+				if (showMessages.indexOf(currentValue.errorMessage) < 0) {
+					showMessages.push(currentValue.errorMessage);
+				}
+			});
+			for (var index in showMessages) {
+				var message = showMessages[index];
+				var messageHtml = '<div class="mark-req">' + message + '</div>';
+				$errorMessages.append(messageHtml);
+			}
+			validateResult.showMessages = showMessages;
+			
+			// ボタン非活性化
+			if (showMessages.length > 0){
+				document.getElementById("save_btn").disabled = true;
+			}
+			
+			return validateResult;
+			
+		}
+		*/
+		
+		/**
+		 * HTML ID 属性作成関数
+		 */
+		var nodeId = 0;
+		function generateNodeId() {
+			return "generate_node_id_" + String(++nodeId);
+		}
+		var clickedElm = null;
+		
+		$(window).on('load', function() {
+			document.getElementById('body').style.display = 'block';
+			$(".imui-calendar").next("img").hide();
+			
+			$("#example_length").hide();
+			$(".bg_ltorange").css('width','');
+			$(".planList").css('max-height', '100%');
+			$(".planList thead, .planList tbody").css('display', 'table-row-group');
+		});
+		
+//-------------------------------------------------------------------------------------------------------
+		// 項目定義
+		var ret;
+
+		$(function () {			
+			$("#mail_to_2").css("display","none");
+
+			//メール送信
+			$("#send_btn").click(function() {
+				
+				if(window.confirm('メールを送信します。よろしいですか？')){
+					/* TODO:
+					var validateResult = validateAndShowMessage();
+					if (validateResult.isError) {
+						alert(validateResult.showMessages[0]);
+						return;
+					}
+					*/
+		
+					clickedElm = $(this);
+					clickedElm.prop('disabled',true);
+		
+					//メール送信
+					var ret = saveShinseiData(true);
+					//var ret = true;
+					
+					if(ret){
+					 	// URLにパラメータを付与
+					    let crntUrl = window.location.pathname;
+						let crntParamIdx = crntUrl.indexOf('?');
+						if(crntParamIdx > 0) crntUrl = crntUrl.substring(0,crntParamIdx);
+						//window.history.replaceState(null,null,crntUrl + '?shinsei_id=' + ret.shinsei_id);
+						window.history.replaceState(null,null,crntUrl);
+						// 詳細画面に遷移
+					    location.href='./lo/contents/screen/send_message/send_message_detail';
+					}
+				}
+			});
+			
+			
+			//to
+			$("#mail_to_2").change(function() {
+				var toText = $(this).val().trim();
+				if(toText.slice( -1 ) == ';'){
+					toText = toText.slice( 0, -1 );
+				}
+				var to_count = toText.split(";").length;
+
+				if($("#send_mode").val()=="2"){
+					$("#send_mail_count").text(to_count);
+				}
+				
+			});
+			
+			//bcc
+			$("#mail_bcc").change(function() {
+				var bccText = $(this).val().trim();
+				if(bccText.slice( -1 ) == ';'){
+					bccText = bccText.slice( 0, -1 );
+					}
+				var bcc = bccText.split(";").length;
+				$("#bcc_count").text(bcc);
+				
+				var bcc_separate_count = parseInt($("#bcc_separate_count").val());
+				
+				if($("#send_mode").val()=="1"){
+					$("#send_mail_count").text(Math.ceil(parseInt(bcc)/bcc_separate_count));
+				}
+				
+			});
+			
+			//送信モード
+			$("#send_mode").change(function() {
+				var sendMode = $(this).val();
+				disp_change(sendMode);
+			});
+			
+			// ファイル選択ボタンをクリック
+			$("#file_upload_btn").on("click", function() {
+				var $form = $("#filesForm");
+				var $file = $form.find(".imui-fileupload-input");
+				$file.focus();
+				$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+			});
+			
+			disp_change($("#send_mode").val());
+		
+		
+	});//jQuery init
+	
+	function disp_change(sendMode){
+
+		if(sendMode == '1'){//一斉送信					
+			$("#mail_to_1").prop("disabled",false).show();
+			$("#mail_to_2").prop("disabled",true).hide();
+			$("#mail_cc").prop("disabled",true);
+			
+			$("#div_bcc").show();
+			
+			$("#msg_mode_bcc").show();
+			$("#msg_mode_to").hide();
+			$("#msg_mode_plain").hide();
+			
+			$(".mode-to").hide();
+			$(".mode-plain").hide();
+			$(".mode-bcc").show();
+			
+		}else if(sendMode == '2'){//個別送信
+			$("#mail_to_1").prop("disabled",true).hide();					
+			$("#mail_to_2").prop("disabled",false).show();
+			$("#mail_cc").prop("disabled",false);
+			
+			$("#div_bcc").hide();
+			
+			$("#msg_mode_to").show();
+			$("#msg_mode_bcc").hide();
+			$("#msg_mode_plain").hide();
+			
+			$(".mode-bcc").hide();	
+			$(".mode-plain").hide();
+			$(".mode_to").show();
+		}else{
+			$("#mail_to_1").prop("disabled",true).hide();					
+			$("#mail_to_2").prop("disabled",false).show();
+			$("#mail_cc").prop("disabled",false);
+			
+			$("#div_bcc").hide();
+			
+			$("#msg_mode_to").hide();
+			$("#msg_mode_bcc").hide();
+			$("#msg_mode_plain").show();
+			
+			$(".mode-bcc").hide();			
+			$(".mode-to").hide();
+			$(".mode-plain").show();
+			
+		}
+		
+	}
+		
+		function saveShinseiData() {
+			var tempu_file_list = [];
+			var fileNo = 0;
+			$("#after_file_select > .afterFileSelect").each(function(index, element) {
+				var $element = $(element);
+				fileNo++;
+				var tempu_file = {
+					file_no: fileNo
+					, file_name: $.trim($element.find('input[name="item_upFile_name"]').val())
+					, file_path: $.trim($element.find('input[name="item_upFile_resname"]').val())
+				};
+				tempu_file_list.push(tempu_file);
+			});	
+
+			var params = {
+				shinsei_data: {
+					shinsei_id : $.trim($("[name='shinsei_id']").val()) == '' ? null : $.trim($("[name='shinsei_id']").val())				    
+					, mail_to : $.trim($("[name=mail_to]").not().val()) == '' ? null : $.trim($("[name=mail_to]").not(":disabled").val())
+					, mail_cc : $.trim($("#mail_cc").val()) == '' ? null : $("#mail_cc").val()
+					, mail_bcc : $.trim($("#mail_bcc").val()) == '' ? null : $("#mail_bcc").val()
+					, mail_bcc_2 : $.trim($("#mail_bcc_2").val()) == '' ? null : $("#mail_bcc_2").val()
+					, bcc_separate_count : $.trim($("#bcc_separate_count").val()) == '' ? null : $("#bcc_separate_count").val()							
+					, biko : $.trim($("#biko").val()) == '' ? null : $("#biko").val()
+					, mail_subject : $.trim($("#mail_subject").val()) == '' ? null : $.trim($("#mail_subject").val())
+					, mail_body : $.trim($("#mail_body").val()) == '' ? null : $.trim($("#mail_body").val())
+					, send_mode : $.trim($("#send_mode").val()) == '' ? null : $.trim($("#send_mode").val())
+					
+				}
+				, tempu_file_list : tempu_file_list
+			}			
+			
+			
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+
+			var ret;
+			try {
+				ret = jsspRpcSendMessage.sendMail(params);
+		    } catch (ex) {
+		    	
+		    	clickedElm.prop('disabled',false);
+				clickedElm = null;
+		    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		        return;
+		        
+		    }
+		    if(ret.error) {		    	
+		    	clickedElm.prop('disabled',false);
+				clickedElm = null;
+		    	imuiShowErrorMessage(ret.message, [], true, 5000, true);
+		    	return;
+		    	
+		    }
+			
+			return ret;
+		}
+		
+		var $fileList = []; // 編集時のファイル格納用
+		var $tempUpFileCount = 0;
+		var $tempUpFileSuccessCount = 0;
+		var $tempUpFileErrotCount = 0;
+		// ---- 詳細資料ファイル -------
+		// ファイルアップロード前処理用
+		function onBeforeSendFiles(e, data) {
+			// ファイル数制限
+			var uploadedNum = $("#after_file_select .afterFileSelect").size();
+			var max_file_num = <imart type="string" value=$maxFileNum />;
+			if(uploadedNum + $tempUpFileCount + data.files.length >= max_file_num) {
+				return false;
+			}
+			
+			var str = '<imart type="string" value=$extListstr />';
+			var max_file_size = <imart type="string" value=$maxFileSize />;
+			var acceptExt =str.split("/");
+			for (var fIdx = 0; fIdx < data.files.length; fIdx++) {
+				// ファイルサイズチェック
+				if(data.files[fIdx].size > max_file_size) {
+					alert('<imart type="message" id="ER01E005" escapeJs="true"></imart>');
+					return false;
+				}
+				
+				// 拡張子チェック
+				var ext = getFileExtension(data.files[fIdx].name);
+				if (!acceptExt.includes(ext)) {
+					var altstr = '<imart type="message" id="KY02E031" escapeJs="true"></imart>';
+					altstr = altstr.replace("{0}", data.files[fIdx].name);
+					alert(altstr);
+					return false;
+				}
+			}
+			// TODO:アップロードするファイルのサイズや拡張子をチェック
+			// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+			// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+			showIndicator();
+			$tempUpFileCount += data.files.length;
+			
+			return true;
+		}
+		// ファイルアップロード成功時
+		function onSuccessFiles(e, data) {
+			// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+			$tempUpFileSuccessCount += data.result.length;
+
+			$.each(data.result, function(index, res) {
+				var src ="lo/contents/screen/ses_file_dl?filePath=" + res.physicalName + "&fileName=" + res.name;
+				var a_src = $('<a>').attr({'href':src, 'download':''});
+				var clon = $("#after_file_select_template > .afterFileSelect").clone(true);
+				clon.find(".upfilenametext").text(res.name);
+				clon.find('input[name="item_upFile_name"]').val(res.name);
+				clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+				clon.find(".upfilenametext").wrap(a_src);
+				clon.show();
+				clon.appendTo("#after_file_select");
+			});
+
+			// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+			if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+				$tempUpFileCount = 0;
+				$tempUpFileSuccessCount = 0;
+				$tempUpFileErrotCount = 0;
+				hideIndicator();
+			}
+		}
+
+		// アップロード失敗
+		function onErrorFiles(e, data) {
+			// TODO:失敗時の処理をいれる
+			// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+			$tempUpFileErrotCount += data.files.length;
+			if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+				$tempUpFileCount = 0;
+				$tempUpFileSuccessCount = 0;
+				$tempUpFileErrotCount = 0;
+				hideIndicator();
+			}
+		}
+		// ---- 詳細資料ファイル -------
+
+		// ---- ファイルアップロード共通 -------
+		// アップロード削除
+		function upFileDel(targetEl){
+			// TODO:確認メッセージを表示
+			var targetObj = $(targetEl).closest("div");
+			targetObj.remove();
+		}
+		// ---- ファイルアップロード共通 -------
+		
+	</script>
+</body>

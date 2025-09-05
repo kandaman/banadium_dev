@@ -1,0 +1,13 @@
+create table lo_m_koteichi (
+  cd_cls_id character varying(4) not null
+  , cd_cls_nm character varying(1024)
+  , cd_id character varying(10) not null
+  , cd_naiyo character varying(1024)
+  , sort_no integer
+  , sakujo_flg character(1) not null
+  , torokusha character varying(1024) not null
+  , toroku_dt timestamp(6) without time zone not null
+  , koshinsha character varying(1024) not null
+  , koshin_dt timestamp(6) without time zone not null
+  , primary key (cd_cls_id, cd_id)
+);

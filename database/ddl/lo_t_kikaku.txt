@@ -1,0 +1,36 @@
+create table public.lo_t_kikaku (
+  kikaku_id character varying(20) not null
+  , kikaku_nm character varying(200)
+  , kikaku_shubetsu_cd smallint
+  , kikaku_status character varying(100)
+  , ip_cd character varying(128)
+  , ip_nm character varying(1024)
+  , title_cd character varying(128)
+  , title_nm character varying(1000)
+  , shinsei_bi date
+  , kaisha_id character varying(100)
+  , kaisha_nm character varying(255)
+  , hanbai_jiki character varying(20)
+  , seikyusho_sofusaki_id character varying(2)
+  , royalty_kingaku numeric(30, 6)
+  , busyo_id character varying(100)
+  , busyo_nm character varying(255)
+  , tantou_sha character varying(255)
+  , tag character varying(1000)
+  , kakunin_bi date
+  , bne_tantou_sha character varying(1024)
+  , comment text
+  , shohyo_chosa_kekka character(1)
+  , shohyo_chosa_comment text
+  , kanshu_no character varying(20)
+  , system_matter_id character varying(20)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (kikaku_id)
+);
+
+--2021.12.14
+--hanbai_jiki,royalty_kingaku追加

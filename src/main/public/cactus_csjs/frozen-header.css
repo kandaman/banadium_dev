@@ -1,0 +1,55 @@
+@CHARSET "UTF-8";
+
+/* ▼bootstrap + frozen-header のCSS実装▼ここから▼ */
+/*table.frozen-header thead, table.frozen-header tbody, table.frozen-header tr,
+	table.frozen-header td, table.frozen-header th {
+	display: block;
+}
+table.frozen-header thead {
+	width: calc(100% - 17px);
+}
+
+table.frozen-header tbody {
+	overflow-y: scroll;
+}
+
+table.frozen-header tr:after {
+	content: ' ';
+	display: block;
+	visibility: hidden;
+	clear: both;
+}
+
+table.frozen-header tbody td, table.frozen-header thead th {
+	float: left;
+	height: 31px;
+}
+
+table#charactertbl.frozen-header tbody td, table#charactertbl.frozen-header thead th,
+	table#shinapplytbl.frozen-header tbody td, table#shinapplytbl.frozen-header thead th,
+	table#kanrentbl.frozen-header tbody td, table#kanrentbl.frozen-header thead th
+	{
+	float: left;
+	height: 40px;
+}
+
+table#tenputbl.frozen-header tbody td, table#tenputbl.frozen-header thead th
+	{
+	float: left;
+	height: 65px;
+}
+*/
+/* ▲bootstrap + frozen-header のCSS実装▲ここまで▲ */
+
+/* ▼imart用のデザイン調整定義▼ */
+/*div.table-outer-panel, table.frozen-header thead tr {
+	background-color: #fff799;
+}
+
+table.frozen-header tbody tr {
+	background-color: white;
+}
+
+table.frozen-header th, table.frozen-header td {
+	border-right-style: none;
+}*/

@@ -1,0 +1,110 @@
+<imart type="head">
+  <title>完了画面</title>
+  <imart type="workflowOpenPageCsjs" />
+  <imart type="imuiValidationRule" rule="cactus/contents/screen/apply#validateRule" rulesName="rules" messagesName="messages" />
+
+  <script src="ui/libs/jquery-validation-1.9.0/jquery.validate.js"></script>
+
+<!-- stylesheet -->
+  <link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
+  <link rel="stylesheet" href="cactus_csjs/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="cactus_csjs/bootstrap-datepicker.min.css">
+
+<!-- @end stylesheet -->
+
+<!-- javascript -->
+  <!-- <script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+
+<script type="text/javascript" src="cactus_csjs/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript"
+	src="cactus_csjs/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript"
+	src="cactus_csjs/bootstrap-datepicker.ja.min.js"></script>
+
+<!-- @end javascript -->
+
+<!-- mycontents -->
+  <script type="text/javascript" src="cactus_csjs/proc.js"></script>
+  <script type="text/javascript" src="cactus_csjs/sksgjs.js"></script>
+  <script type="text/javascript" src="cactus_csjs/addpf.js"></script>
+  <script type="text/javascript" src="cactus_csjs/pager.js"></script>
+  <script type="text/javascript" src="cactus_csjs/common.js"></script>
+  <link rel="stylesheet" href="cactus_csjs/sksg.css">
+  <link rel="stylesheet" href="cactus_csjs/step_bar.css">
+<!-- @end mycontents -->
+
+
+<script>
+	$(function() {
+        // 戻るボタン
+        $('#btnBack').bind('click', function(){
+        	//window.location.href = '<imart type="string" value=$data.imwCallOriginalPagePath />';
+        	window.location.href = 'cactus/contents/screen/top';
+        });
+	});
+</script>
+
+</imart>
+
+<!-- navi-bar -->
+<IMART type="include" page="cactus/contents/screen/navibar"></IMART>
+
+<imart type="workflowOpenPage"
+    name="workflowOpenPageForm"
+    id="workflowOpenPageForm"
+    method="POST"
+    target="_top"
+    imwUserDataId=$data.imwUserDataId
+    imwSystemMatterId=$data.imwSystemMatterId
+    imwAuthUserCode=$data.imwAuthUserCode
+    imwApplyBaseDate=$data.imwApplyBaseDate
+    imwNodeId=$data.imwNodeId
+    imwFlowId=$data.imwFlowId
+    imwCallOriginalParams=$data.imwCallOriginalParams
+    imwNextScriptPath=$data.imwCallOriginalPagePath>
+
+	<!--<h3 class="title">完了画面</h3>-->
+
+	<!-- 申請結果 -->
+	<div class="form-group" style="width: 40%" align="center">
+		<span style="font-size: 20px">処理が完了されました。 </span>
+	</div>
+	<!-- @end 申請結果 -->
+
+	<!-- 申請内容 -->
+	<div class="form-group">
+		<div class="panel panel-default">
+			<table class="table table-bordered">
+				<tr>
+                    <th>タイトル名/件名</th>
+					<td><imart type="string" value=$data.matter_name escapeXml = "true" /></td>
+				</tr>
+				<tr>
+					<th>起案者</th>
+					<td><imart type="string" value=$data.user_name /></td>
+				</tr>
+				<tr>
+					<th>申請番号</th>
+					<td><imart type="string" value=$data.matter_number /></td>
+				</tr>
+				<tr>
+					<th>起案日時</th>
+					<td><imart type="string" value=$data.create_date /></td>
+				</tr>
+				<tr>
+					<th>更新日時</th>
+					<td><imart type="string" value=$data.update_date /></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- @end 申請内容 -->
+
+	<!-- ボタン -->
+	<button escapejs="false" name="btnBack" escapexml="true" id="btnBack" type="button" class="btn btn-hozon center-block">TOPへ戻る</button>
+	<!-- @end ボタン -->
+</imart>

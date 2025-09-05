@@ -1,0 +1,204 @@
+<imart type="head">
+<html lang="ja">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	
+	
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcPlannningWfCheck" page="lo/contents/screen/common/wf_check"></IMART>
+	
+	<title><imart type="message" id="LO.TITLE.COMMON.WF_CHECK" escapeXml="true" /></title>
+</imart>
+<style>
+	.border-radius {
+		border-radius: 10px;
+	}
+	.font {
+		font-size: 25px;
+	}
+	.font2 {
+		font-size: 20px;
+	}
+	.margin-left {
+		margin-left: 0px !important;
+	}
+</style>
+<body>
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+
+	<!-- 詳細画面遷移用 -->
+	<form id="sendFrom" method="post"
+		action="lo/contents/screen/user/myProcess_list">
+	</form>
+	<form id="sendFromKikaku" method="get"
+		action="lo/contents/screen/kikaku/planning_detail_new">
+		<IMART type="hidden" kikaku_id=$data.kikaku_id></IMART>
+	</form>
+	<form id="sendFromKyodaku" method="get"
+		action="lo/contents/screen/kyodaku/permission_product_detail">
+		<IMART type="hidden" kyodaku_id=$data.kyodaku_id></IMART>
+	</form>
+	<form id="sendFromKeiyaku" method="get"
+		action="lo/contents/screen/keiyaku_dorafuto/keiyaku_dorafuto_detail">
+		<IMART type="hidden" keiyaku_dorafuto_id=$data.keiyaku_dorafuto_id></IMART>
+	</form>
+	<form id="sendFromKawari" method="get"
+		action="lo/contents/screen/kawari/kawari_detail">
+		<IMART type="hidden" bunsho_id=$data.bunsho_id></IMART>
+	</form>
+	<form id="sendFromAccount" method="get"
+		action="lo/contents/screen/account/account_detail">
+		<IMART type="hidden" shinsei_id=$data.shinsei_id></IMART>
+	</form>
+	<form id="sendFromAccountShanai" method="get"
+		action="lo/contents/screen/account/shanai_account_detail">
+		<IMART type="hidden" shinsei_id=$data.shinsei_id></IMART>
+	</form>
+	
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none"> <i
+					class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+				<article>
+					<div class="container">
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10 left-justified">
+								<h2 class="indent"><imart type="message" id="LO.TITLE.COMMON.WF_CHECK" escapeXml="true" /></h2>
+							</div>
+							<div class="col-1"></div>
+						</div>
+						<div class="row mb-4">
+							<div class="col-1"></div>
+							<div class="col-10 form-area mt-2 mb-2 border-radius">
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<div class="row">
+									<div class="col-12 mb-4 text-center font">
+										<imart type="string" value=$message />
+									</div>
+									<div class="col-12 text-center font">
+										<a href="javascript:sendLink();"><imart type="string" value=$bnsyo_link /></a>
+									</div>
+								</div>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+							</div>
+							<div class="col-1"></div>
+						</div>
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10 left-justified">
+								<button type="button" class="bg_orange txt_dark font2 margin-left" id="btn_bunsyo"><imart type="message" id="LO.TITLE.USER.MY_PROCESS_LIST" escapeXml="true" />へ</button>
+							</div>
+							<div class="col-1"></div>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+	<IMART type="decision" value=$doc_type case="1">
+		var formId = "sendFromKikaku";
+		var idName = "kikaku_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="2">
+		var formId = "sendFromKyodaku";
+		var idName = "kyodaku_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="3">
+		var formId = "sendFromKeiyaku";
+		var idName = "keiyaku_dorafuto_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="4">
+		var formId = "sendFromKawari";
+		var idName = "bunsho_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="5">
+		var formId = "sendFromKawari";
+		var idName = "bunsho_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="6">
+		var formId = "sendFromKawari";
+		var idName = "bunsho_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="7">
+	var formId = "sendFromAccount";
+	var idName = "shinsei_id";
+	</IMART>
+	<IMART type="decision" value=$doc_type case="8">
+	var formId = "sendFromAccountShanai";
+	var idName = "shinsei_id";
+	</IMART>
+	
+	$(function () {
+		// 当該画面に戻らないようにURL書き換え
+		let ticketId = $("#" + formId + ">input[name='" + idName + "']")[0].value;
+		let altUrl = document.getElementById(formId).action;
+		window.history.replaceState(null,null,altUrl + '?' + idName + '=' + ticketId + "#");
+		
+		// MY文書一覧ボタン押下時
+        $('#btn_bunsyo').click(function () {
+        	$('#sendFrom').submit();
+        });
+	});
+	
+	function sendLink() {
+		$('#'+formId).submit();
+	}
+</script>

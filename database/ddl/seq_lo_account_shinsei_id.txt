@@ -1,0 +1,2 @@
+create sequence seq_lo_account_shinsei_id;
+create sequence seq_lo_account_shinsei_id_shanai;

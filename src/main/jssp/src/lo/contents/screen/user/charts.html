@@ -1,0 +1,550 @@
+<imart type="head">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcCharts" page="lo/contents/screen/user/charts"></IMART>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<!-- link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/disable.radius.css">
+
+	<script type="text/javascript" src="lo_csjs/Chart.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+
+    <script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js" type="text/javascript"></script>
+
+
+	<title><imart type="message" id="LO.TITLE.USER.CHARTS" escapeXml="true" /></title>
+	
+</imart>
+<body>
+
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	<!-- header -->
+
+	<div class="container">
+		<div class="row">
+
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+
+			<!-- main contents -->
+			<div class="col mt-5">
+
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display:none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<div>
+					<article>
+						<section class="show">
+							<h1><imart type="message" id="LO.TITLE.USER.CHARTS" escapeXml="true" /></h1>
+						</section>
+					</article>
+				</div>
+				
+				<IMART type="decision" value=$userInfo.licenseProductionFlg case="1"> <!-- プロダクションの場合 -->
+				<article>
+					<div class="container"><!-- Start チャートコンテナ1行目 -->
+						<div class="row">
+						
+							<div class="col-6 mt-2 mb-2">
+								<div id="kikakuChartContainer" class="canvas-container">
+									<div>
+										<h4>企画件数チャート</h4>
+									</div>
+									<div class="container mt-3 mb-3"><!-- Start フィルタ用コンテナ -->
+										<div class="row">
+											<div class="col-4">
+												年度指定：<imart type="imuiSelect" class="custom-select form-control" id="kikaku_nendo_list" name="kikaku_nendo_list" list=$kikakuNendoList/>
+											</div>
+											<div class="col-4 pl-0">
+												組織指定：<imart type="imuiSelect" class="custom-select form-control" id="kikaku_org_list" name="kikaku_org_list" list=$kikakuOrgList/>
+											</div>
+											<div class="col-4"></div>
+										</div>
+									</div><!-- End フィルタ用コンテナ -->
+									<div>
+										<canvas id="kikakuChart" height="400px"></canvas>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-6 mt-2 mb-2">
+								<div id="kyodakuChartContainer" class="canvas-container">
+									<div>
+										<h4>許諾件数チャート</h4>
+									</div>
+									<div class="container mt-3 mb-3"><!-- Start フィルタ用コンテナ -->
+										<div class="row">
+											<div class="col-4">
+												年度指定：<imart type="imuiSelect" class="custom-select form-control" id="kyodaku_nendo_list" name="kyodaku_nendo_list" list=$kyodakuNendoList/>
+											</div>
+											<div class="col-4 pl-0">
+												組織指定：<imart type="imuiSelect" class="custom-select form-control" id="kyodaku_org_list" name="kyodaku_org_list" list=$kyodakuOrgList/>
+											</div>
+											<div class="col-4"></div>
+										</div>
+									</div><!-- End フィルタ用コンテナ -->
+									<div>
+										<canvas id="kyodakuChart" height="400px"></canvas>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div><!-- End チャートコンテナ1行目 -->
+					
+					<div class="container"><!-- Start チャートコンテナ2行目 -->
+						<div id="uriageChartContainer" class="canvas-container col-12 mt-2 mb-2">
+							<div>
+								<h4>売上チャート</h4>
+							</div>
+							<div class="row">
+								<div class="col-5">
+									<div class="container mt-3 mb-3"><!-- Start フィルタ用コンテナ -->
+										<div class="row">
+											<div class="col-5">
+												年度指定：<imart type="imuiSelect" class="custom-select form-control" id="uriage_nendo_list" name="uriage_nendo_list" list=$uriageNendoList/>
+											</div>
+											<div class="col-5 pl-0">
+												組織指定：<imart type="imuiSelect" class="custom-select form-control" id="uriage_org_list" name="uriage_org_list" list=$uriageOrgList/>
+											</div>
+											<div class="col-2"></div>
+										</div>
+									</div><!-- End フィルタ用コンテナ -->
+									<div>
+										<canvas id="uriageChart" height="400px"></canvas>
+									</div>
+								</div>
+								<div id="uriageTableArea" class="col-7">
+									<div class="text-right mb-2"><small>単位：万円</small></div>
+									<div class="overflow-auto" style="height:420px">
+										<table id="uriageChartTable" class="cell-border" style="width:100%">
+											<tr class="pt-2">
+												<th colspan="1" class="kado text-center align-middle"></th>
+												<th colspan="1" class="text-center align-middle">4月</th>
+												<th colspan="1" class="text-center align-middle">5月</th>
+												<th colspan="1" class="text-center align-middle">6月</th>
+												<th colspan="1" class="text-center align-middle">7月</th>
+												<th colspan="1" class="text-center align-middle">8月</th>
+												<th colspan="1" class="text-center align-middle">9月</th>
+												<th colspan="1" class="text-center align-middle">10月</th>
+												<th colspan="1" class="text-center align-middle">11月</th>
+												<th colspan="1" class="text-center align-middle">12月</th>
+												<th colspan="1" class="text-center align-middle">1月</th>
+												<th colspan="1" class="text-center align-middle">2月</th>
+												<th colspan="1" class="text-center align-middle">3月</th>
+											</tr>
+											<tr>
+												<th class="text-left align-middle">テスト</th>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+												<td class="text-right align-middle">100,000</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div><!-- End チャートコンテナ2行目 -->
+					
+				</article>
+				</IMART>
+				
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	
+	// チャート用12ヶ月リスト
+	var aryMonth = ['4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月', '3月'];
+	
+	// 企画チャート初期設定
+	var kikaku_ctx = document.getElementById('kikakuChart').getContext('2d');
+	var kikakuDbData;
+	var kikakuChartData = {
+	        labels: aryMonth,
+	        datasets: [{
+	            label: '：総件数　',
+	            type: 'line',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+	            borderColor: 'rgba(255, 99, 132, 1)',
+	            borderWidth: 2,
+	            lineTension: 0,
+	        },{
+	            label: '：総件数（選択組織）',
+	            type: 'bar',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(99, 132, 255, 0.2)',
+	            borderColor: 'rgba(99, 132, 255, 1)',
+	            borderWidth: 1,
+	            lineTension: 0,
+	        },{
+	            label: '：完了件数（選択組織）',
+	            type: 'bar',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(99, 200, 132, 0.2)',
+	            borderColor: 'rgba(99, 200, 132, 1)',
+	            borderWidth: 1,
+	            lineTension: 0,
+	        }]
+	    };
+	var kikakuChartOptions = {
+	    	responsive: true,
+	        maintainAspectRatio: false,
+	        scales: {
+	        	xAxes: [{
+	                scaleLabel: {
+	                    display: true,
+	                    labelString: '申請月'
+	                }
+	            }],
+	            yAxes: [{
+	            	scaleLabel: {
+	                    display: true,
+	                    labelString: '企画件数'
+	                },
+	                ticks: {
+	                    beginAtZero: true,
+	                    userCallback: function(label, index, labels) {
+	                    	if (Math.floor(label) === label) return label;
+	                    }
+	                }
+	            }]
+	        }
+	    };
+	var kikakuChart = new Chart(kikaku_ctx, {
+	    type: 'bar',
+	    data: kikakuChartData,
+	    options: kikakuChartOptions
+	});
+	
+	// 許諾チャート初期設定
+	var kyodaku_ctx = document.getElementById('kyodakuChart').getContext('2d');
+	var kyodakuDbData;
+	var kyodakuChartData = {
+	        labels: aryMonth,
+	        datasets: [{
+	            label: '：総件数　',
+	            type: 'line',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+	            borderColor: 'rgba(255, 99, 132, 1)',
+	            borderWidth: 2,
+	            lineTension: 0,
+	        },{
+	            label: '：総件数（選択組織）',
+	            type: 'bar',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(99, 132, 255, 0.2)',
+	            borderColor: 'rgba(99, 132, 255, 1)',
+	            borderWidth: 1,
+	            lineTension: 0,
+	        },{
+	            label: '：完了件数（選択組織）',
+	            type: 'bar',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(99, 200, 132, 0.2)',
+	            borderColor: 'rgba(99, 200, 132, 1)',
+	            borderWidth: 1,
+	            lineTension: 0,
+	        }]
+	    };
+	var kyodakuChartOptions = {
+	    	responsive: true,
+	        maintainAspectRatio: false,
+	        scales: {
+	        	xAxes: [{
+	                scaleLabel: {
+	                    display: true,
+	                    labelString: '申請月'
+	                }
+	            }],
+	            yAxes: [{
+	            	scaleLabel: {
+	                    display: true,
+	                    labelString: '許諾件数'
+	                },
+	                ticks: {
+	                    beginAtZero: true,
+	                    userCallback: function(label, index, labels) {
+	                    	if (Math.floor(label) === label) return label;
+	                    }
+	                }
+	            }]
+	        }
+	    };
+	var kyodakuChart = new Chart(kyodaku_ctx, {
+	    type: 'bar',
+	    data: kyodakuChartData,
+	    options: kyodakuChartOptions
+	});
+	
+	// 売上チャート初期設定
+	var uriage_ctx = document.getElementById('uriageChart').getContext('2d');
+	var uriageDbData;
+	var uriageChartData = {
+	        labels: aryMonth,
+	        datasets: [{
+	            label: '：実績　',
+	            type: 'line',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+	            borderColor: 'rgba(255, 99, 132, 1)',
+	            borderWidth: 2,
+	            lineTension: 0,
+	        },{
+	            label: '：見込　',
+	            type: 'line',
+	            data: [],
+	            fill: false,
+	            backgroundColor: 'rgba(99, 200, 132, 0.2)',
+	            borderColor: 'rgba(99, 200, 132, 1)',
+	            borderWidth: 2,
+	            lineTension: 0,
+	        }]
+	    };
+	var uriageChartOptions = {
+	    	responsive: true,
+	        maintainAspectRatio: false,
+	        scales: {
+	        	xAxes: [{
+	                scaleLabel: {
+	                    display: true,
+	                    labelString: '売上月'
+	                }
+	            }],
+	            yAxes: [{
+	            	scaleLabel: {
+	                    display: true,
+	                    labelString: '万円'
+	                },
+	                ticks: {
+	                    beginAtZero: true,
+	                    userCallback: function(label, index, labels) {
+	                    	if (Math.floor(label) === label) return label;
+	                    }
+	                }
+	            }]
+	        }
+	    };
+	var uriageChart = new Chart(uriage_ctx, {
+	    type: 'line',
+	    data: uriageChartData,
+	    options: uriageChartOptions
+	});
+	
+	// DBから企画チャートデータ取得
+	function getKikakuChartData() {
+		let ret;
+		try {
+			ret = jsspRpcCharts.getKikakuChartData();
+	    } catch (ex) {
+	    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+	        return;
+	    }
+	    
+	    if (ret.countRow > 0) {
+	    	kikakuDbData = ret.data;
+	    	setFilterToKikakuChart();
+	    }
+	}
+	
+	// DBから許諾チャートデータ取得
+	function getKyodakuChartData() {
+		let ret;
+		try {
+			ret = jsspRpcCharts.getKyodakuChartData();
+	    } catch (ex) {
+	    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+	        return;
+	    }
+	    
+	    if (ret.countRow > 0) {
+	    	kyodakuDbData = ret.data;
+	    	setFilterToKyodakuChart();
+	    }
+	}
+	
+	// データを企画チャートに反映
+	function changeKikakuChartData(arg) {
+		kikakuChart.destroy();
+		kikakuChart = new Chart(kikaku_ctx, {
+		    type: 'bar',
+		    data: arg,
+		    options: kikakuChartOptions
+		});
+	}
+	
+	// データを許諾チャートに反映
+	function changeKyodakuChartData(arg) {
+		kyodakuChart.destroy();
+		kyodakuChart = new Chart(kyodaku_ctx, {
+		    type: 'bar',
+		    data: arg,
+		    options: kyodakuChartOptions
+		});
+	}
+	
+	// 画面で選択したフィルタを企画チャート用に設定
+	function setFilterToKikakuChart() {
+		let selectNendo = $("#kikaku_nendo_list option:selected").val();
+		let selectOrg = $("#kikaku_org_list option:selected").val();
+		let aryCount0 = [];	// グラフ1
+		let aryCount1 = [];	// グラフ2
+		let aryCount2 = [];	// グラフ3
+		
+    	$.each(aryMonth, function(idx, curMon){
+    		let count0 = kikakuDbData.reduce((prev, dat) => {
+    			  if (dat.nendo == selectNendo || selectNendo == "") {
+    			  	return prev + (dat.getudo == curMon ? 1 : 0)
+    			  } else {
+    				return prev
+    			  }
+    			}, 0);
+    		aryCount0.push(count0);
+    		
+    		let count1 = kikakuDbData.reduce((prev, dat) => {
+    			  if ((dat.nendo == selectNendo || selectNendo == "") && (dat.busyo_nm == selectOrg || selectOrg == "")) {
+    			  	return prev + (dat.getudo == curMon ? 1 : 0)
+    			  } else {
+    				return prev
+    			  }
+    			}, 0);
+    		aryCount1.push(count1);
+    		
+    		let count2 = kikakuDbData.reduce((prev, dat) => {
+    			  if ((dat.nendo == selectNendo || selectNendo == "") && (dat.busyo_nm == selectOrg || selectOrg == "")) {
+    			  	return prev + (dat.getudo == curMon && dat.status == '9' ? 1 : 0)	//TODO 固定値(dat.status == '9')
+    			  } else {
+    				return prev
+    			  }
+    			}, 0);
+    		aryCount2.push(count2);
+    		
+		});
+    	
+    	kikakuChartData.datasets[0].data = aryCount0;
+    	kikakuChartData.datasets[1].data = aryCount1;
+    	kikakuChartData.datasets[2].data = aryCount2;
+    	changeKikakuChartData(kikakuChartData);
+	}
+	
+	// 画面で選択したフィルタを許諾チャート用に設定
+	function setFilterToKyodakuChart() {
+		let selectNendo = $("#kyodaku_nendo_list option:selected").val();
+		let selectOrg = $("#kyodaku_org_list option:selected").val();
+		let aryCount0 = [];	// グラフ1
+		let aryCount1 = [];	// グラフ2
+		let aryCount2 = [];	// グラフ3
+		
+    	$.each(aryMonth, function(idx, curMon){
+    		let count0 = kyodakuDbData.reduce((prev, dat) => {
+    			  if (dat.nendo == selectNendo || selectNendo == "") {
+    			  	return prev + (dat.getudo == curMon ? 1 : 0)
+    			  } else {
+    				return prev
+    			  }
+    			}, 0);
+    		aryCount0.push(count0);
+    		
+    		let count1 = kyodakuDbData.reduce((prev, dat) => {
+    			  if ((dat.nendo == selectNendo || selectNendo == "") && (dat.busyo_nm == selectOrg || selectOrg == "")) {
+    			  	return prev + (dat.getudo == curMon ? 1 : 0)
+    			  } else {
+    				return prev
+    			  }
+    			}, 0);
+    		aryCount1.push(count1);
+    		
+    		let count2 = kyodakuDbData.reduce((prev, dat) => {
+    			  if ((dat.nendo == selectNendo || selectNendo == "") && (dat.busyo_nm == selectOrg || selectOrg == "")) {
+    			  	return prev + (dat.getudo == curMon && dat.status == '9' ? 1 : 0)	//TODO 固定値(dat.status == '9')
+    			  } else {
+    				return prev
+    			  }
+    			}, 0);
+    		aryCount2.push(count2);
+    		
+		});
+    	
+    	kyodakuChartData.datasets[0].data = aryCount0;
+    	kyodakuChartData.datasets[1].data = aryCount1;
+    	kyodakuChartData.datasets[2].data = aryCount2;
+    	changeKyodakuChartData(kyodakuChartData);
+	}
+
+	$(function () {
+		
+		// チャートデータ
+		getKikakuChartData();
+		getKyodakuChartData();
+		
+		// フィルタ変更時発火
+		$("#kikaku_nendo_list,#kikaku_org_list").change(function() {
+			setFilterToKikakuChart();
+		});
+		$("#kyodaku_nendo_list,#kyodaku_org_list").change(function() {
+			setFilterToKyodakuChart();
+		});
+		
+	});
+	</script>
+</body>

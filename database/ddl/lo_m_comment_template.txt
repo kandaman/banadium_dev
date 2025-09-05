@@ -1,0 +1,12 @@
+create table lo_m_comment_template (
+comment_template_id integer not null 
+,comment_template_nm varchar(100) not null 
+,comment_template_content text not null 
+,sort_no integer not null 
+,sakujo_flg  varchar(20) not null 
+,touroku_sha  varchar(100) not null 
+,touroku_bi  timestamp(6) without time zone not null 
+,koushin_sha  varchar(100) not null 
+,koushin_bi  timestamp(6) without time zone not null 
+,primary key (comment_template_id) 
+);

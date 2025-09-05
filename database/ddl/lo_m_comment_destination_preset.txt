@@ -1,0 +1,11 @@
+create table lo_m_comment_destination_preset (
+preset_id varchar(100) not null 
+,owner_id varchar(100) not null 
+,preset_nm varchar(100) not null 
+,sakujo_flg  varchar(20) not null 
+,touroku_sha  varchar(100) not null 
+,touroku_bi  timestamp(6) without time zone not null 
+,koushin_sha  varchar(100) not null 
+,koushin_bi  timestamp(6) without time zone not null 
+,primary key (preset_id) 
+);

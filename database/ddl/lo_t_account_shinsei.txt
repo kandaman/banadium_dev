@@ -1,0 +1,23 @@
+create table public.lo_t_account_shinsei (
+  shinsei_id character varying(20) not null
+  , flow_id character varying(100) not null
+  , shinsei_bi date
+  , shinsei_status character varying(100)
+  , kaisha_id character varying(20)
+  , kaisha_nm character varying(200)
+  , natsuin_change_flg character varying(1)
+  , shinsei_title_cd character varying(128)
+  , biko text
+  , shinsei_sha_id character varying(100)
+  , shinsei_sha_nm character varying(200)
+  , tantou_sha_id character varying(100)
+  , tantou_sha_nm character varying(200)
+  , sairiyou_bunsho_id character varying(20)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (shinsei_id)
+);
+--初回作成時はシーケンスも併せて作成

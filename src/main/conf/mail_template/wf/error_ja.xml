@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mail-template xmlns="http://www.intra-mart.co.jp/system/mail/template" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.intra-mart.co.jp/system/mail/template ../../../schema/mail-template.xsd ">
+
+    <subject>【エラー】【{type}】{title_nm}</subject>
+
+    <body>以下の申請書でエラーが発生しました。
+
+申請番号：{shinsei_no}
+起案者：{kian_user_nm}{kian_busho_nm}
+起案日：{kian_date}
+
+エラー発生日：{error_date}
+エラー情報：{error_detail}
+
+全案件一覧は以下のURLから
+{anken_all_url}
+
+MY文書は以下のURLから
+{my_documents_url}
+</body>
+</mail-template>

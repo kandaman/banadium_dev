@@ -1,0 +1,1304 @@
+<html lang="jp">
+<imart type="head">
+	<meta charset="utf-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<title><imart type="message" id="LO.TITLE.KIKAKU.PLANNING_FORM_EVENT" escapeXml="true" /></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" href="lo_csjs/cform.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+
+	<script type="text/javascript" src="lo_csjs/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/popper.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/ja.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js"></script>
+	<script type="text/javascript" src="lo_csjs/selectize.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/custom.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	<script type="text/javascript" src="lo_csjs/form-change-trigger.js"></script>
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcPlanEvent" page="lo/contents/screen/kikaku/planning_form_event_new" callback="editCallback" onErrorCallback="editError"></IMART>
+
+<style>
+	.square {
+		border-radius: 0rem !important;
+	}
+	.left-justified {
+		padding-left: 0px !important;
+	}
+	.right-justified {
+		padding-right: 0px !important;
+	}
+	.padding-top {
+		padding-top: 0.7rem !important;
+	}
+	.padding-top2 {
+		padding-top: 2.4rem !important;
+	}
+	.margin-left {
+		margin-left: 0 !important;
+	}
+	.full_width {
+		width: 100% !important;
+	}
+	.radio_height {
+		height:40px !important;
+	}
+	.licensePro_color {
+		background-color : #98fb98;
+	}
+	.mar-left {
+		margin-left: 16px;
+	}
+	.local-nav {
+    	position: -webkit-sticky;
+    	position: sticky;
+    	top: 80px;
+    	z-index: 1030;
+		margin: 0px;
+		padding: 0px;
+    	background-color: #FFFFFF;
+	}
+	.local-nav2 {
+    	position: -webkit-sticky;
+    	position: sticky;
+    	top: 157px;
+    	z-index: 1030;
+    	margin: 0px;
+		padding: 0px;
+		background-color: #f3f3f3;
+	}
+	.form-area {
+		background-color: #f3f3f3;
+		margin: 2px 0px 60px;
+		padding-top: 0 !important;
+		padding-left: 40px !important;
+		padding-right: 40px !important;
+		border: 1px solid #84919e;
+	}
+	.mar-bot {
+		margin-bottom: 10px;
+	}
+	.margin-top {
+		margin-top: 40px !important;
+	}
+	.mark-req {
+		color: red;
+	}
+	.line-height {
+		line-height: 100px;
+	}
+	.line-height2 {
+		line-height: 270px;
+	}
+
+</style>
+
+<script>
+
+	var $fileList = [];
+	var $tempUpFileCount = 0;
+	var $tempUpFileSuccessCount = 0;
+	var $tempUpFileErrotCount = 0;
+
+	$("#file_upload_btn").on("click", function() {
+		var $form = $("#filesForm");
+		var $file = $form.find(".imui-fileupload-input");
+		$file.focus();
+		$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+	});
+
+	// ---- 詳細資料ファイル -------
+	// ファイルアップロード前処理用
+	function onBeforeSendFiles(e, data) {
+		// プロダクション制限
+		<imart type="condition" validity=$production_flg>return false;</imart>
+		
+		// ファイル数制限
+		var uploadedNum = $("#complete_images .afterFileSelect").size() - 1;
+		var max_file_num = <imart type="string" value=$maxFileNum />;
+		if(uploadedNum + $tempUpFileCount + data.files.length >= max_file_num) {
+			return false;
+		}
+		
+		var str = '<imart type="string" value=$extListstr />';
+		var max_file_size = <imart type="string" value=$maxFileSize />;
+		var acceptExt =str.split("/");
+		for (var fIdx = 0; fIdx < data.files.length; fIdx++) {
+			// ファイルサイズチェック
+			if(data.files[fIdx].size > max_file_size) {
+				alert('<imart type="message" id="ER01E005" escapeJs="true"></imart>');
+				return false;
+			}
+			
+			// 拡張子チェック			
+			var ext = getFileExtension(data.files[fIdx].name);
+			if (!acceptExt.includes(ext)) {
+				var altstr = '<imart type="message" id="KK05E026" escapeJs="true"></imart>';
+				altstr = altstr.replace("{0}", data.files[fIdx].name);
+				alert(altstr);
+				return false;
+			}
+		}
+		// TODO:アップロードするファイルのサイズや拡張子をチェック
+		// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		showIndicator();
+		$tempUpFileCount += data.files.length;
+		return true;
+	}
+	// ファイルアップロード成功時
+	function onSuccessFiles(e, data) {
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpFileSuccessCount += data.result.length;
+
+		$.each(data.result, function(index, res) {
+
+			var src ="lo/contents/screen/ses_file_dl?filePath=" + res.physicalName + "&fileName=" + res.name;
+			var a_src = $('<a>').attr({'href':src, 'download':''});
+			var template = $(".completeImageTemplate");
+			var clon = template.clone(true);
+			clon.removeClass("completeImageTemplate");
+			clon.find(".upfilenametext").text(res.name);
+			clon.find(".upfilenametext").wrap(a_src);
+			clon.find('input[name="item_upFile_name"]').val(res.name);
+			clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+
+			var img_src;
+			if(getFileExtension(res.name) == "pdf") {
+				img_src = $('<i>').attr('class', 'far fa-file-pdf fa-9x mb-2 text-danger');
+				clon.find(".imgFile").html(img_src);
+				clon.find(".imgFile>i").wrap(a_src);
+			} else {
+				img_src = $('<img>').attr('src', src);
+				img_src.attr("class","img-responsive");
+				clon.find(".imgFile").html(img_src);
+				clon.find(".imgFile>img").wrap(a_src);
+			}
+			clon.find("a").css("display", "");
+
+			clon.css("display", "");
+			clon.appendTo("#complete_images");
+			template.hide();
+		});
+		// 必須項目確認
+		validateAndShowMessage();
+		
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+			$tempUpFileCount = 0;
+			$tempUpFileSuccessCount = 0;
+			$tempUpFileErrotCount = 0;
+			//$("body").imuiIndicator("destroy");は再利用できないのでhide()で隠す
+			hideIndicator();
+		}
+	}
+
+	// アップロード失敗
+	function onErrorFiles(e, data) {
+		// TODO:失敗時の処理をいれる
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpFileErrotCount += data.files.length;
+		if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+			$tempUpFileCount = 0;
+			$tempUpFileSuccessCount = 0;
+			$tempUpFileErrotCount = 0;
+			//$("body").imuiIndicator("destroy");は再利用できないのでhide()で隠す
+			hideIndicator();
+		}
+	}
+	// ---- 詳細資料ファイル -------
+
+	// ---- ファイルアップロード共通 -------
+	// アップロード削除
+	function upFileDel(targetEl){
+		// TODO:確認メッセージを表示
+		var targetObj = $(targetEl).closest("div.completeImage");
+		targetObj.remove();
+		
+		if ($(".completeImage:not(.completeImageTemplate)").length === 0) {
+			$(".completeImageTemplate").css("display", "");
+		}
+		
+		// 必須項目チェック
+    	validateAndShowMessage();
+	}
+	// ---- ファイルアップロード共通 -------
+
+ 	// 券売有無表示変更
+    function kembai_chk() {
+    	var param = $('#inputFrom').serializeObject();
+    	
+    	if (param.kembai_umu == "1") {
+    		$('.kembai').show();
+    	} else {
+    		$('.kembai').hide(); 
+    	}
+    	validateAndShowMessage();
+    }
+ 	// 声優稼働表示変更
+    function seiyu_chk() {
+    	var param = $('#inputFrom').serializeObject();
+    	
+    	if (param.seiyu_kado == "1") {
+    		$('.seiyu_kado').show();
+    	} else {
+    		$('.seiyu_kado').hide(); 
+    	}
+    	validateAndShowMessage();
+    }
+ 	// 映像使用希望表示変更
+    function eizo_chk() {
+    	var param = $('#inputFrom').serializeObject();
+    	
+    	if (param.eizo_shiyo_kibo == "1") {
+    		$('.eizo_shiyo_kibo').show();
+    	} else {
+    		$('.eizo_shiyo_kibo').hide(); 
+    	}
+    	validateAndShowMessage();
+    }
+ 	// 楽曲使用希望表示変更
+    function gakkyoku_chk() {
+    	var param = $('#inputFrom').serializeObject();
+    	
+    	if (param.gakkyoku_shiyo_kibo == "1") {
+    		$('.gakkyoku_shiyo_kibo').show();
+    	} else {
+    		$('.gakkyoku_shiyo_kibo').hide(); 
+    	}
+    	validateAndShowMessage();
+    }
+	
+</script>
+
+</imart>
+
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	
+	<!-- 企画編集画面遷移用 -->
+	<form id="sendFrom" method="post"
+		action="lo/contents/screen/kikaku/planning_form_new">
+		<imart type="hidden" kikaku_id=$event_data.kikaku_id />
+		<imart type="hidden" kikaku_edaban=$event_data.kikaku_edaban />
+	</form>
+	
+	
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+	<article>
+		<div class="container">
+			<div class="page-information row local-nav my-4">
+				<div class="col-12 col-lg-3">
+					<h1><imart type="message" id="LO.TITLE.KIKAKU.PLANNING_FORM_EVENT" escapeXml="true" /> #<imart type="string" value=$event_data.kikaku_edaban /></h1>
+					<button type="button" id="btn_back" class="brdr_orange txt_orange mt-2" onclick="history.back();">
+						<i class="fas fa-caret-left "></i><span>戻る</span>
+					</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<form role="form" id="inputFrom" autocomplete="off">
+						<imart type="hidden" kikaku_id=$event_data.kikaku_id />
+						<imart type="hidden" kikaku_edaban=$event_data.kikaku_edaban />
+						<imart type="hidden" koushin_bi=$event_data.koushin_bi />
+						<div class="form-area margin-top">
+							<section class="show local-nav2">
+								<div class="col-12 mt-2 mb-2 row">
+									<h2>基本情報</h2>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center padding-top"><span class="contaract_name">イベント・キャンペーン名<span class="mark-req"> *</span></span><span class="blanc"></span></div>
+										<div class="col-4 left-justified">
+											<IMART type="imuiTextbox" maxlength="200" class="form-control require" name="event_campaign_nm" id="event_campaign_nm" value=$event_data.event_campaign_nm　require />
+										</div>
+									</div>
+								</div>
+							</section>
+							<section class="show">
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-4 col-lg-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">イベント開始時期<span class="mark-req"> *</span></div>
+										<div class="col-6 col-lg-2 left-justified">
+											<div class="input-group licensePro-hide">
+												<IMART type="imuiTextbox" maxlength="10" class="form-control radio_height require" id="event_kaishi_jiki" name="event_kaishi_jiki" value=$event_data.event_kaishi_jiki />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#event_kaishi_jiki" showMonthAfterYear="true" zIndex="1000" onSelect="onSelectCalender" />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<div class="input-group licensee-hide">
+												<IMART type="imuiTextbox" maxlength="10" class="form-control radio_height" id="event_kaishi_jiki_pro" name="event_kaishi_jiki_pro" value=$event_data.event_kaishi_jiki readonly />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 col-lg-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">イベント終了時期<span class="mark-req"> *</span></div>
+										<div class="col-6 col-lg-2 left-justified">
+											<div class="input-group licensePro-hide">
+												<IMART type="imuiTextbox" maxlength="10" class="form-control radio_height require" id="event_shuryo_jiki" name="event_shuryo_jiki" value=$event_data.event_shuryo_jiki />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#event_shuryo_jiki" showMonthAfterYear="true" zIndex="1000" onSelect="onSelectCalender" />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<div class="input-group licensee-hide">
+												<IMART type="imuiTextbox" maxlength="10" class="form-control radio_height" id="event_shuryo_jiki_pro" name="event_shuryo_jiki_pro" value=$event_data.event_shuryo_jiki readonly />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 col-lg-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">情報初出時期<span class="mark-req"> *</span></div>
+										<div class="col-6 col-lg-2 left-justified">
+											<div class="input-group licensePro-hide">
+												<IMART type="imuiTextbox" maxlength="10" class="form-control radio_height require" id="syosyutu_jiki" name="syosyutu_jiki" value=$event_data.syosyutu_jiki />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#syosyutu_jiki" showMonthAfterYear="true" zIndex="1000" onSelect="onSelectCalender" />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<div class="input-group licensee-hide">
+												<IMART type="imuiTextbox" maxlength="10" class="form-control radio_height" id="syosyutu_jiki_pro" name="syosyutu_jiki_pro" value=$event_data.syosyutu_jiki readonly />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">券売有無<span class="mark-req"> *</span></div>
+										<div class="col-2 left-justified">
+											<imart type="imuiSelect" class="form-control square radio_height" id="kembai_umu" name="kembai_umu" list=$kembai_umu onChange="kembai_chk" />
+										</div>
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height kembai padding-top">券売開始時期</div>
+										<div class="col-2 left-justified kembai">
+											<div class="input-group licensePro-hide">
+												<IMART type="imuiTextbox" class="form-control radio_height" id="kembai_kaishi_jiki" name="kembai_kaishi_jiki" value=$event_data.kembai_kaishi_jiki />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#kembai_kaishi_jiki" showMonthAfterYear="true" zIndex="1500" onSelect="onSelectCalender"/>
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<div class="input-group licensee-hide">
+												<IMART type="imuiTextbox" class="form-control radio_height" id="kembai_kaishi_jiki_pro" name="kembai_kaishi_jiki_pro" value=$event_data.kembai_kaishi_jiki readonly />
+												<div class="input-group-append">
+													<span class="input-group-text square"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height kembai padding-top">チケット価格</div>
+										<div class="col-2 left-justified kembai">
+											<div class="input-group">
+											<IMART type="input" style="text" maxlength="9" class="form-control radio_height mask_money nat-only text-number" name="ticket_kakaku" id="ticket_kakaku" aria-describedby="fca8" value=$event_data.ticket_kakaku />
+											<div class="input-group-append">
+												<span class="input-group-text square" id="fca8">円</span>
+											</div>
+										</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center padding-top">開催場所・<br>実施店舗（店舗数）<span class="mark-req"> *</span></div>
+										<div class="col-10 mb-2 left-justified">
+											<imart type="imuiTextArea" maxlength="255" class="form-control require" name="kaisaibasho_jisshitempo" id="kaisaibasho_jisshitempo" placeholder="" rows="1" value=$event_data.kaisaibasho_jisshitempo />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center padding-top2">海外を含む場合は<br>対象国・地域を記載</div>
+										<div class="col-10 mb-2 left-justified">
+											<imart type="imuiTextArea" maxlength="255" class="form-control" name="senden_hansoku" id="senden_hansoku" placeholder="" rows="4" value=$event_data.senden_hansoku />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center padding-top">新規グッズ製造<span class="mark-req"> *</span></div>
+										<div class="col-6 col-lg-2 left-justified">
+											<imart type="imuiSelect" class="form-control square full_width radio_height require" id="shinki_goods_seizo" name="shinki_goods_seizo" list=$shinki_goods_seizo />
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center padding-top">描き下ろし希望有無<span class="mark-req"> *</span></div>
+										<div class="col-6 col-lg-2 left-justified">
+											<imart type="imuiSelect" class="form-control square full_width radio_height require" id="kakioroshi" name="kakioroshi" list=$kakioroshi />
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center padding-top">ノベルティ<span class="mark-req"> *</span></div>
+										<div class="col-6 col-lg-2 left-justified">
+											<imart type="imuiSelect" class="form-control square full_width radio_height require" id="novelty" name="novelty" list=$novelty />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">声優稼働<span class="mark-req"> *</span></div>
+										<div class="col-2 left-justified">
+											<imart type="imuiSelect" class="form-control square radio_height" id="seiyu_kado" name="seiyu_kado" list=$seiyu_kado onChange="seiyu_chk" />
+										</div>
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height seiyu_kado padding-top">声優稼働詳細<span class="mark-req"> *</span></div>
+										<div class="col-6 mb-2 left-justified seiyu_kado">
+											<IMART type="imuiTextbox" maxlength="255" class="form-control radio_height require" name="seiyu_kado_syosai" id="seiyu_kado_syosai" value=$event_data.seiyu_kado_syosai />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">映像使用希望<span class="mark-req"> *</span></div>
+										<div class="col-2 left-justified">
+											<imart type="imuiSelect" class="form-control square radio_height" id="eizo_shiyo_kibo" name="eizo_shiyo_kibo" list=$eizo_shiyo_kibo onChange="eizo_chk" />
+										</div>
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height eizo_shiyo_kibo padding-top">映像使用想定素材<span class="mark-req"> *</span></div>
+										<div class="col-6 mb-2 left-justified eizo_shiyo_kibo">
+											<IMART type="imuiTextbox" maxlength="255" class="form-control radio_height require" name="eizo_shiyo_sozai" id="eizo_shiyo_sozai" value=$event_data.eizo_shiyo_sozai />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">楽曲使用希望<span class="mark-req"> *</span></div>
+										<div class="col-2 left-justified">
+											<imart type="imuiSelect" class="form-control square radio_height" id="gakkyoku_shiyo_kibo" name="gakkyoku_shiyo_kibo" list=$gakkyoku_shiyo_kibo onChange="gakkyoku_chk" />
+										</div>
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height gakkyoku_shiyo_kibo padding-top">楽曲使用想定素材<span class="mark-req"> *</span></div>
+										<div class="col-6 mb-2 left-justified gakkyoku_shiyo_kibo">
+											<IMART type="imuiTextbox" maxlength="255" class="form-control radio_height require" name="gakkyoku_shiyo_sozai" id="gakkyoku_shiyo_sozai" value=$event_data.gakkyoku_shiyo_sozai />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center line-height padding-top">宣伝販促規模<span class="mark-req"> *</span></div>
+										<div class="col-10 mb-2 left-justified">
+											<imart type="imuiTextArea" class="form-control require" name="senden_hansoku_kibo" id="senden_hansoku_kibo" placeholder="" maxlength="255" rows="4" value=$event_data.senden_hansoku_kibo />
+											<!-- <div class="txt_red fs11 mb-4">※販促物、特典がある場合は宣伝販促計画欄に内容を記載してください。</div> -->
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center radio_height padding-top">使用料（期間合計）</div>
+										<div class="col-2 left-justified">
+											<div class="input-group">
+												<IMART type="input" style="text" maxlength="9" class="form-control radio_height mask_money nat-only text-number" name="shiyoryo_kikan_gokei" id="shiyoryo_kikan_gokei" value=$event_data.shiyoryo_kikan_gokei />
+												<div class="input-group-append">
+													<span class="input-group-text square">円</span>
+												</div>
+											</div>
+										</div>
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center padding-top">素材費</div>
+										<div class="col-2 mb-2 left-justified">
+											<div class="input-group">
+												<IMART type="input" style="text" maxlength="9" class="form-control radio_height mask_money nat-only text-number" name="sozaihi" id="sozaihi" value=$event_data.sozaihi />
+												<div class="input-group-append">
+													<span class="input-group-text square">円</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 row mt-2 mb-2">
+									<h2>コンセプト・仕様</h2>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center line-height padding-top" id="outline_name">イベント概要<span class="mark-req"> *</span></div>
+										<div class="col-10 mb-2 left-justified">
+											<imart type="imuiTextArea" class="form-control require" name="event_gaiyo" id="event_gaiyo" placeholder="イベントの概要を記入してください" maxlength="1000" rows="4" value=$event_data.event_gaiyo />
+										</div>
+									</div>
+								</div>
+								<div class="col-12 border-bottom mt-2 mb-2" id="complete_images">
+									<div class="col-6 form-group row mt-2 mb-2 licensePro-hide left-justified right-justified">
+										<div class="fileupload-area">
+											<div class="filesSelect imui-fileupload-area before_file_select">
+												<div class="fileupload-input-caption">完成イメージを追加するにはここに画像をドラッグ&ドロップしてください</div>
+												<!-- <label id="file_upload_btn" for="file_upload" class="filesUploadLabel">ファイルを選択</label> -->
+											</div>
+										</div>
+									</div>
+									<div class="col-6 form-group row mt-2 mb-2 licensePro-hide left-justified right-justified">
+										<span class="col-12"><imart type="string" value=$extstr /></span>
+										<span class="col-12"><imart type="message" id="IN01I007" escapeJs="true" /></span>
+									</div>
+									<!-- 初期表示兼テンプレートエリア -->
+									<div class="form-group row mb-2 sec2 sec3 completeImage completeImageTemplate">
+                                        <div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center" style="line-height: 300px;">完成イメージ</div>
+										<div class="col-4 mb-2 left-justified imui-fileupload-area before_file_select">
+											<div class="fileupload-area" style="height: 100%; margin: 0px;">
+												<div class="afterFileSelect">
+													<div class="thumbnail imgFile">
+													</div>
+													<dl>
+														<dt class="upfilename">
+															<span class="upfilenametext"><imart type="string" value="" /></span>
+														</dt>
+														<imart type="hidden" item_upFile_name="" />
+														<imart type="hidden" item_upFile_resname="" />
+														<dd>
+															<a href="javascript: void(0);" onclick="upFileDel(this)" style="display: none;">
+																<span class="fas fa-trash-alt fa-1x"></span>
+															</a>
+														</dd>
+													</dl>
+												</div>
+											</div>
+										</div>
+										<!-- THATS_RIGHTS-1160により削除
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center" style="line-height: 300px;">コメント<span class="mark-req"> *</span></div>
+										<div class="col-4 mb-2 left-justified">
+											<imart type="imuiTextArea" class="form-control require" name="comment"　value="" maxlength="10000" rows="12" />
+										</div>
+										-->
+									</div>
+									<!-- 動的追加エリア -->
+									<imart type="repeat" list=$fileList item="item" index="idx">
+									<div class="form-group row mb-2 sec2 sec3 completeImage">
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center" style="line-height: 300px;">完成イメージ</div>
+										<div class="col-4 mb-2 left-justified imui-fileupload-area before_file_select">
+											<div class="fileupload-area" style="height: 100%; margin: 0px;">
+												<div class="afterFileSelect">
+													<div class="thumbnail imgFile">
+														<a href='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />&fileName=<imart type="string" value=item.file_name escapeXml="true"/>' download>
+															<img class="img-responsive" src='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />&fileName=<imart type="string" value=item.file_name escapeXml="true"/>' onerror="changeImgToIcon(this,'<imart type="string" value=item.file_name escapeXml="true"/>')" />
+														</a>
+													</div>
+													<dl>
+														<dt class="upfilename">
+															<a href='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />&fileName=<imart type="string" value=item.file_name escapeXml="true"/>' download>
+																<imart type="string" value=item.file_name escapeXml="true"/>
+															</a>
+														</dt>
+														<imart type="hidden" item_upFile_name=item.file_name escapeXml="true"/>
+														<imart type="hidden" item_upFile_resname=item.file_path />
+														<dd class="licensePro-hide shanaiShusei-hide">
+															<a href="javascript: void(0);" onclick="upFileDel(this)">
+																<span class="fas fa-trash-alt fa-1x"></span>
+															</a>
+														</dd>
+													</dl>
+												</div>
+											</div>
+										</div>
+										<!-- THATS_RIGHTS-1160により削除
+										<div class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center" style="line-height: 300px;">コメント<span class="mark-req"> *</span></div>
+										<div class="col-4 mb-2 left-justified">
+											<imart type="imuiTextArea" class="form-control require" name="comment"　id="comment"　value=item.comment maxlength="10000" rows="12" />
+										</div>
+										-->
+									</div>
+									</imart>
+								</div>
+								<div class="col-12 row mt-2 mb-2">
+									<h2>備考<span class="ml-3">※補足情報があればこちらに記入してください</span></h2>
+								</div>
+								<div class="col-12 border-bottom mb-2 mt-2">
+									<div class="form-group row mb-2 sec3">
+										<div id="ichizi_bikou" class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center padding-top line-height">備考</div>
+										<div id="syuusei_bikou" class="col-2 mb-2 t-header bg_ltorange brdr_dkgray text-center padding-top line-height" style="display:none;">備考<span class="mark-req"> *</span></div>
+										<div class="col-10 mb-2 left-justified">
+											<imart type="imuiTextArea" class="form-control" name="bikou" id="bikou" value=$event_data.bikou maxlength="10000" rows="4" 
+											placeholder="販売国と商品・キャラクター名（種類数）をご記入ください。
+また、色違いの商品がある、特殊な加工方法を検討している（Tシャツのプリントなど）場合には、その旨もご記入ください。" />
+										</div>
+									</div>
+									<div id="annotation_bikou" class="mb-2" style="display:none;">
+										修正依頼を受けて内容を変更した場合は以下のように変更内容が分かるよう記載のご協力をお願いします<br>
+										例） 税抜上代：1000→1500
+									</div>
+								</div>
+							</section>
+							<section class="show licensePro_color">
+								<!-- ライセンスプロダクションのみ表示 -->
+								<IMART type="condition" validity=$production_flg>
+									<div class="col-12 sec_mode2 mt-2 mb-2 row">
+										<h2>ライセンスプロダクション入力欄<span class="ml-3">※社内ユーザのみ参照できます</span></h2>
+									</div>
+									<div class="col-12 border-bottom mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 mb-2 t-header btn_include bg_ltblue brdr_dkgray text-center">理由・条件</div>
+											<div class="col-10 mb-2 left-justified">
+												<imart type="imuiTextArea" class="form-control" name="riyu_joken" placeholder="" maxlength="1000" rows="4" value=$event_data.riyu_joken />
+											</div>
+										</div>
+									</div>
+									<div class="col-12 border-bottom mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 mb-2 t-header bg_ltblue brdr_dkgray text-center padding-top">承認</div>
+											<div class="col-2 left-justified">
+												<imart type="imuiSelect" class="form-control square full_width radio_height" id="ok_ng" name="ok_ng"  list=$shoninList />
+											</div>
+											<div class="col-3"></div>
+											<div class="col-2 mb-2 t-header bg_ltblue brdr_dkgray text-center padding-top">ロイヤリティ金額</div>
+											<div class="col-3 mb-2 left-justified">
+												<div class="input-group">
+													<IMART type="input" style="text" maxlength="9" class="form-control mask_money radio_height nat-only text-number" name="royalty_kingaku" id="royalty_kingaku" value=$event_data.royalty_kingaku></IMART>
+												</div>
+											</div>
+										</div>
+									</div>
+								</IMART>
+							</section>
+							<!-- エラー表示エリア -->
+							<div class="row">
+								<div id="error-messages" class="col-12 mt-4 mb-2">
+								</div>
+							</div>
+							
+							<section class="show">
+								<div class="col-12 form-group border-bottom row mt-2 mb-2">
+									<div class="flex_btn">
+										<div class="col-12">
+											<button type="button" id="btn_save" class="bg_orange txt_dark mb-2"><i class="fas fa-check "></i><span>登録</span></button>
+										</div>
+									</div>
+								</div>
+							</section>
+						</div>
+					</form>
+					
+					<div class="ml-4">
+						<button type="button" class="brdr_orange txt_orange p-3 mb-2" onclick="moveToPageTop(100);">
+							▲ページ先頭へ戻る
+						</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ファイルアップロードエリア -->
+	<form id="filesForm" name="filesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+		<div style="display:none;">
+			<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+			<imart type="imuiFileUpload" 
+				storeTo="/lo/upload"
+				autoUpload="true" 
+				uniqueFileName="true" 
+				id="imui-upload"
+				onBeforeSend="onBeforeSendFiles" 
+				onSuccess="onSuccessFiles"
+				onError="onErrorFiles" 
+				outerFormId="filesForm"
+				dropZone=".before_file_select" />
+				<imst:imSecureToken />
+		</div>
+	</form> 
+
+<script type="text/javascript">
+	//企画ステータス取得
+	var kikaku_status = <imart type="string" value=$kikaku_status />;
+
+	var validationErrorMessages = <imart type="string" value=$validationErrorMessages />;
+	function validate() {
+		var validationRules = [
+			{type: "single", dataCategory: "basic",
+				items: [	
+					{selectorType: "name", name: "event_campaign_nm", validations:[{type: "required", messageId: "KK05E001"}]},
+					{selectorType: "name", name: "event_kaishi_jiki", validations:[{type: "required", messageId: "KK05E002"}]},
+					{selectorType: "name", name: "event_kaishi_jiki", validations:[{type: "calender", messageId: "KK05E020"}]},
+					{selectorType: "name", name: "event_shuryo_jiki", validations:[{type: "required", messageId: "KK05E003"}]},
+					{selectorType: "name", name: "event_shuryo_jiki", validations:[{type: "calender", messageId: "KK05E021"}]},
+					{selectorType: "name", name: "event_shuryo_jiki", validations:[{type: "calender_to", messageId: "KK05E023"}]},
+					{selectorType: "name", name: "syosyutu_jiki", validations:[{type: "required", messageId: "KK05E004"}]},
+					{selectorType: "name", name: "syosyutu_jiki", validations:[{type: "calender", messageId: "KK05E022"}]},
+					{selectorType: "name", name: "syosyutu_jiki", validations:[{type: "calender_from", messageId: "KK05E024"}]},
+					{selectorType: "name", name: "kembai_umu", validations:[{type: "required", messageId: "KK05E005"}]},
+					{selectorType: "name", name: "ticket_kakaku", validations:[{type: "nat", messageId: "KK05E017"}]},
+					{selectorType: "name", name: "ticket_kakaku", validations:[{type: "space", messageId: "KK05E031"}]},
+					{selectorType: "name", name: "kaisaibasho_jisshitempo", validations:[{type: "required", messageId: "KK05E006"}]},
+					{selectorType: "name", name: "shinki_goods_seizo", validations:[{type: "required", messageId: "KK05E007"}]},
+					{selectorType: "name", name: "kakioroshi", validations:[{type: "required", messageId: "KK05E008"}]},
+					{selectorType: "name", name: "novelty", validations:[{type: "required", messageId: "KK05E009"}]},
+					{selectorType: "name", name: "seiyu_kado", validations:[{type: "required", messageId: "KK05E010"}]},
+					{selectorType: "name", name: "seiyu_kado_syosai", validations:[{type: "seiyu", messageId: "KK05E028"}]},
+					{selectorType: "name", name: "eizo_shiyo_kibo", validations:[{type: "required", messageId: "KK05E011"}]},
+					{selectorType: "name", name: "eizo_shiyo_sozai", validations:[{type: "eizo", messageId: "KK05E029"}]},
+					{selectorType: "name", name: "gakkyoku_shiyo_kibo", validations:[{type: "required", messageId: "KK05E012"}]},
+					{selectorType: "name", name: "gakkyoku_shiyo_sozai", validations:[{type: "gakkyoku", messageId: "KK05E030"}]},
+					{selectorType: "name", name: "senden_hansoku_kibo", validations:[{type: "required", messageId: "KK05E013"}]},
+					{selectorType: "name", name: "shiyoryo_kikan_gokei", validations:[{type: "nat", messageId: "KK05E027"}]},
+					{selectorType: "name", name: "shiyoryo_kikan_gokei", validations:[{type: "space", messageId: "KK05E032"}]},
+					{selectorType: "name", name: "sozaihi", validations:[{type: "nat", messageId: "KK05E027"}]},
+					{selectorType: "name", name: "sozaihi", validations:[{type: "space", messageId: "KK05E032"}]},
+					{selectorType: "name", name: "event_gaiyo", validations:[{type: "required", messageId: "KK05E014"}]},
+					{selectorType: "name", name: "royalty_kingaku", validations:[{type: "nat", messageId: "KK05E040"}]}
+				]
+			},
+			{type: "grid", dataCategory: "complateImage",  rowSelector: "#complete_images div.completeImage:visible",
+				items: []
+			}
+		];
+		
+		if (kikaku_status == '3') {
+			validationRules[0].items.push({selectorType: "name", name: "bikou", validations:[{type: "required", messageId: "KK05E025"}]});
+		}
+		
+		var natNgList = chkInputNatOnly();
+		var numNgList = chkInputNumOnly();
+		var spaceNgList = chkInputSpace();
+		
+		var validateItem = function(itemName, $item, validations, index) {
+			var result = [];
+			if ($item.is(':disabled')) {
+				return result;
+			}
+			for (var validationIndex in validations) {
+				var validation = validations[validationIndex];
+				var messageId = null;
+				if (validation.type == "required") {
+					if ($item.is(":radio") || $item.is(":checkbox")) {
+						var checked = false;
+						$item.each(function(index, element) {
+							var $element = $(element);
+							if ($element.is(":checked")) {
+								checked = true;
+								return false;
+							}
+						});
+						if (checked == false) {
+							messageId = validation.messageId;
+						}
+					} else {
+						if ($item.length == 0 || $item.val() == '') {
+							messageId = validation.messageId;
+						}
+					}
+				}
+				if (validation.type == "simplex" || validation.type == "unique") {
+					var uniqueArray = [];
+					$item.each(function(index, element) {
+						var $element = $(element);
+						if (uniqueArray.indexOf($element.val()) < 0) {
+							uniqueArray.push($element.val());
+						}
+					});
+					if (validation.type == "unique") {
+						if ($item.length != uniqueArray.length) {
+							messageId = validation.messageId;
+						}
+					}
+					if (validation.type == "simplex") {
+						if (uniqueArray.length > 1) {
+							messageId = validation.messageId;
+						}
+					}
+				}
+				if (validation.type == "nat") {
+					if(natNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+				}
+				if (validation.type == "num") {
+					if(numNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+				}
+				if (validation.type == "space") {
+					if(spaceNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+				}
+				if (validation.type == "calender") {
+                	if (!$item.val() == '' && !$item.val().match(/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/)) {
+                		messageId = validation.messageId;
+                	}
+                }
+                if (validation.type == "calender_to") {
+                	let event_kaishi_jiki = $("[name=event_kaishi_jiki]") ? parseInt($("[name=event_kaishi_jiki]").val().replace(/\//g, "").replace(/,/g, '')) : 0;
+                	let event_shuryo_jiki = $("[name=event_shuryo_jiki]") ? parseInt($("[name=event_shuryo_jiki]").val().replace(/\//g, "").replace(/,/g, '')) : 0;
+                	if (event_kaishi_jiki > event_shuryo_jiki) {
+                		messageId = validation.messageId;
+                	}
+                }
+                if (validation.type == "calender_from") {
+                	let event_kaishi_jiki = $("[name=event_kaishi_jiki]") ? parseInt($("[name=event_kaishi_jiki]").val().replace(/\//g, "").replace(/,/g, '')) : 0;
+                	let syosyutu_jiki = $("[name=syosyutu_jiki]") ? parseInt($("[name=syosyutu_jiki]").val().replace(/\//g, "").replace(/,/g, '')) : 0;
+                	if (event_kaishi_jiki < syosyutu_jiki) {
+                		messageId = validation.messageId;
+                	}
+                }
+                if (validation.type == "seiyu") {
+                	let seiyu =$("[name=seiyu_kado]") ? $("[name=seiyu_kado]").val() : '';
+                	if ($item.val() == '' && seiyu == '1') {
+                		messageId = validation.messageId;
+                	}
+                }
+                if (validation.type == "eizo") {
+                	let seiyu =$("[name=eizo_shiyo_kibo]") ? $("[name=eizo_shiyo_kibo]").val() : '';
+                	if ($item.val() == '' && seiyu == '1') {
+                		messageId = validation.messageId;
+                	}
+                }
+                if (validation.type == "gakkyoku") {
+                	let seiyu =$("[name=gakkyoku_shiyo_kibo]") ? $("[name=gakkyoku_shiyo_kibo]").val() : '';
+                	if ($item.val() == '' && seiyu == '1') {
+                		messageId = validation.messageId;
+                	}
+                }
+				if (messageId != null) {
+					var errorMessage = validationErrorMessages[messageId];
+					if (typeof index != "undefined") {
+						errorMessage = errorMessage.replace("{0}", "#" + (index + 1));
+					}
+					result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});
+					break;
+				}
+			}
+			return result;
+		}
+
+		var validateItems = function($container, items, index) {
+			var allResult = [];
+			for (var itemKey in items) {
+				var validationItem = items[itemKey];
+				var selectorType = validationItem.selectorType;
+				var itemName = validationItem.name;
+				var validations = validationItem.validations;
+				var $item = $container.find(selectorType == 'class' ? '.' + itemName : '[name="' + itemName + '"]');
+				var result = validateItem(itemName, $item, validations, index);
+				allResult = allResult.concat(result);
+			}
+			return allResult;
+		}
+
+		var validateResult = {
+			isError: false,
+			itemResults: []
+		};
+		for (var typeKey in validationRules) {
+			var ruleType = validationRules[typeKey];
+			if (ruleType.type == 'grid') {
+				var $rows = $(ruleType.rowSelector);
+				$rows.each(function(index, element) {
+					var $row = $(element);
+					var result = validateItems($row, ruleType.items, index);
+					validateResult.itemResults = validateResult.itemResults.concat(result);
+				});
+			} else {
+				var $body = $("body");
+				var result = validateItems($body, ruleType.items);
+				validateResult.itemResults = validateResult.itemResults.concat(result);
+			}
+		}
+		if (validateResult.itemResults.length > 0) {
+			validateResult.isError = true;
+		}
+		return validateResult;
+	}
+
+	function validateAndShowMessage() {
+		var $errorMessages = $("#error-messages");
+		$errorMessages.empty();
+		var validateResult = validate();
+		if (validateResult.isError == false) {
+			// ボタン活性化
+			document.getElementById("btn_save").disabled = false;
+			return validateResult;
+		}
+		var showMessages = [];
+		validateResult.itemResults.forEach(function(currentValue, index, array){
+			if (showMessages.indexOf(currentValue.errorMessage) < 0) {
+				showMessages.push(currentValue.errorMessage);
+			}
+		});
+		for (var index in showMessages) {
+			var message = showMessages[index];
+			var messageHtml = '<div class="mark-req">' + message + '</div>';
+			$errorMessages.append(messageHtml);
+		}
+		validateResult.showMessages = showMessages;
+		
+		// ボタン非活性化
+		if (showMessages.length > 0){
+			document.getElementById("btn_save").disabled = true;
+		}
+		return validateResult;
+	}
+	
+	//登録後処理
+	function editCallback(ret){
+		// 企画編集画面へ遷移
+		if (ret.error){
+			hideIndicator();
+			alert(ret.msg);
+		}else{
+			// URLにパラメータを付与
+			let crntUrl = window.location.pathname;
+			let crntParamIdx = crntUrl.indexOf('?');
+			if(crntParamIdx > 0) crntUrl = crntUrl.substring(0,crntParamIdx);
+			window.history.replaceState(null,null,crntUrl + '?kikaku_id=' + ret.kikaku_id + '&kikaku_edaban=' + ret.kikaku_edaban);
+			// THATS_RIGHTS-1312 【UAT指摘】ダイアログ「更新しました」は余計
+			//alert(ret.altmsg);
+			// 戻画面へ遷移
+			history.back();
+	    }
+	}
+	// 登録時エラー
+	function editError(ex) {
+		hideIndicator();
+		imuiShowErrorMessage(ex.message, [], true, 5000, true);
+	}
+
+	// 初期表示
+	function initDisp() {
+		
+		// プルダウン初期設定
+		// 値取得
+		var kembai_umu = '<imart type="string" value=$event_data.kembai_umu />';
+		var shinki_goods_seizo = '<imart type="string" value=$event_data.shinki_goods_seizo />';
+		var kakioroshi = '<imart type="string" value=$event_data.kakioroshi />';
+		var novelty = '<imart type="string" value=$event_data.novelty />';
+		var seiyu_kado = '<imart type="string" value=$event_data.seiyu_kado />';
+		var eizo_shiyo_kibo = '<imart type="string" value=$event_data.eizo_shiyo_kibo />';
+		var gakkyoku_shiyo_kibo = '<imart type="string" value=$event_data.gakkyoku_shiyo_kibo />';
+		var ok_ng = '<imart type="string" value=$event_data.ok_ng />';
+		
+		if ($(".completeImage:not(.completeImageTemplate)").length > 0) {
+			$(".completeImageTemplate").hide();
+		}
+		
+		var select = document.getElementById("kembai_umu");
+		if(kembai_umu == '1') {
+			$('.kembai').show();
+			select.options[1].selected = true;
+		} else if(kembai_umu == '2') {
+			$('.kembai').hide();
+			select.options[2].selected = true;
+		} else {
+			select.options[0].selected = true;
+			$('.kembai').hide();
+		}
+		select = document.getElementById("shinki_goods_seizo");
+		if(shinki_goods_seizo == '1') {
+			select.options[1].selected = true;
+		} else if(shinki_goods_seizo == '2') {
+			select.options[2].selected = true;
+		} else {
+			select.options[0].selected = true;
+		}
+		select = document.getElementById("kakioroshi");
+		if(kakioroshi == '1') {
+			select.options[1].selected = true;
+		} else if(kakioroshi == '2') {
+			select.options[2].selected = true;
+		} else {
+			select.options[0].selected = true;
+		}
+		select = document.getElementById("novelty");
+		if(novelty == '1') {
+			select.options[1].selected = true;
+		} else if(novelty == '2') {
+			select.options[2].selected = true;
+		} else {
+			select.options[0].selected = true;
+		}
+		select = document.getElementById("seiyu_kado");
+		if(seiyu_kado == '1') {
+			select.options[1].selected = true;
+			$('.seiyu_kado').show();
+		} else if(seiyu_kado == '2') {
+			select.options[2].selected = true;
+			$('.seiyu_kado').hide();
+		} else {
+			select.options[0].selected = true;
+			$('.seiyu_kado').hide();
+		}
+		select = document.getElementById("eizo_shiyo_kibo");
+		if(eizo_shiyo_kibo == '1') {
+			select.options[1].selected = true;
+			$('.eizo_shiyo_kibo').show();
+		} else if(eizo_shiyo_kibo == '2') {
+			select.options[2].selected = true;
+			$('.eizo_shiyo_kibo').hide();
+		} else {
+			select.options[0].selected = true;
+			$('.eizo_shiyo_kibo').hide();
+		}
+		select = document.getElementById("gakkyoku_shiyo_kibo");
+		if(gakkyoku_shiyo_kibo == '1') {
+			select.options[1].selected = true;
+			$('.gakkyoku_shiyo_kibo').show();
+		} else if(gakkyoku_shiyo_kibo == '2') {
+			select.options[2].selected = true;
+			$('.gakkyoku_shiyo_kibo').hide();
+		} else {
+			select.options[0].selected = true;
+			$('.gakkyoku_shiyo_kibo').hide();
+		}
+
+		
+		// ライセンスプロダクションでない場合
+		<IMART type="condition" validity=$production_flg negative>
+			$('.licensee-hide').hide(); // ライセンスプロダクション用の項目を非表示
+		</IMART>
+		
+		// ライセンスプロダクションの場合、読み取り専用にする
+		<IMART type="condition" validity=$production_flg>
+			// 表示設定
+			select = document.getElementById("ok_ng");
+			if(ok_ng == '0'){
+				select.options[0].selected = true;
+			} else if(ok_ng == '1') {
+				select.options[1].selected = true;
+			} else if(ok_ng == '2') {
+				select.options[2].selected = true;
+			}
+			
+			<imart type="condition" validity=$shanaiShuseiFlg>
+				// 社内修正の場合は、ライセンシーと同様に修正可能とする(一部修正不可)
+				$('.licensee-hide').hide();
+				$('#complete_images > .licensePro-hide').hide();
+				$('.shanaiShusei-hide').hide();
+			</imart>
+			<imart type="condition" validity=$shanaiShuseiFlg negative>
+				$('.licensePro-hide').hide(); // ライセンシー用の項目を非表示
+				
+				document.getElementById("event_campaign_nm").readOnly = true;
+				document.getElementById("event_kaishi_jiki").readOnly = true;
+				document.getElementById("event_shuryo_jiki").readOnly = true;
+				document.getElementById("syosyutu_jiki").readOnly = true;
+				document.getElementById("kembai_umu").options[0].disabled = true;
+				document.getElementById("kembai_umu").options[1].disabled = true;
+				document.getElementById("kembai_umu").options[2].disabled = true;
+				document.getElementById("kembai_kaishi_jiki").readOnly = true;
+				document.getElementById("ticket_kakaku").readOnly = true;
+				document.getElementById("kaisaibasho_jisshitempo").readOnly = true;
+				document.getElementById("senden_hansoku").readOnly = true;
+				document.getElementById("shinki_goods_seizo").options[0].disabled = true;
+				document.getElementById("shinki_goods_seizo").options[1].disabled = true;
+				document.getElementById("shinki_goods_seizo").options[2].disabled = true;
+				document.getElementById("kakioroshi").options[0].disabled = true;
+				document.getElementById("kakioroshi").options[1].disabled = true;
+				document.getElementById("kakioroshi").options[2].disabled = true;
+				document.getElementById("novelty").options[0].disabled = true;
+				document.getElementById("novelty").options[1].disabled = true;
+				document.getElementById("novelty").options[2].disabled = true;
+				document.getElementById("seiyu_kado").options[0].disabled = true;
+				document.getElementById("seiyu_kado").options[1].disabled = true;
+				document.getElementById("seiyu_kado").options[2].disabled = true;
+				document.getElementById("seiyu_kado_syosai").readOnly = true;
+				document.getElementById("eizo_shiyo_kibo").options[0].disabled = true;
+				document.getElementById("eizo_shiyo_kibo").options[1].disabled = true;
+				document.getElementById("eizo_shiyo_kibo").options[2].disabled = true;
+				document.getElementById("eizo_shiyo_sozai").readOnly = true;
+				document.getElementById("gakkyoku_shiyo_kibo").options[0].disabled = true;
+				document.getElementById("gakkyoku_shiyo_kibo").options[1].disabled = true;
+				document.getElementById("gakkyoku_shiyo_kibo").options[2].disabled = true;
+				document.getElementById("gakkyoku_shiyo_sozai").readOnly = true;
+				document.getElementById("senden_hansoku_kibo").readOnly = true;
+				document.getElementById("shiyoryo_kikan_gokei").readOnly = true;
+				document.getElementById("event_gaiyo").readOnly = true;
+				document.getElementById("bikou").readOnly = true;
+			</imart>
+		</IMART>
+		
+		// 企画ステータス毎の設定
+		var action_url = '';
+		if (kikaku_status == '2') {
+			action_url = 'lo/contents/screen/kikaku/planning_detail_new';
+		} else if (kikaku_status == '3') {
+			action_url = 'lo/contents/screen/kikaku/planning_form_new';
+			$('#annotation_bikou').show();
+			$('#ichizi_bikou').hide();
+			$('#syuusei_bikou').show();
+			$('#bikou').addClass('require');
+		} else {
+			action_url = 'lo/contents/screen/kikaku/planning_form_new';
+		}
+		$('#sendFrom').attr("action",action_url);
+		
+		// フォーム内にあるname属性と入力値を一括で取得する
+		var param = $('#inputFrom').serializeInputValue();
+		
+		// 必須項目チェック
+    	validateAndShowMessage();
+	}
+	
+    $(function () {
+    	
+		// 初期表示
+		initDisp();
+
+		//カレンダー横のアイコンを消す
+		 $('.imui-calendar').each(function(i,elem){
+			 $(elem).next('img').hide();
+		 });
+		//カレンダー横アイコン押下
+		 $('.fa-calendar').parent().click(function(){
+			$(this).parent().parent().find('img').click();
+		 });
+
+    	// 企画申請登録
+    	$('#btn_save').on('click', function() {
+    		showIndicator();
+    		
+    		// チェックボタン、ラジオボタンの有効化
+    		<IMART type="condition" validity=$production_flg>
+				document.getElementById("kembai_umu").options[0].disabled = false;
+				document.getElementById("kembai_umu").options[1].disabled = false;
+				document.getElementById("kembai_umu").options[2].disabled = false;
+				document.getElementById("shinki_goods_seizo").options[0].disabled = false;
+				document.getElementById("shinki_goods_seizo").options[1].disabled = false;
+				document.getElementById("shinki_goods_seizo").options[2].disabled = false;
+				document.getElementById("kakioroshi").options[0].disabled = false;
+				document.getElementById("kakioroshi").options[1].disabled = false;
+				document.getElementById("kakioroshi").options[2].disabled = false;
+				document.getElementById("novelty").options[0].disabled = false;
+				document.getElementById("novelty").options[1].disabled = false;
+				document.getElementById("novelty").options[2].disabled = false;
+				document.getElementById("seiyu_kado").options[0].disabled = false;
+				document.getElementById("seiyu_kado").options[1].disabled = false;
+				document.getElementById("seiyu_kado").options[2].disabled = false;
+				document.getElementById("eizo_shiyo_kibo").options[0].disabled = false;
+				document.getElementById("eizo_shiyo_kibo").options[1].disabled = false;
+				document.getElementById("eizo_shiyo_kibo").options[2].disabled = false;
+				document.getElementById("gakkyoku_shiyo_kibo").options[0].disabled = false;
+				document.getElementById("gakkyoku_shiyo_kibo").options[1].disabled = false;
+				document.getElementById("gakkyoku_shiyo_kibo").options[2].disabled = false;
+			</IMART>
+    		
+		    var template = $(".completeImageTemplate");
+			template.find('[name="item_upFile_name"]').prop("disabled", true);
+			template.find('[name="item_upFile_resname"]').prop("disabled", true);
+			template.find('[name="comment"]').prop("disabled", true);
+
+			// フォーム内にあるname属性と入力値を一括で取得する
+			//var param = $('#inputFrom').serializeObject();
+			//var inputList = $('#inputFrom').serializeArray();
+			var inputList = $('#inputFrom').serializeRawValueArray();
+			var param = {};
+			for (var i = 0; i < inputList.length; i++) {
+				var inputName = inputList[i].name;
+				var inputVal = inputList[i].value;
+				if (param[inputName] !== undefined) {
+					if (!param[inputName].push) {
+						param[inputName] = [param[inputName]];
+					}
+					param[inputName].push(inputVal || '');   
+				} else {
+					param[inputName] = inputVal || '';
+				}
+			}
+			
+			template.find('[name="item_upFile_name"]').prop("disabled", false);
+			template.find('[name="item_upFile_resname"]').prop("disabled", false);
+			template.find('[name="comment"]').prop("disabled", false);
+    		
+    		<IMART type="condition" validity=$production_flg negative>
+				param.ok_ng = '0';
+			</IMART>
+			
+			// THATS_RIGHTS-1312 【UAT指摘】ダイアログ「更新しました」は余計
+			// 枝番がなければ新規登録
+			//var res;
+			//if ($('#inputFrom').find('input[name=kikaku_edaban]').val()==""){
+				// todo メッセージボックスは仮
+			//    res = confirm('<imart type="message" id="KK05C001" escapeJs="true"></imart>');
+			//}else{
+			//    res = confirm('<imart type="message" id="KK05C002" escapeJs="true"></imart>');
+			//}
+		    //if( res == false ) {
+		    //	return false;
+		    //}
+		    
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+			
+    		// 登録処理を行う
+    		jsspRpcPlanEvent.create(param);
+    	});
+    	
+     	// 完成イメージ追加
+		$('#image_drop_add').click(function() {
+			$('#image_drop').append('<div class="form-group row mb-2 sec2 sec3 row">'+ $('#image_drop_main').html() + '</div>');
+		});
+     	
+		$('.require, .nat-only, .num-only').change(function(){
+			mandatory_chk();
+		});
+    	
+        //$("#input").cleditor()[0].focus();
+        
+    	 // カレンダーチェック
+		$('.imui-calendar').change(function(e) {
+    		mandatory_chk();
+    	});
+
+		initializeNumFormat();
+    });
+    
+	// 必須項目チェック
+    function mandatory_chk() {
+    	validateAndShowMessage();
+    }
+
+    document.getElementById("kembai_umu").onchange = kembai_chk;
+    document.getElementById("seiyu_kado").onchange = seiyu_chk;
+    document.getElementById("eizo_shiyo_kibo").onchange = eizo_chk;
+    document.getElementById("gakkyoku_shiyo_kibo").onchange = gakkyoku_chk;
+    
+    $(window).on("load", function() {
+		document.getElementById('body').style.display = 'block';
+	});
+    
+    function onSelectCalender() {
+ 		mandatory_chk();
+ 	}
+</script>
+
+
+</body>
+</main>
+</html>

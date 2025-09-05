@@ -1,0 +1,20 @@
+create table lo_t_sozaihi(
+sozaihi_id  varchar(20)
+,sozai_irai_nm  varchar(255)
+,siyo_sozaihi_irai_naiyo  varchar(1024)
+,sai_irai_flg  integer
+,shiharai_kigen_ymd  varchar(20)
+,shiyo_tensu  integer
+,sozai_mitsumori  numeric(30,6)
+,shinsei_bi  varchar(20)
+,kakunin_bi  varchar(20)
+,bne_tantou_sha  varchar(1024)
+,tenpu_siryou  varchar(1000)
+,tenpu_siryou_file_path  varchar(1000)
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+,primary key (sozaihi_id)
+);

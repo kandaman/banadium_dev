@@ -1,0 +1,347 @@
+<style type="text/css">
+<!--
+#kyodaku_select_table td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+--> 
+</style>
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcKyodakuSearch" page="lo/contents/screen/common/kyodaku_search" callback="searchResultKyodaku" onErrorCallback="searchErrorKyodaku"></IMART>
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<section class="show">
+							<div class="mt-2 mb-2">
+								<h2>許諾選択</h2>
+							</div>
+							<div class="col-12 form-area mt-2 mb-2">
+								<div class="col-12 row"><h4 class="indent">検索条件</h4></div>
+								<form role="form" id="kyodakuSearchForm">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">許諾番号</div>
+										<div class="col-4 left-justified">
+											<div class="input-group">
+												<input id="kyodaku_search_kyodaku_id" maxlength="20" type="text" class="form-control kyodaku_search_clear_target">
+											</div>
+										</div>
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">許諾ステータス</div>
+										<div class="col-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiSelect" class="custom-select kyodaku_search_clear_target" id="kyodaku_search_kyodaku_status" list=$form.kyodaku_status_list />
+											</div>
+										</div>
+									</div>
+									<imart type="decision" value=$bne_flg case="1"> <!-- プロダクションの場合-->
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">ライセンシー名</div>
+											<div class="col-4 left-justified">
+												<div class="input-group">
+													<input id="kyodaku_search_kaisha_nm" maxlength="255" type="text" class="form-control kyodaku_search_clear_target">
+												</div>
+											</div>
+										</div>
+									</imart>
+									<imart type="imuiTextbox" id="kyodaku_search_restraint_values" name="kyodaku_search_restraint_values" class="form-control" value=$form.restraint_values hidden="true" escapeXml="true"/>
+								</form>
+							</div>
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="kyodaku_search_search"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+											<button type="button" class="brdr_dkgray txt_dark" id="kyodaku_search_clear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 border-bottom mt-2 mb-2">
+								<table id="kyodaku_select_table" class="table table_border_radius bnadium-table" style="width: 100%;">
+									<thead>
+										<tr class="brdr_ltgray" role="row">
+											<th style="width: 28px; min-width: 28px;"></th>
+											<th style="width: 140px; min-width: 140px;">許諾番号</th>
+											<th>許諾名</th>
+											<th>タイトル</th>
+											<th style="width: 150px; min-width: 150px;">許諾期間(FROM)</th>
+											<th style="width: 150px; min-width: 150px;">許諾期間(TO)</th>
+											<th style="width: 130px; min-width: 130px;">契約種別</th>
+											<th style="width: 130px; min-width: 130px;">許諾種別</th>
+											<th class="licensee_hide">会社名</th>
+											<th style="width: 130px; min-width: 130px;">担当者</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="kyodaku_search_select" disabled><i class="fas fa-search fa-2x"></i><span>選択</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+
+						</section>
+					</div>
+				</div>
+			</div>
+<script type="text/javascript">
+$(function () {
+
+	var bneFlg = ('<imart type="string" value=$bne_flg />' == "1" ? true : false);
+	var motoFlg = ('<imart type="string" value=$moto_flg />' == "1" ? true : false);
+
+	if (!bneFlg) {
+		$(".licensee_hide").hide();
+	}
+	function escapeStr(value) {
+		  return value.replace(/&/g, "&amp;")
+		    .replace(/"/g, "&quot;")
+		    .replace(/'/g, "&#039;")
+		    .replace(/</g, "&lt;")
+		    .replace(/>/g, "&gt;")
+		    .replace(/\n/g, "<br>");
+		}
+	
+	var changeSelectBtnDisabled = function () {
+		if($("[name=row_check_kyodaku]:checked").val()) {
+			$("#kyodaku_search_select").prop('disabled', false);
+		} else {
+			$("#kyodaku_search_select").prop('disabled', true);
+		}
+	}
+	
+	// ENTERで検索
+	var enterPressFlg = false;
+	$('form#kyodakuSearchForm input').keyup(function() {
+		if(event.keyCode == 13 && !enterPressFlg) {
+			enterPressFlg = true;
+			$('#kyodaku_search_search').click();
+		}
+	});
+	
+	var kyodakuSelectDataTable = null;
+	var checkedDataIndex = null;
+	$("#kyodaku_search_search").click(function() {
+
+		// 表のクリア
+		if (kyodakuSelectDataTable == null) {
+			kyodakuSelectDataTable = $('#kyodaku_select_table').DataTable({
+				data: [],
+				// 自動幅調整無効
+				autoWidth: false,
+				// 件数切替機能 無効
+				lengthChange: false,
+				// 検索機能 無効
+				searching: false,
+				// ソート機能 無効
+				ordering: false,
+				// 初期ソート 無効
+				order: [],
+				// 情報表示 無効
+				info: false,
+				// ページング機能 無効
+				paging: true,
+				// １ページあたりの表示件数
+				pageLength: 10,
+				pagingType: "full_numbers",
+				// 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+				scrollX: false,
+				dom: "<tr><'row'<'col-4'i><'col-4 text-center'p><'col-4'>>",
+				"language": {
+					"processing":   "処理中...",
+					"lengthMenu":   "_MENU_ 件表示",
+					"zeroRecords":  "データはありません。",
+					"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+					"infoEmpty":    " 0 件中 0 から 0 まで表示",
+					"infoFiltered": "（全 _MAX_ 件より抽出）",
+					"infoPostFix":  "",
+					"search":       "検索:",
+					"url":          "",
+					"paginate": {
+						"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+						"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+						"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+						"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+					}
+				},
+				columns: [
+					{data: "kyodaku_search_chk", targets: 0,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-center align-middle");
+						},
+						render:function(data, type, row, meta) {
+							var html = '';
+							html += '<div class="input-group text-center align-middle">';
+							<imart type="condition" validity=$radio_mode negative>
+							html += '<input type="checkbox" name="row_check_kyodaku" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							<imart type="condition" validity=$radio_mode>
+							html += '<input type="radio" name="row_check_kyodaku" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							html += '</div>';
+							return html;
+
+						}
+					},
+					{data: "kyodaku_id", targets: 1,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						},
+						render:function(data, type, row, meta) {
+							return '<a href="lo/contents/screen/kyodaku/permission_product_detail?new_window_flg=1&kyodaku_id=' + data + '" target="_blank">' + data + '</a>';
+						}
+					},
+					{data: "kyodaku_nm", targets: 2,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						},
+						render: $.fn.dataTable.render.text()
+					},
+					{data: "title_nm", targets: 3,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+					{data: "kyodaku_kikan_from", targets: 4,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+					{data: "kyodaku_kikan_to", targets: 5,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+					{data: "keiyaku_cls_nm", targets: 6,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+					{data: "kyodaku_cls_nm", targets: 7,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+					{data: "kaisha_nm", targets: 8, visible: bneFlg,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+					{data: "tantou_sha_nm", targets: 9,
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+							$(cell).addClass("brdr_ltgray text-left align-middle");
+						}
+					},
+				],
+				createdRow: function(row, data, dataIndex) {
+					$(row).attr('data-dataindex', dataIndex);
+				}
+			});
+
+		} else {
+			kyodakuSelectDataTable.rows().remove();			
+		}
+		// 検索条件取得
+		var whereParam = {
+			"kyodaku_id":$.trim($("#kyodaku_search_kyodaku_id").val())
+			, "kyodaku_status": $.trim($("#kyodaku_search_kyodaku_status").val()) == "" ? [] : $.trim($("#kyodaku_search_kyodaku_status").val()).split(",")
+			, "kaisha_nm":$.trim($("#kyodaku_search_kaisha_nm").val())
+			, "restraint_values" : $.trim($("#kyodaku_search_restraint_values").val()) == "" ? null : $.trim($("#kyodaku_search_restraint_values").val())
+		};
+		
+		// 検索
+		jsspRpcKyodakuSearch.searchKyodakuList(whereParam, motoFlg);
+		// インジケータ表示
+		showIndicator();
+	});
+	
+	// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+	window.searchResultKyodaku = function(ret) {
+        var dataSet = [];
+        if (ret.countRow > 0) {
+            // data配列を順に処理
+        	$.each(ret.data,function(index, elem) {
+				elem.kyodaku_search_chk = false;
+				dataSet.push(elem);
+			});
+        }
+        kyodakuSelectDataTable.rows.add(dataSet).draw();
+	    $("#kikaku_search_select").prop('disabled', true);
+	    checkedDataIndex = null;
+
+		// インジケータ非表示
+        hideIndicator();
+        enterPressFlg = false;
+    }
+	// 検索エラー後コールバック
+	window.searchErrorKyodaku = function(res) {
+        hideIndicator();
+        enterPressFlg = false;
+		try {
+			imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+			return;
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		}
+    }
+	
+	<imart type="condition" validity=$radio_mode>
+	var radioMode = true;
+	</imart>
+	<imart type="condition" validity=$radio_mode negative>
+	var radioMode = false;
+	</imart>
+	
+	$(document).on("change", '#kyodaku_select_table [name="row_check_kyodaku"]', function(){
+		var $this = $(this);
+		var $tr = $this.closest("tr");
+		var dataIndex = Number($tr.attr('data-dataindex'));
+		if (radioMode && checkedDataIndex != null) {
+			kyodakuSelectDataTable.data()[checkedDataIndex].kyodaku_search_chk = false;
+		}
+		var kyodakuData = kyodakuSelectDataTable.data()[dataIndex];
+		kyodakuData.kyodaku_search_chk = $this.prop('checked');
+		checkedDataIndex = dataIndex;
+		changeSelectBtnDisabled();
+	});
+
+	$("#kyodaku_search_select").click(function() {
+		var selectedKyodakuDatas = [];
+		if (kyodakuSelectDataTable != null) {
+			selectedKyodakuDatas = kyodakuSelectDataTable.rows(function(index, data, node) {
+		        return data.kyodaku_search_chk;
+		    }).data().toArray();
+		}
+		
+		initializePopup();
+		var $popup = $(this).closest(".popup");
+		$popup.trigger("selectedKyodakuDatas", [selectedKyodakuDatas]);
+	});
+	
+	$("#kyodaku_search_clear").click(function() {
+		$(".kyodaku_search_clear_target").val("");
+		
+	});
+
+	var initializePopup = function() {
+		$("#kyodaku_search_clear").click();
+		if (kyodakuSelectDataTable != null) {
+			kyodakuSelectDataTable.rows().remove().draw();
+		}
+		$("#kyodaku_search_select").prop('disabled', true);
+	};
+
+	$(document).on("initializePopup", function(){
+		initializePopup();
+	});
+});
+</script>

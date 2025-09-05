@@ -1,0 +1,1 @@
+create sequence seq_lo_kawari_license_proposal_id;

@@ -1,0 +1,1105 @@
+
+<imart type="head">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator_materialize.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap-multiselect.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+		
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/popper.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/tabulator.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js?version=20210714"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcKeiyakuList" page="lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_list"></IMART>
+	<IMART type="jsspRpc" name="jsspRpcKeiyakuSearch" page="lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_list" callback="searchResult" onErrorCallback="searchError"></IMART>
+<style>
+
+	footer .bne-information {
+	    margin-bottom: 20px;
+	}
+	.table td {
+		border-top-width: 1px !important;
+    	border-top-style: solid !important;
+    	border-top-color: rgb(222, 226, 230) !important;
+    	border-left-width: 1px !important;
+    	border-left-style: solid !important;
+    	border-left-color: rgb(222, 226, 230) !important;
+    	border-right-width: 1px !important;
+    	border-right-style: solid !important;
+    	border-right-color: rgb(222, 226, 230) !important;
+    	border-bottom-width: 1px !important;
+    	border-bottom-style: solid !important;
+    	border-bottom-color: rgb(222, 226, 230) !important;
+    	
+	}
+	.form-control {
+		width: 100%;
+		/*display: block; こいつが悪さする？*/
+		height: calc(1.5em + 0.75rem + 2px);
+		padding: 0.375rem 0.75rem;
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #495057;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: 0rem !important;
+		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	}
+	.word_wrap {
+		word-wrap: break-word;
+	}
+	
+	#keiyaku_table thead th:nth-child(1){
+		width: 130px;
+		min-width: 130px;
+	}
+	#keiyaku_table thead th:nth-child(2){
+		width: 150px;
+		min-width: 150px;
+	}
+	#keiyaku_table thead th:nth-child(3){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(4){
+		width: 400px;
+		min-width: 400px;
+	}
+	#keiyaku_table thead th:nth-child(5){
+		width: 190px;
+		min-width: 190px;
+	}
+	#keiyaku_table thead th:nth-child(6){
+		width: 200px;
+		min-width: 200px;
+	}
+	#keiyaku_table thead th:nth-child(7){
+		width: 200px;
+		min-width: 200px;
+	}
+	#keiyaku_table thead th:nth-child(8){
+		width: 300px;
+		min-width: 300px;
+	}
+	#keiyaku_table thead th:nth-child(9){
+		width: 300px;
+		min-width: 300px;
+	}
+	#keiyaku_table thead th:nth-child(10){
+		width: 160px;
+		min-width: 160px;
+	}
+	#keiyaku_table thead th:nth-child(11){
+		width: 250px;
+		min-width: 250px;
+	}
+	#keiyaku_table thead th:nth-child(12){
+		width: 200px;
+		min-width: 200px;
+	}
+	#keiyaku_table thead th:nth-child(13){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(14){
+		width: 150px;
+		min-width: 150px;
+	}
+	#keiyaku_table thead th:nth-child(15){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(16){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(17){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(18){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(19){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(20){
+		width: 120px;
+		min-width: 120px;
+	}
+	#keiyaku_table thead th:nth-child(21){
+		width: 120px;
+		min-width: 120px;
+	}
+</style>
+
+	<title><imart type="message" id="LO.TITLE.KEIYAKU.CONTRACT_LIST" escapeXml="true" /></title>
+</imart>
+
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none"> <i
+					class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+				<article id="page-upper-part">
+					<div class="page-information row my-4">
+						<div class="col-3">
+							<h1><imart type="message" id="LO.TITLE.KEIYAKU.CONTRACT_LIST" escapeXml="true" /></h1>
+						</div>
+						<div class="col-6 mt-3">
+							<imart type="message" id="KE01I001" escapeJs="true"></imart>
+						</div>
+						<div class="col-3 d-flex align-items-end">
+							<div class="text-right" style="width: 100%;">
+								<span id="condition_hide"><i class="far fa-caret-square-up"></i>検索条件非表示</span>
+								<span id="condition_show" style="display: none;"><i class="far fa-caret-square-down"></i>検索条件表示</span>
+							</div>
+						</div>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-12 form-area search_condition mt-2 mb-2">
+								<div class="row">
+									<div class="col-12">
+										<h4 class="indent">検索条件</h4>
+									</div>
+								</div>
+								<form role="form" id="inputForm">
+									<imart type="decision" value=$userInfo.bneFlg case="1">
+										<div class="row mb-2">
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">IP</div>
+											<div class="col-6 col-lg-4 left-justified">
+												<div class="input-group">
+													<imart type="imuiTextbox" maxlength="1024" id="ip_nm" name="ip_nm" class="form-control" value=$form.ip_nm />
+													<div class="input-group-append">
+														<button type="button" id="btn_ip_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+													</div>
+												</div>
+											</div>
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">タイトル名</div>
+											<div class="col-6 col-lg-4 left-justified">
+												<div class="input-group">
+													<imart type="imuiTextbox" maxlength="1024" id="title_nm" name="title_nm" class="form-control" value=$form.title_nm />
+													<div class="input-group-append">
+														<button type="button" id="btn_title_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</imart>
+									<div class="row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約書表題</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<imart type="imuiTextbox" maxlength="100" id="keiyakusho_hyodai" name="keiyakusho_hyodai" class="form-control" value=$form.keiyakusho_hyodai />
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約種別</div>
+										<div class="col-4 col-lg-2 left-justified">
+											<div class="input-group">
+												<imart type="imuiSelect" class="custom-select form-control" id="keiyaku_cls" name="keiyaku_cls"  list=$form.keiyaku_cls_list />
+											</div>
+										</div>
+										<div class="col-4 col-lg-2 left-justified">
+											<div class="input-group">
+												<imart type="imuiSelect" class="custom-select form-control" id="kyodaku_cls" name="kyodaku_cls"  list=$form.kyodaku_cls_list />
+											</div>
+										</div>
+									</div>
+									<div class="row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約内容名</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<imart type="imuiTextbox" maxlength="100" id="keiyaku_naiyo_nm" name="keiyaku_naiyo_nm" class="form-control" value=$form.keiyaku_naiyo_nm />
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約進捗ステータス</div>
+										<div class="col-4 col-lg-2 left-justified">
+											<div class="input-group">
+												<imart type="imuiSelect" class="custom-select form-control multiple" id="keiyaku_status" name="keiyaku_status"  list=$form.keiyaku_status_list multiple="multiple" />
+											</div>
+										</div>
+										<div class="col-3 col-lg-2 align-middle inputRadio pl-0 mt-auto mb-auto">
+											<div class="input-group">
+												<button type="button" class="brdr_dkgray txt_dark ml-0" id="keiyaku_status_not_kanryo"><i class="fas fa-search fa-2x"></i><span>完了以外を選択</span></button>
+											</div>
+										</div>
+									</div>
+									<imart type="decision" value=$userInfo.bneFlg case="1">
+										<div class="row mb-2">
+											<div class="col-2 col-lg-1 t-header bg_ltorange brdr_dkgray text-center">契約番号</div>
+											<div class="col-3 col-lg-2 left-justified">
+												<imart type="imuiTextbox" maxlength="100" id="keiyaku_naiyo_id" name="keiyaku_naiyo_id" class="form-control" value=$form.keiyaku_naiyo_id />
+											</div>
+											<div class="col-2 col-lg-1 t-header bg_ltorange brdr_dkgray text-center">稟議申請番号</div>
+											<div class="col-3 col-lg-2 left-justified">
+												<imart type="imuiTextbox" maxlength="100" id="ringi_sinsei_no" name="ringi_sinsei_no" class="form-control" value=$form.ringi_sinsei_no />
+											</div>
+											<div class="col-2 col-lg-1 t-header bg_ltorange brdr_dkgray text-center">稟議名</div>
+											<div class="col-3 col-lg-2 left-justified">
+												<imart type="imuiTextbox" maxlength="1024" id="ringi_sinsei_nm" name="ringi_sinsei_nm" class="form-control" value=$form.ringi_sinsei_nm />
+											</div>
+											<div class="col-2 col-lg-1 t-header bg_ltorange brdr_dkgray text-center">BNE担当者</div>
+											<div class="col-3 col-lg-2 left-justified">
+												<span class="input-group" id="inputGroupSelect04" aria-label="">
+												<imart type="imuiTextbox" maxlength="100" id="tantou_sha" name="tantou_sha" class="form-control" value=$form.tantou_sha />
+												<div class="input-group-append">
+													<button type="button" id="my_charge" class="btn btn-outline-secondary searchbtn fa fa-portrait fa-1x" >私が担当</button>
+												</div>
+												</span>
+											</div>
+											
+										</div>
+									</imart>
+									<div class="row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約開始日</div>
+										<div class="infl col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" class="form-control" id="keiyaku_kaishi_bi_from" name="keiyaku_kaishi_bi_from" value=$form.keiyaku_kaishi_bi_from />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#keiyaku_kaishi_bi_from" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<span class="text-center blanc">～</span>
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" class="form-control" id="keiyaku_kaishi_bi_to" name="keiyaku_kaishi_bi_to" value=$form.keiyaku_kaishi_bi_to />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#keiyaku_kaishi_bi_to" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約締結日</div>
+										<div class="infl col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" class="form-control" id="keiyaku_teiketu_bi_from" name="keiyaku_teiketu_bi_from" value=$form.keiyaku_teiketu_bi_from />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#keiyaku_teiketu_bi_from" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<span class="text-center blanc">～</span>
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" class="form-control" id="keiyaku_teiketu_bi_to" name="keiyaku_teiketu_bi_to" value=$form.keiyaku_teiketu_bi_to />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#keiyaku_teiketu_bi_to" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">最終確認日</div>
+										<div class="infl col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" class="form-control" id="saisyu_kakunin_bi_from" name="saisyu_kakunin_bi_from" value=$form.saisyu_kakunin_bi_from />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#saisyu_kakunin_bi_from" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+											<span class="text-center blanc">～</span>
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" class="form-control" id="saisyu_kakunin_bi_to" name="saisyu_kakunin_bi_to" value=$form.saisyu_kakunin_bi_to />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#saisyu_kakunin_bi_to" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+										<imart type="decision" value=$userInfo.bneFlg case="1">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">ライセンシー名</div>
+											<div class="col-4 left-justified">
+												<div class="input-group">
+													<imart type="imuiTextbox" maxlength="1024" class="form-control" id="kaisha_nm" name="kaisha_nm" value=$form.kaisha_nm />
+													<div class="input-group-append">
+														<button type="button" id="btn_kaisha_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+													</div>
+												</div>
+											</div>
+										</imart>
+									</div>
+									<imart type="decision" value=$userInfo.bneFlg case="1">
+										<div class="row mb-2">
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">許諾番号</div>
+											<div class="col-6 col-lg-4 left-justified">
+												<imart type="imuiTextbox" maxlength="100" id="kyodaku_number" name="kyodaku_number" class="form-control" value=$form.kyodaku_number />
+											</div>
+										</div>
+									</imart>
+									<div class="form-group row mb-2">
+										<div class="flex_btn">
+											<div class="col-12">
+												<span class="blanc">
+													<button type="button" class="bg_orange txt_dark" id="tblsearch"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+													<button type="button" class="brdr_dkgray txt_dark" id="tblclear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row" id="list_title">
+						<div class="col-6 col-lg-6"><h4>契約一覧</h4></div>
+						<div class="col-2 col-lg-2 mb-2 t-header bg_ltorange brdr_dkgray text-center">表示項目切り替え</div>
+						<div class="col-2 col-lg-2 left-justified">
+							<div class="input-group">
+								<imart type="imuiSelect" class="custom-select form-control" id="show_column_def" name="show_column_def"  list=$form.show_column_defs />
+								<imart type="imuiTextbox" id="select_show_column_def" name="select_show_column_def" value=$form.select_show_column_def hidden="true" />
+							</div>
+						</div>
+						<div class="col-2 col-lg-2 text-right" style="padding-right: 0px;">
+							<div class="btn-group">
+							<button type="button" class="bg_ltblue txt_dark" id="outputfile" disabled><i class="fas fa-print fa-2x"></i><span>ファイル出力</span></button>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-lg-9">
+							<div class="scrollbar" id="scrollbar"><div class="scroll-inner" id="scroll-inner"></div></div>
+						</div>
+					</div>
+				</article>
+				<article>
+					<section class="show">
+						<div class="container">
+							<div class="row">
+								<div id="keiyaku_table"></div>
+							</div>
+						</div>
+					</section>
+				</article>
+				<div id="page-footer-part">
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+				
+				<br>
+				<br>
+				<br>
+			</div>
+		</div>
+	</div>
+	
+	<div class="popup" id="js-popup">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/ip_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg"></div>
+	</div>
+	
+	<div class="popup" id="js-popup2">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn2"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/title_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg2"></div>
+	</div>
+		
+	<div class="popup" id="js-popup3">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn3"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/kaisha_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg3"></div>
+	</div>
+	
+	<div class="popup" id="js-popup4">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn4"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/user_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg4"></div>
+	</div>
+	<script type="text/javascript">
+
+		// 初期表示
+		function initDisp() {
+			// ライセンスプロダクションでない場合
+			<imart type="decision" case="0" value=$userInfo.bneFlg>
+				$('.licensee-hide').hide(); // ライセンスプロダクション用の項目を非表示
+			</imart>
+			// ライセンスプロダクションの場合
+			<imart type="decision" case="1" value=$userInfo.bneFlg>
+				$('.bne-hide').hide(); // ライセンシー用の項目を非表示
+			</imart>
+		}
+		
+		/**
+		 * 数値カンマ付与関数
+		 */
+		function addComma(num) {
+		    var s = String(num).split('.');
+		    var ret = String(s[0]).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+		    if (s.length > 1 && s[1].length > 0) {
+		        ret += '.' + s[1];
+		    }
+		    return ret;
+		}
+
+		/**
+		 * 契約進捗ステータスのデフォルト選択(完了は未選択、左記以外は選択状態とする)
+		 */
+		function keiyakuStatusDefaultSelected() {
+			var aryKeiyakuStatus = [];
+			var aryKeiyakuStatusKanryo = [];
+			$('#keiyaku_status option').each(function() {
+				if ($(this).text() == '完了') {
+					aryKeiyakuStatusKanryo.push($(this).val());
+				} else {
+					aryKeiyakuStatus.push($(this).val());
+				}
+			});
+			$('#keiyaku_status').multiselect('select', aryKeiyakuStatus, true);
+			$('#keiyaku_status').multiselect('deselect', aryKeiyakuStatusKanryo, false);
+		}
+
+		var tableUtil = null;
+
+		$(function () {
+/*			
+			var zoom_value = 0.67;
+			document.body.style.transformOrigin='top left';
+			document.body.style.transform='scale(' + zoom_value + ')';
+			document.body.style.width=Math.round(1000/zoom_value)/10 + '%';
+*/
+			$("body").css("zoom","80%");
+			var showColumnMap = <imart type="string" value=$form.show_column_map />;
+
+			// 初期表示
+			initDisp();
+			
+			// ENTERで検索
+			var enterPressFlg = false;
+			$('form#inputForm input').keyup(function() {
+				if(event.keyCode == 13 && !enterPressFlg) {
+					enterPressFlg = true;
+					$('#tblsearch').click();
+				}
+			});
+
+			var getShowColumnFields = function() {
+				var showColumnFields = [];
+				if (showColumnMap[$("#show_column_def").val()]) {
+					showColumnFields = showColumnFields.concat(showColumnMap[$("#show_column_def").val()]);
+				}
+				return showColumnFields;
+			};
+			
+			var decorateWarningColor = function(cell) {
+				var dom = cell.getElement();
+				$(dom).css("background-color", "yellow");
+				var row = cell.getRow();
+				var rowElement = row.getElement();
+				$(rowElement).css("color", "#da0b00");
+			}
+			
+			var keiyakuTeiketuBiFormatter = function(cell, formatterParams, onRendered) {
+				var value = cell.getValue();
+				var data = cell.getData();
+				if (!value && data.keiyaku_kaishi_bi && Date.parse(data.keiyaku_kaishi_bi) < Date.now()) {
+					decorateWarningColor(cell);
+				}
+				return value;
+			};
+			
+			var keiyakuManryoBiFormatter = function(cell, formatterParams, onRendered) {
+				var value = cell.getValue();
+				var data = cell.getData();
+				if (data.keiyaku_encho_cls == '<imart type="string" value=$keiyakuEnchoClsUnanswered />') {
+					decorateWarningColor(cell);
+				}
+				return value;
+			};
+			
+			// 最低保証料(税抜)＋素材費
+			var saiteiHoshoryoPlusSozaihiFormatter = function(cell, formatterParams, onRendered) {
+				var value = cell.getValue();
+				if (value) {
+					return addComma(value);
+				}
+				return "";
+			}
+			
+			// ツールチップ
+			var tooltipNullFunc = function(cell) {
+				if (!cell.getValue()) {
+					return "※登録なし";
+				}
+				return cell.getValue();
+			};
+			
+			// 最低保証料(税抜)＋素材費のツールチップ
+			var tooltipSaiteiHoshoryoPlusSozaihiNullFunc = function(cell) {
+				if (!cell.getValue()) {
+					return "※登録なし";
+				}
+				return addComma(cell.getValue());
+			};
+			
+			var defaultMaxWidth = 900;
+			var columns = [
+				{title:"契約番号", field:"keiyaku_naiyo_id", visible: true, headerTooltip:true, tooltip:true, maxWidth:defaultMaxWidth, formatter:"link", formatterParams:{
+				    labelField:"keiyaku_naiyo_id",
+				    urlPrefix:"lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_detail?keiyaku_naiyo_id=",
+				}},
+				<imart type="decision" case="1" value=$userInfo.bneFlg>
+				{title:"稟議申請番号", field:"ringi_sinsei_no", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				</imart>
+				<imart type="decision" case="1" value=$userInfo.bneFlg>
+				{title:"稟議名", field:"ringi_sinsei_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				</imart>
+				{title:"個別・包括", field:"keiyaku_cls_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"新規・追加", field:"kyodaku_cls_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"契約内容名", field:"keiyaku_naiyo_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"新商品企画申請番号", field:"kikaku_id", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth, formatter: function(cell, formatterParams, onRendered) {
+					var values = (cell.getValue() == null ? "" : cell.getValue()).split("\n");
+					var result = "";
+					for(var key in values) {
+						var value = values[key];
+						if (result.length > 0) {
+							result += '<br>';
+						}
+						result += '<a href="lo/contents/screen/kikaku/planning_detail_new?new_window_flg=1&kikaku_id=' + value + '" target="_blank">' + value + '</a>';
+					}
+					return result;
+				}},
+				{title:"商品化権許諾申請番号", field:"kyodaku_id", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth, formatter: function(cell, formatterParams, onRendered) {
+					var values = (cell.getValue() == null ? "" : cell.getValue()).split("\n");
+					var result = "";
+					for(var key in values) {
+						var value = values[key];
+						if (result.length > 0) {
+							result += '<br>';
+						}
+						result += '<a href="lo/contents/screen/kyodaku/permission_product_detail?new_window_flg=1&kyodaku_id=' + value + '" target="_blank">' + value + '</a>';
+					}
+					return result;
+				}},
+				{title:"IP担当者", field:"bne_tantou_sha", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"IP", field:"ip_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"タイトル", field:"title_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"ライセンシー名", field:"kaisha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"最低保証料(税抜)＋素材費", field:"saiteihosho_ryo_sozai_seisaku_hi_gokei", visible: true, headerTooltip:true, tooltip:tooltipSaiteiHoshoryoPlusSozaihiNullFunc, maxWidth:defaultMaxWidth, formatter: saiteiHoshoryoPlusSozaihiFormatter},
+				{title:"契約進捗ステータス", field:"keiyaku_status_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				<imart type="decision" case="1" value=$userInfo.bneFlg>
+				{title:"契約進捗備考", field:"keiyaku_biko", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				</imart>
+				{title:"契約担当窓口", field:"licensee_keiyaku_tanto_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"契約担当窓口メールアドレス", field:"licensee_keiyaku_tanto_email_address", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"更新日", field:"koushin_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"最終確認日", field:"saisyu_kakunin_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth, formatter: keiyakuTeiketuBiFormatter},
+				{title:"契約締結日", field:"keiyaku_teiketu_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth, formatter: keiyakuTeiketuBiFormatter},
+				{title:"契約開始日", field:"keiyaku_kaishi_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"契約満了日", field:"keiyaku_manryo_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth, formatter: keiyakuManryoBiFormatter},
+				{title:"契約延長区分", field:"keiyaku_encho_cls_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"追加生産区分", field:"tsuika_seisan_cls_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"許諾地域", field:"kyodaku_chiiki", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"契約書表題", field:"keiyakusho_hyodai_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				<imart type="decision" case="1" value=$userInfo.bneFlg>
+				{title:"法務相談番号", field:"homu_soudan_no", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				</imart>
+				<imart type="decision" case="1" value=$userInfo.bneFlg>
+				{title:"契約保管番号", field:"keiyaku_hokan_no", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				</imart>
+				{title:"備考", field:"biko", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"最終更新者", field:"koushin_sha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"料率", field:"ryoritsu", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"最新コメント日時", field:"max_comment_koshin_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+			];
+
+			
+			var activeStorageKey = {id: "", type: ""};
+			var getStorageKey = function(id, type) {
+				activeStorageKey.id = id;
+				activeStorageKey.type = type;
+				return id + "-" + type;
+			}
+			
+			var banadiumFormat = {banadium_format_version: <imart type="string" value=$banadiumFormatVersion />, show_column_defs:[]};
+
+			// Tabulator生成時にカラム情報を保存されないために制御するためのフラグ
+			var isInitializedTabulatorUtil = false;
+			var extendOptions = {
+				paginationSize: 100
+				, persistenceWriterFunc: function(id, type, data){
+					
+			        console.log("persistenceWriterFunc");
+			        // Tablator生成が完了していない場合は、カラム情報の保存を実施しない
+			        if (isInitializedTabulatorUtil == false) {
+			        	return;
+			        }
+					
+			        //id - tables persistence id
+			        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+			        //data - array or object of data
+
+			        var storageKey = getStorageKey(id, type);
+			        var show_column_def = $("#show_column_def").val();
+			        
+			        var storageStr = localStorage.getItem(storageKey);
+
+			        if (storageStr) {
+			        	var storageData = JSON.parse(storageStr);
+			        	if (storageData.banadium_format_version == banadiumFormat.banadium_format_version) {
+			        		var hitIndex = storageData.show_column_defs.findIndex(function(elem){
+			        			if ('show_column_def' in elem) {
+				        			return elem.show_column_def === show_column_def;
+			        			}
+			        			return false;
+			        		});
+			        		if (hitIndex >= 0) {
+			        			storageData.show_column_defs[hitIndex].columns = data;
+			        		} else {
+			        			storageData.show_column_defs.push({show_column_def: show_column_def, columns: data});
+			        		}
+					        localStorage.setItem(storageKey, JSON.stringify(storageData));
+					        return;
+			        	}
+			        }
+			        
+			        var base = mergeDeeply({}, banadiumFormat)
+			        base.show_column_defs.push({show_column_def: show_column_def, columns: data});
+			        localStorage.setItem(storageKey, JSON.stringify(base));
+				}
+				, persistenceReaderFunc: function(id, type){
+
+			        console.log("persistenceReaderFunc");
+
+			        //id - tables persistence id
+			        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+
+			        var storageKey = getStorageKey(id, type);
+			        var show_column_def = $("#show_column_def").val();
+
+			        var storageStr = localStorage.getItem(storageKey);
+
+			        if (storageStr) {
+			        	var storageData = JSON.parse(storageStr);
+			        	if (storageData.banadium_format_version == banadiumFormat.banadium_format_version) {
+			        		var hitElem = storageData.show_column_defs.find(function(elem){
+			        			return elem.show_column_def === show_column_def;
+			        		});
+			        		if (hitElem) {
+			        			return hitElem.columns;
+			        		}
+			        	}
+			        }
+			        
+			        return false;
+				}
+			};
+
+            tableUtil = new TabulatorUtil("#keiyaku_table", columns, "keiyaku_naiyo_id", [{column:"keiyaku_naiyo_id", dir:"asc"}], extendOptions);
+	        // Tablator生成済みとしてフラグをON
+            isInitializedTabulatorUtil = true;
+
+			$("#show_column_def").on("change", function(){
+
+				var $this = $(this);
+				
+				// カラムの状態が保存されている場合は、並び替えは行わない為に、
+				// カラムの状態を変更する前に、保存データを取得する
+				// サーバー上のBANADIUMフォーマットバージョンと、クライアント上に保存されているBANADIUMフォーマットバージョンが異なる場合は
+				// この関数はfalse値を返す。
+				var storageData = extendOptions.persistenceReaderFunc(activeStorageKey.id, activeStorageKey.type);
+
+				// 非表示項目を表示する
+				var showColumnFields = getShowColumnFields();
+				var existsColumnOrder = [];
+				for (var showKey in showColumnFields) {
+					var showColumnName = showColumnFields[showKey];
+					var column = tableUtil.getColumn(showColumnName);
+					if (!column) {
+						continue;
+					}
+					existsColumnOrder.push(showColumnName);
+					if (!column.isVisible()) {
+						column.show();
+					}
+				}
+				// 表示項目を非表示にする
+				var columnDefinitions = tableUtil.getColumnDefinitions();
+				for (var defKey in columnDefinitions) {
+					var colDef = columnDefinitions[defKey];
+					var isHide = (showColumnFields.indexOf(colDef.field) == -1);
+					if (!isHide) {
+						continue;
+					}
+					var column = tableUtil.getColumn(colDef.field);
+					if (column.isVisible()) {
+						column.hide();
+					}
+				}
+
+				// カラムの表示順を変更すべきか判定
+				if (storageData) {
+					return;
+				}
+				for (var orderKey in existsColumnOrder) {
+					if (orderKey == 0) {
+						continue;
+					}
+					var columnOrder = existsColumnOrder[orderKey];
+					var column = tableUtil.getColumn(columnOrder);
+					column.move(existsColumnOrder[orderKey - 1], true);
+				}
+
+			});
+
+			//検索を行う
+			$('#tblsearch').click(function () {
+				
+				// フォーム内にあるname属性と入力値を一括で取得する
+				var whereParam = $('#inputForm').serializeInputValue();
+				if($.trim($("#keiyaku_status").val()) != "") {
+					whereParam.keiyaku_status = $.trim($("#keiyaku_status").val()).split(",");
+				}
+				if(!$("#not_finish").prop("checked")) {
+					whereParam.not_finish = "off";
+				}
+				whereParam.show_column_def = $("#show_column_def").val();
+				
+				setUrlParam(whereParam);
+				
+				// 検索
+				jsspRpcKeiyakuSearch.searchKeiyakuNaiyoList(whereParam);
+				// インジケータ表示
+				showIndicator();
+			});
+			
+			// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+			window.searchResult = function(ret) {
+				
+				if(ret.data.length > 0) {
+					$("#outputfile").prop('disabled', false);
+				} else {
+					$("#outputfile").prop('disabled', true);
+				}
+				// インジケータ非表示
+		        hideIndicator();
+		        enterPressFlg = false;
+
+		        tableUtil.setData(ret.data);
+				$(document).trigger("resizeTabulator");
+				if (document.documentElement.clientHeight >= 1000) {
+					document.getElementById("keiyaku_table").style.height="650px";
+				} else if (document.documentElement.clientHeight >= 900) {
+					document.getElementById("keiyaku_table").style.height="500px";
+				}
+		    }
+			// 検索エラー後コールバック
+			window.searchError = function(res) {
+		        hideIndicator();
+		        enterPressFlg = false;
+				try {
+					imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+					return;
+				} catch (ex) {
+					imuiShowErrorMessage(ex.message, [], true, 5000, true);
+				}
+
+		    }			
+
+			// クリアボタン押下時
+			$('#tblclear').click(function () {
+				$('#ip_nm').val('');
+				$('#title_nm').val('');
+				$('#keiyakusho_hyodai').val('');
+				$('#keiyaku_cls').val('');
+				$('#kyodaku_cls').val('');
+				$('#keiyaku_naiyo_id').val('');
+				$('#keiyaku_naiyo_nm').val('');
+				$('#keiyaku_status').next().children('.multiselect-container').children('.multiselect-reset').children('div').children('a').trigger('click');
+				$('#ringi_sinsei_nm').val('');
+				$('#keiyaku_kaishi_bi_from').val('');
+				$('#keiyaku_kaishi_bi_to').val('');
+				$('#keiyaku_teiketu_bi_from').val('');
+				$('#keiyaku_teiketu_bi_to').val('');
+				$('#saisyu_kakunin_bi_from').val('');
+				$('#saisyu_kakunin_bi_to').val('');
+				$('#ringi_sinsei_no').val('');
+				$('#kaisha_nm').val('');
+				$('#tantou_sha').val('');
+				$('#kyodaku_number').val('');
+			});
+			
+			// ファイル出力ボタン押下時
+			/*$('#outputfile').click(function () {
+				showIndicator();
+				jsspRpcKeiyakuCsv.getkeiyakuCsvData(keiyakuTable.getData());
+			});
+			
+			// CSVデータ取得コールバック
+			window.csvResult = function(ret) {
+				if (ret.error) {
+					try {
+						imuiShowErrorMessage(ret.errorMessage, [], true, 5000, true);
+					} catch (ex) {
+						imuiShowErrorMessage(ex.message, [], true, 5000, true);
+					}
+				} else {
+					if (ret.countRow > 0){
+				    	createCsv(ret.data, '企画一覧.csv');
+				    }
+				}
+			    hideIndicator();
+			}
+			// CSVデータ取得エラー後コールバック
+			window.csvError = function(res) {
+		        hideIndicator();
+				try {
+					imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+					return;
+				} catch (ex) {
+					imuiShowErrorMessage(ex.message, [], true, 5000, true);
+				}
+		    }*/
+			
+			
+			// ファイル出力ボタン押下時（CSV出力）
+			$('#outputfile').click(function () {
+				// データテーブルを取得
+				var keiyakuDataSet = tableUtil.getData();
+				if (keiyakuDataSet.length > 0){
+					var keiyakuList = [];
+					// 項目名をCSV用に変換
+					$.each(keiyakuDataSet, function(index, elem) {
+						var obj = {};
+						//一覧に使用しているカラム情報からタイトル名とデータを紐づける
+						$.each(tableUtil.getColumns(), function(i, col) {
+							// 表示項目のみ対象
+							if (col.isVisible() == true){
+								obj[col.getDefinition().title] = elem[col.getDefinition().field];
+							}
+						});
+						keiyakuList.push(obj);
+					});
+					// CSV出力
+			    	createCsv(keiyakuList, '契約一覧.csv');
+				}
+			});
+
+			$("#my_charge").on("click", function(){
+				var myName = '<imart type="string" value=$userInfo.userName />';
+				$("#tantou_sha").val(myName);
+			});
+
+			// カレンダーアイコンをクリック
+			$("#keiyaku_kaishi_bi_to").parent().find(".fa-calendar").parent().click(function(){
+				$("#keiyaku_kaishi_bi_to").next("img").click();
+			});
+			$("#keiyaku_kaishi_bi_from").parent().find(".fa-calendar").parent().click(function(){
+				$("#keiyaku_kaishi_bi_from").next("img").click();
+			});
+			$("#keiyaku_teiketu_bi_to").parent().find(".fa-calendar").parent().click(function(){
+				$("#keiyaku_teiketu_bi_to").next("img").click();
+			});
+			$("#keiyaku_teiketu_bi_from").parent().find(".fa-calendar").parent().click(function(){
+				$("#keiyaku_teiketu_bi_from").next("img").click();
+			});
+			$("#saisyu_kakunin_bi_to").parent().find(".fa-calendar").parent().click(function(){
+				$("#saisyu_kakunin_bi_to").next("img").click();
+			});
+			$("#saisyu_kakunin_bi_from").parent().find(".fa-calendar").parent().click(function(){
+				$("#saisyu_kakunin_bi_from").next("img").click();
+			});
+
+			// IP 検索
+			$("#btn_ip_search").click(function(e, data){
+				$('#js-popup').addClass('is-show');
+			});
+			$("#js-popup").on("ipSearchSelected", function(e, selectedRecords) {
+				$('#js-popup').removeClass('is-show');
+				if (selectedRecords.length > 0) {
+					var selectedRecord = selectedRecords[0];
+					$("#ip_nm").val(selectedRecord.ip_nm);
+				}
+			});
+
+			// タイトル検索
+			$("#btn_title_search").click(function(e, data){
+				$('#js-popup2').addClass('is-show');
+			});
+			$("#js-popup2").on("selectedTitleDatas", function(e, selectedTitleDatas) {
+				$('#js-popup2').removeClass('is-show');
+				if (selectedTitleDatas.length > 0) {
+					var selectedTitleData = selectedTitleDatas[0];
+					$("#title_nm").val(selectedTitleData.title_nm);
+					$("#ip_nm").val(selectedTitleData.ip_nm);
+				}
+			});
+
+			// ライセンシー検索
+			$("#btn_kaisha_search").click(function(e, data){
+				$('#js-popup3').addClass('is-show');
+			});
+			$("#js-popup3").on("selectedkaishaDatas", function(e, selectedkaishaDatas) {
+				$('#js-popup3').removeClass('is-show');
+				if (selectedkaishaDatas.length > 0) {
+					$("#kaisha_nm").val(selectedkaishaDatas[0].kaisha_nm);
+				}
+			});
+
+			// ユーザー検索
+			$("#btn_bne_user_search").click(function(e, data){
+				$('#js-popup4').addClass('is-show');
+			});
+			$("#js-popup4").on("selecteduserDatas", function(e, selecteduserDatas) {
+				$('#js-popup4').removeClass('is-show');
+				if (selecteduserDatas.length > 0) {
+					$("#tantou_sha").val(selecteduserDatas[0].user_nm);
+				}
+			});
+
+			$(document).on("click", "#condition_hide, #condition_show", function(){
+				var $this = $(this);
+				$this.hide();
+				if ($this.is("#condition_hide")) {
+					$(".search_condition").hide();
+					$("#condition_show").show();
+//					tableUtil.setPageSize(10);
+				} else {
+					$(".search_condition").show();
+					$("#condition_hide").show();
+//					tableUtil.setPageSize(3);
+				}
+				$(document).trigger("resizeTabulator");
+
+				/*
+				if ($this.is("#condition_hide")) {
+					if (document.documentElement.clientHeight >= 1000) {
+						document.getElementById("keiyaku_table").style.height="1076px";
+					} else if (document.documentElement.clientHeight >= 900) {
+						document.getElementById("keiyaku_table").style.height="926px";
+					}
+				} else {
+					if (document.documentElement.clientHeight >= 1000) {
+						document.getElementById("keiyaku_table").style.height="650px";
+					} else if (document.documentElement.clientHeight >= 900) {
+						document.getElementById("keiyaku_table").style.height="500px";
+					} else if (document.documentElement.clientHeight < 900) {
+						document.getElementById("keiyaku_table").style.height="360px";
+					}
+				}
+				*/
+				
+			});
+			// 契約進捗ステータスの複数選択セレクトボックス
+			$('#keiyaku_status').multiselect({
+				inheritClass: true,
+				includeResetOption: true,
+				resetText: '選択解除',
+				nonSelectedText: '未選択',
+				buttonText: function(options, select) {
+					if (options.length === 0) {
+						return '未選択';
+					} else if (options.length > 1) {
+						return '複数選択中';
+					} else {
+						var labels = [];
+						options.each(function() {
+							if ($(this).attr('label') !== undefined) {
+								labels.push($(this).attr('label'));
+							} else {
+								labels.push($(this).html());
+							}
+						});
+						return labels.join(', ') + '';
+					}
+				}
+			});
+			// 契約進捗ステータスプルダウンの表示調整
+			$('#keiyaku_status').next().children('button').css('text-align', 'left');
+			$('#keiyaku_status').next().children('button').children('span').css('margin-left', '0px');
+			$('#keiyaku_status').next().children('.multiselect-container').css('right', '0px');
+			$('#keiyaku_status').next().children('.multiselect-container').children('li').children('a').css('color', '#2b2b2b');
+			$('#keiyaku_status_not_kanryo').on('click', function() {
+				keiyakuStatusDefaultSelected();
+			});
+			
+			<imart type="condition" validity=$initialSearching>
+				// 検索条件を契約進捗ステータスプルダウンに反映
+				var selectedKeiyakuStatus = "<imart type="string" value=$form.keiyaku_status />";
+				var selectedKeiyakuStatusList = selectedKeiyakuStatus.split(',');
+				$('#keiyaku_status').multiselect('select', selectedKeiyakuStatusList, true);
+			</imart>
+			<imart type="condition" validity=$initialSearching negative>
+				// 初期表示のため、契約進捗ステータスプルダウンに反映
+				keiyakuStatusDefaultSelected();
+			</imart>
+
+		});
+		
+		$(window).on("load", function() {
+			var padding = 15;
+			document.getElementById('body').style.display = 'block';
+			// カレンダー表示のアイコンを非表示
+			$("#keiyaku_kaishi_bi_from").next("img").hide();
+			$("#keiyaku_kaishi_bi_to").next("img").hide();
+			$("#keiyaku_teiketu_bi_from").next("img").hide();
+			$("#keiyaku_teiketu_bi_to").next("img").hide();
+			$("#saisyu_kakunin_bi_from").next("img").hide();
+			$("#saisyu_kakunin_bi_to").next("img").hide();
+			<imart type="condition" validity=$initialSearching>
+			$('#tblsearch').trigger("click");
+			</imart>
+			
+			$('footer .bne-information').css({'margin-bottom':'20px'});
+			$("#show_column_def").val($("#select_show_column_def").val())
+			$("#show_column_def").trigger("change");
+		});
+		
+	</script>
+</body>

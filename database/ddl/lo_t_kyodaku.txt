@@ -1,0 +1,32 @@
+create table lo_t_kyodaku(	
+kyodaku_id  varchar(20)	
+,kyodaku_status  varchar(100)	
+,keiyaku_status  varchar(100)	
+,kyodaku_nm  varchar(200)	
+,kyodaku_cls  char(1)	
+,keiyaku_cls  char(1)	
+,shinsei_bi  varchar(20)
+,kaisha_id varchar(100)	
+,kaisha_nm  varchar(255)			
+,busyo_id varchar(100)	
+,busyo_nm  varchar(255)			
+,tantou_sha_id varchar(100)	
+,tantou_sha_nm  varchar(255)			
+,kakunin_bi  varchar(20)	
+,bne_tantou_sha  varchar(1024)	
+,kyodaku_kikan_from  varchar(20)	
+,kyodaku_kikan_to  varchar(20)	
+,saiteihosho_kigen  varchar(20)	
+,sozai_biko text	
+,biko  text	
+,sozai_hi numeric(30, 6)
+,kyodaku_chiiki text
+,seikyusho_sofusaki_id varchar(2)
+,system_matter_id varchar(20)
+,sakujo_flg  varchar(20)	
+,touroku_sha  varchar(100)	
+,touroku_bi  timestamp(6) without time zone	
+,koushin_sha  varchar(100)	
+,koushin_bi  timestamp(6) without time zone	
+,primary key (kyodaku_id)	
+);

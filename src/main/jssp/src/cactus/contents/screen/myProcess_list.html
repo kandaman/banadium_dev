@@ -1,0 +1,597 @@
+<imart type="head">
+  <title>MY文書</title>
+
+<IMART type="jsspRpc" name="jsActionMyProcess" page="cactus/contents/screen/myProcess_list"></IMART>
+<imart type="workflowOpenPageCsjs" />
+
+<imart type="include" page="im_workflow/common/parts/window_popup/imw_window_popup" />
+<!-- stylesheet -->
+  <link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">  
+  <link rel="stylesheet" href="cactus_csjs/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="cactus_csjs/bootstrap-datepicker.min.css">
+
+  <!-- mycontents -->
+  <script type="text/javascript" src="cactus_csjs/const.js"></script>
+  <script type="text/javascript" src="cactus_csjs/proc.js"></script>
+  <script type="text/javascript" src="cactus_csjs/sksgjs.js"></script>
+  <script type="text/javascript" src="cactus_csjs/addpf.js"></script>
+  <script type="text/javascript" src="cactus_csjs/pager.js"></script>
+  <script type="text/javascript" src="cactus_csjs/common.js"></script>
+     
+  <link rel="stylesheet" href="cactus_csjs/sksg.css">
+  <link rel="stylesheet" href="cactus_csjs/step_bar.css">
+  <link rel="stylesheet" href="cactus_csjs/frozen-header.css">
+  
+  <!-- workflow/csjs/greybox.jsの　showGreyBoxを変更 -->
+  <script type="text/javascript" src="workflow/csjs/greybox_cactus.js"></script>
+  
+  
+  
+  
+<script>
+//ページ情報
+var $searchPageInfo={
+	maxRow: 10 //１ページの最大行数
+    ,MaxLinks:5 //リンク表示の最大数
+	,totalPage:1 //ページ数（件数/最大行数）
+};  
+
+
+// 処理へ遷移（承認）
+function onClickProcess2(imwSystemMatterId, imwUserDataId, imwNodeId, imwPageType) {
+	
+    $('#workflowOpenPageForm').find('#imwUserDataId').val(imwUserDataId); 
+    $('#workflowOpenPageForm').find('#imwSystemMatterId').val(imwSystemMatterId); 
+    $('#workflowOpenPageForm').find('#imwNodeId').val(imwNodeId); 
+
+    
+    // 案件情報を取得
+    /*var ret = jsActionMyProcess.getMatterData(imwSystemMatterId);
+    if (ret == null){
+    	return false;
+    }
+    $('#workflowOpenPageForm').find('#imwFlowId').val(ret.flow_id); 
+    //$('#workflowOpenPageForm').find('#imwAuthUserCode').val(ret.apply_auth_user_code); 
+    //$('#workflowOpenPageForm').find('#iimwApplyBaseDate').val(ret.apply_base_date); 
+    //$('#workflowOpenPageForm').find('#iimwApplyBaseDate').val('2018/03/30'); 
+    */
+    // 処理用ページを変更する
+    var nodeSetting = {
+	  	  "procPage" : "im_workflow/common/proc/custom/approve/approve", //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		  "BackNodeSetting" : { // 差し戻し処理
+		    "planApplNode_02" : {   // 設定対象のノードIDをプロパティ名とする
+		      	"displayID" : ["planApplNode_01"],    // 差し戻し画面として設定するノードIDを配列持ち
+		    },
+  		"planApplNode_03" : {   // 設定対象のノードIDをプロパティ名とする
+      		"displayID" : ["planApplNode_01"],    // 差し戻し画面として設定するノードIDを配列持ち
+		    },
+          "planApplNode_04" : {   // 設定対象のノードIDをプロパティ名とする
+          	"displayID" : ["planApplNode_01","planApplNode_03"],    // 差し戻し画面として設定するノードIDを配列持ち
+		    },
+		  },      		  
+	  };
+    $('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));    	  
+	
+    workflowOpenPage('4'); // 標準画面に遷移
+    return false;   	
+}
+//確認画面
+function onClickConfirm(imwSystemMatterId, imwUserDataId, imwNodeId, imwPageType) {
+	
+    $('#workflowOpenPageForm').find('#imwUserDataId').val(imwUserDataId); 
+    $('#workflowOpenPageForm').find('#imwSystemMatterId').val(imwSystemMatterId); 
+    $('#workflowOpenPageForm').find('#imwNodeId').val(imwNodeId); 
+    
+    // 処理用ページを変更する
+    var nodeSetting = {
+	  	  "procPage" : "im_workflow/common/proc/custom/confirm/confirm", //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+	  };
+    $('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));    	  
+	
+    workflowOpenPage('6'); // 標準画面に遷移
+    //workflowOpenPage('5'); // 標準画面に遷移
+    return false;
+}
+
+//処理へ遷移(再申請)
+function onClickProcess(imwSystemMatterId, imwUserDataId, imwNodeId, imwPageType) {
+	//document.processForm.imwCallOriginalParams.value = $('#imwCallOriginalParams').val();
+	document.processForm.imwCallOriginalParams.value = '';
+    document.processForm.imwSystemMatterId.value = imwSystemMatterId;
+    document.processForm.imwUserDataId.value = imwUserDataId;
+    document.processForm.imwNodeId.value = imwNodeId;
+    document.processForm.imwPageType.value = imwPageType;
+    document.processForm.submit();
+}
+
+
+// 一時保存
+//function onClickApplyTemp(flowId, nodeId, userDataId, actUserCode, applyBaseDate) {
+/*function onClickApplyTemp(flowId, actUserCode, userDataId, nodeId, imwPageType) {
+	  document.applyForm.imwPageType.value = imwPageType;
+	  //document.applyForm.imwCallOriginalParams.value = $('#imwCallOriginalParams').val();
+	  document.applyForm.imwCallOriginalParams.value = "";
+	  document.applyForm.imwFlowId.value = flowId;
+	  document.applyForm.imwNodeId.value = nodeId;
+	  document.applyForm.imwUserDataId.value = userDataId;
+	  document.applyForm.imwAuthUserCode.value = actUserCode;
+	  document.applyForm.imwApplyBaseDate.value = getNowData();
+	  document.applyForm.submit();
+}*/
+ //一時保存
+function onClickApplyTemp(flowId, actUserCode, userDataId, nodeId, imwPageType) {
+	  document.applyForm.imwPageType.value = imwPageType;
+	  //document.applyForm.imwCallOriginalParams.value = $('#imwCallOriginalParams').val();
+	  document.applyForm.imwCallOriginalParams.value = "";
+	  document.applyForm.imwFlowId.value = flowId;
+	  document.applyForm.imwNodeId.value = nodeId;
+	  document.applyForm.imwUserDataId.value = userDataId;
+	  document.applyForm.imwAuthUserCode.value = actUserCode;
+	  document.applyForm.imwApplyBaseDate.value = getNowData();
+	  document.applyForm.imwCallOriginalPagePath.value = "cactus/contents/screen/myProcess_list";
+	  document.applyForm.submit();
+}
+
+// 詳細
+function onClickDetail(imwSystemMatterId, imwUserDataId, imwPageType) {
+    document.detailForm.imwPageType.value = imwPageType;
+    document.detailForm.imwSystemMatterId.value = imwSystemMatterId;
+    document.detailForm.imwUserDataId.value = imwUserDataId;
+    openPopupWindowDetail(document.detailForm);
+}
+
+// 削除（一時保存）
+function onClickTemporaryDelete(userDataId) {
+	  //$('#userDataId').val(userDataId);
+	  $.imuiFormUtil.confirm('<imart type="string" value=$dialogMsg.confirmDeleteMsg/>', '<imart type="string" value=$dialogMsg.deleteDialogTitle/>', function() {temporaryDelete(userDataId)});
+	  return false;
+}
+
+function temporaryDelete(userDataId) {
+  try {
+    var oReqParam = {
+      //"userDataId" : $('#userDataId').val()
+      "userDataId" : userDataId
+    };
+    var res = jsActionMyProcess.actionDelete(oReqParam);
+    if (res.resultFlag) {
+      //$('#temporarySaveList').trigger('reloadGrid');
+      //　再検索
+      $("#btn_searchList").click();
+      imuiShowSuccessMessage('削除しました');
+    } else {
+      imuiShowErrorMessage(res.resultStatus.message);
+    }
+  } catch (ex) {
+    imuiShowErrorMessage(ex.message);
+  }
+}
+
+//削除（再申請）
+function onClickReApplyDelete(system_matter_id,flow_id,node_id) {
+	  $.imuiFormUtil.confirm('<imart type="string" value=$dialogMsg.confirmDeleteMsg/>', '<imart type="string" value=$dialogMsg.deleteDialogTitle/>', function() {reApplyDelete(system_matter_id,flow_id,node_id)});
+	  return false;
+}
+function reApplyDelete(system_matter_id,flow_id,node_id) {
+	  try {
+	    var oReqParam = {
+	      "imwSystemMatterId" : system_matter_id,
+	      "imwFlowId" : flow_id,
+	      "imwNodeId" : node_id
+	    };
+	    var res = jsActionMyProcess.discontinue(oReqParam);
+	    if (res.resultFlag) {
+	      //$('#temporarySaveList').trigger('reloadGrid');
+	      //　再検索
+	      $("#btn_searchList").click();
+	      imuiShowSuccessMessage('削除しました');
+	    } else {
+	      imuiShowErrorMessage(res.errorMessage.message);
+	    }
+	  } catch (ex) {
+	    imuiShowErrorMessage(ex.message);
+	  }
+}
+
+// URLからの遷移
+function chkURLparam() {
+	<IMART type="condition" validity=$sendproc.showFlg>
+	var imwPageType = '<imart type="string" value=$sendproc.imwPageType/>';
+	var imwSystemMatterId = '<imart type="string" value=$sendproc.imwSystemMatterId/>';
+	var imwNodeId = '<imart type="string" value=$sendproc.imwNodeId/>';
+	var imwUserDataId = '<imart type="string" value=$sendproc.imwUserDataId/>';
+	
+	if (imwPageType == '3'){
+		//再申請
+		onClickProcess(imwSystemMatterId,imwUserDataId,imwNodeId,imwPageType);
+	}else{
+		//承認待ち
+		onClickProcess2(imwSystemMatterId,imwUserDataId,imwNodeId,imwPageType);
+	}
+	</IMART>
+}
+
+
+
+$(function() {
+	
+
+	// ページ移動
+	$(document).on("click",'#searchPager li',function(event){
+		var pageNum =$(this).attr('page');
+		// ページャー移動
+		onPagerMove('searchPager',pageNum);
+		// 表示データ
+		onPagerlistDrawTbody("processlist",pageNum,$searchPageInfo.maxRow);
+	});
+	
+	// 検索条件リセット
+	$("#btn_reset").click(function() {
+		$("#searchfrom")[0].reset();
+	});
+	
+	// 絞り込み条件変更時
+	$('input[name=search_type]:radio').change( function() {  
+		// 未完了ならコンボボックス使用可
+		if ($(this).val() =="proc"){
+			$("#status_kbn").prop("disabled", false);
+		}else{
+			$("#status_kbn").val("")
+			$("#status_kbn").prop("disabled", true);
+		}
+	});  
+
+	
+	
+	// 検索処理
+	$("#btn_searchList").click(function() {
+		//中身をクリア
+		//$("#processlist").children().remove();
+		$("#processlist .resultBody").remove();
+
+		// 検索条件
+		var where = {
+			"shinsei_no":$.trim($("#shinsei_no").val())
+			,"shinsei_typ_cd": $.trim($("#sheet_type").val())
+			,"region": $.trim($("#region").val())
+			,"character_nm": $.trim($("#character_nm").val())
+			,"hanmoto_nm": $.trim($("#hanmoto_nm").val())
+			,"titel_nm": $.trim($("#titel_nm").val())
+			,"status_kbn": $.trim($("#status_kbn").val())
+		};
+		var sort = [
+			 {"sortkey":$("#sort_key1").val(),"sorttype": $("#sort_type1").val()}
+			,{"sortkey":$("#sort_key2").val(),"sorttype": $("#sort_type2").val()}
+			,{"sortkey":$("#sort_key3").val(),"sorttype": $("#sort_type3").val()}
+		];
+		
+		var search_type = $('input[name=search_type]:checked').val()
+		
+		// 検索
+		var ret;
+		ret = jsActionMyProcess.getMyProcessList(search_type,where,sort);
+		
+        //行の最大件数
+		$searchPageInfo.maxRow = $("#rowmax").val();
+	
+		if (ret.countRow > 0){
+			//$searchUserData = ret.data;
+			$searchPageInfo.totalPage = Math.ceil(ret.countRow / $searchPageInfo.maxRow);
+			clreatePager('searchPager',$searchPageInfo.totalPage,$searchPageInfo.MaxLinks);
+
+			$("#help1").show();
+		}else{
+			clreatePager('searchPager',0,$searchPageInfo.MaxLinks);
+		}
+
+		if (ret.countRow > 0){
+			// data配列を順に処理
+			$.each(ret.data,function(index, elem) {
+				
+				
+				//テンプレート行をコピー
+				var coln = $("#resultTemplate").clone(true);
+				//id削除
+				coln.removeAttr('id');
+				coln.attr('class','resultBody');
+
+				//var href =  '<a href="javascript: void(0);" onclick="onClickProcess('+elem.system_matter_id+','+elem.user_data_id+','+elem.node_id+',4); return false;">'+elem.shinsei_no+'</a>'
+				  
+				//データを反映
+				coln.find('.id_status').text(elem.status_name);
+				if (elem.pagetype == '3'){
+					// 再申請待ち
+					coln.find('.id_sinsei_no').attr("onclick", "onClickProcess('"+elem.system_matter_id+"','"+elem.im_user_data_id+"','"+elem.node_id+"','"+ elem.pagetype +"'); return false;");
+					coln.find('.id_del_btn').attr("onclick", "onClickReApplyDelete('"+elem.system_matter_id+"','"+elem.flow_id +"','"+elem.node_id+"'); return false;");
+				}else if (elem.pagetype == '4'){
+					// 承認待ち
+					coln.find('.id_sinsei_no').attr("onclick", "onClickProcess2('"+elem.system_matter_id+"','"+elem.im_user_data_id+"','"+elem.node_id+"','"+ elem.pagetype +"'); return false;");
+					coln.find('.id_del_btn').remove();
+				}else if (elem.pagetype == '6'){
+					// 詳細画面
+					//coln.find('.id_sinsei_no').attr("onclick", "onClickDetail('"+elem.system_matter_id+"','"+elem.im_user_data_id+"','"+ elem.pagetype +"'); return false;");
+					coln.find('.id_sinsei_no').attr("onclick", "onClickConfirm('"+elem.system_matter_id+"','"+elem.im_user_data_id+"','"+elem.node_id+"','"+ elem.pagetype +"'); return false;");
+					coln.find('.id_del_btn').remove();
+				}else{
+					// 一時保存
+					coln.find('.id_sinsei_no').attr("onclick", "onClickApplyTemp('" + elem.flow_id + "','"+elem.auth_user_code+"','"+elem.im_user_data_id+"','"+elem.node_id+"','"+ elem.pagetype +"'); return false;");
+					coln.find('.id_del_btn').attr("onclick", "onClickTemporaryDelete('" + elem.im_user_data_id +"'); return false;");
+				}
+				coln.find('.id_sinsei_no').text(elem.shinsei_no);
+				
+				
+				coln.find('.id_character').text(elem.character_nms);
+				coln.find('.id_hanmoto').text(elem.hanmoto_nms);
+				coln.find('.id_titel').text(elem.title_nm);
+				coln.find('.id_user').text(elem.kiansha_nm);
+				
+				coln.find('.id_update').text(elem.koshin_dt);
+				coln.find('.id_region').text(elem.region_type);
+				coln.find('.id_type').text(elem.shinsei_typ_nm);
+				
+				// 末尾に追加
+				if (index < $searchPageInfo.maxRow){
+					coln.show();
+				}
+				coln.appendTo("#processlist");
+				
+			});
+
+			// 件数表示
+			$("#searchDataCount").text("検索結果 ： " + ret.countRow + "件");
+		}else{
+			$("#searchDataCount").text("検索結果 ： 0件");
+		}
+	});
+	
+	// URLから飛んできたときパラメータを取得し画面を開く
+	chkURLparam();
+});
+
+  
+  
+  
+</script>
+  
+  
+  
+  
+  
+</imart>
+
+<body>
+
+
+
+
+<!-- ナビバー -->
+<IMART type="include" page="cactus/contents/screen/navibar"></IMART>
+<!-- @end ナビバー -->
+
+	<!-- 検索条件 -->
+	<h2 style="margin-left: 20px;">MY文書</h2>
+	<form id="searchfrom" >
+	<div class="form-group" style="width: 80%; margin-top: 30px;">
+		<!--  <label>絞り込み条件</label>-->
+		<div class="panel">
+			<table class="table table-bordered table-condensed">
+
+				<!-- <tr>
+					<th>ステータス</th>
+					<td colspan="9"><select class="form-control input-sm">
+							<option>全て</option>
+							<option>完了</option>
+							<option>版権元確認中</option>
+							<option>メディア部受付待ち</option>
+							<option>事業部承認待ち</option>
+					</select></td>
+				</tr> -->
+
+				<tr>
+					<th>絞り込み</th>
+					<td colspan="9"><div class="radio form-inline">
+							<label><input type="radio" name="search_type" value="all"> すべて</label> &nbsp;&nbsp;&nbsp;&nbsp;
+							 <label><input type="radio" name="search_type" value="unt" checked> 未処理</label>&nbsp;&nbsp;&nbsp;&nbsp; 
+							 <label><input type="radio" name="search_type" value="proc"> 申請中</label>
+							 <select class="form-control input-sm" style="width: auto;" id="status_kbn" disabled>
+								<option value=""></option>
+								<option value="01">事業部承認待ち</option>
+								<option value="02">メディア部受付待ち</option>
+								<option value="03">版権元確認中</option>
+							</select>
+						</div></td>
+				</tr>
+				<tr>
+					<th>申請番号</th>
+					<td><input type="text" class="form-control input-sm" id="shinsei_no" ></td>
+					<th>地域</th>
+					<td><select class="form-control input-sm" id="region">
+							<option value="">全て</option>
+							<option value="00">国内</option>
+							<option value="11">海外</option>
+							<option value="01">国内/海外</option>
+					</select></td>
+					<th>申請書種類</th>
+					<td><select class="form-control input-sm" id="sheet_type">
+							<option value="">全て</option>
+							<option value="1">新商品企画申請書</option>
+							<option value="2">販促物企画申請書</option>
+							<option value="3">ダウンロードコンテンツ申請書</option>
+					</select></td>
+					<th>キャラクター名</th>
+					<td><input type="text" class="form-control input-sm" id="character_nm"></td>
+					<th>版権元</th>
+					<td><input type="text" class="form-control input-sm" id="hanmoto_nm"></td>
+				</tr>
+				<tr>
+
+					<th>タイトル名/件名</th>
+					<td><input type="text" class="form-control input-sm" id="titel_nm"></td>
+					<td colspan="8"></td>
+				</tr>
+				<tr>
+					<th>並び順</th>
+					<td colspan="5" class="form-inline">
+							<select class="form-control input-sm" style="margin-right: 5px" id="sort_key1">
+								<option value="1">ステータス</option>
+								<option value="2" selected>申請番号</option>
+								<option value="3">地域</option>
+								<option value="4">申請書種類</option>
+								<option value="5">キャラクター名</option>
+								<option value="6">版権元</option>
+								<option value="7">タイトル名/件名</option>
+								<option value="8">起案者</option>
+								<option value="9">最終更新日時</option>
+							</select>
+							<select class="form-control input-sm" style="margin-right: 20px" id="sort_type1">
+								<option value="ASC">昇順</option>
+								<option value="DESC">降順</option>
+							</select>
+							<select class="form-control input-sm" style="margin-right: 5px" id="sort_key2">
+								<option value="1" selected>ステータス</option>
+								<option value="2">申請番号</option>
+								<option value="3">地域</option>
+								<option value="4">申請書種類</option>
+								<option value="5">キャラクター名</option>
+								<option value="6">版権元</option>
+								<option value="7">タイトル名/件名</option>
+								<option value="8">起案者</option>
+								<option value="9">最終更新日時</option>
+							</select>
+							<select class="form-control input-sm" style="margin-right: 20px" id="sort_type2">
+								<option value="ASC">昇順</option>
+								<option value="DESC">降順</option>
+							</select>
+							<select class="form-control input-sm" style="margin-right: 5px" id="sort_key3">
+								<option value="1">ステータス</option>
+								<option value="2">申請番号</option>
+								<option value="3">地域</option>
+								<option value="4" selected>申請書種類</option>
+								<option value="5">キャラクター名</option>
+								<option value="6">版権元</option>
+								<option value="7">タイトル名/件名</option>
+								<option value="8">起案者</option>
+								<option value="9">最終更新日時</option>
+							</select>
+							<select class="form-control input-sm" style="margin-right: 20px" id="sort_type3">
+								<option value="ASC">昇順</option>
+								<option value="DESC">降順</option>
+							</select>
+					</td>
+					<th>表示件数</th>
+					<td colspan="3" class="form-inline">
+							<select class="form-control" id="rowmax">
+								<option value=10>10件</option>
+								<option value=20>20件</option>
+								<option value=50 selected>50件</option>
+								<option value=100>100件</option>
+							</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<button type="button" class="btn btn-hensyu" style="width: auto" id="btn_searchList" >検索</button>
+		<button type="button" class="btn btn-hensyu" style="width: auto" id="btn_reset">条件リセット</button>
+	</div>
+	</form>
+
+
+	<hr>
+
+<!-- 結果表示部------------------------------------------------------------------------------------------------------- -->
+	<div id="help1" style="display: block">
+		<!-- 一時保存一覧 表示-->
+		<!-- <label>すべて</label> -->
+		<div style="float: left;">
+			<label id="searchDataCount">検索結果 ： 0件</label>
+		</div>
+		<!-- ページャー -->
+		<div id="searchPager" style="float: right;"></div>
+			
+		<div class="panel" style="clear: both;" id="info">
+			<table class="table table-condensed" id="processlist">
+				<thead>
+					<tr>
+						<th rowspan="2" style="width: 6%">ステータス</th>
+						<th colspan="2">申請番号</th>
+						<th rowspan="2" style="width: 25%">キャラクター名</th>
+						<th rowspan="2" style="width: 20%">版権元</th>
+						<th rowspan="2" style="width: 15%">タイトル名/件名</th>
+						<th rowspan="2" style="width: 10%">起案者</th>
+						<th rowspan="2" style="width: 10%">最終更新日時</th>
+					</tr>
+					<tr>
+						<th style="width: 7%">地域</th>
+						<th style="width: 7%">申請書種類</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<!-- @end 一覧表示 -->
+	</div>
+	
+	<!-- 結果行テンプレート -->
+	<div style="display: none">
+		<table class="table table-condensed">
+			<tbody id="resultTemplate" style="display: none">
+				<tr>
+					<td rowspan="2" class="id_status">一時保存</td>
+					<td colspan="2"><a class="id_sinsei_no" href="javascript: void(0);">SKSG17002738</a><a class="id_del_btn" href="javascript: void(0);" style="margin-left: 10px">削除する</a></td>
+						<!-- style="margin-left: 10px">削除する</a></td> -->
+					<td rowspan="2" class="id_character">宇宙戦艦ﾔﾏﾄ2199</td>
+					<td rowspan="2" class="id_hanmoto">株式会社東北新社</td>
+					<td rowspan="2" class="id_titel">PSVita「スーパーロボット大戦Ｖ」ダウンロード通常版</td>
+					<td rowspan="2" class="id_user">塚中 健介 Kensuke</td>
+					<td rowspan="2" class="id_update">2017/02/17 17:57</td>
+				</tr>
+				<tr>
+					<td class="id_region">国内/海外</td>
+					<td class="id_type">新商品企画申請書</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- @end結果行テンプレート -->
+
+	<!-- 承認処理へ移動 -->
+
+    <form id="processForm" name="processForm" method="POST" action="im_workflow/common/switch/switch_content">
+    <IMART type="hidden" imwCallOriginalParams=""
+    	imwCallOriginalPagePath="cactus/contents/screen/myProcess_list"
+        imwSystemMatterId="" imwUserDataId="" imwNodeId="" imwPageType=""></IMART>
+    </form>
+     
+   <form id="detailForm" name="detailForm" method="POST" target="IMW_DETAIL" action="im_workflow/common/switch/switch_content_detail_cactus">
+   <IMART type="hidden" imwPageType=""
+       imwSystemMatterId="" imwUserDataId=""></IMART>
+   </form>
+
+
+
+<!-- 承認用画面を開く -->
+<imart type="workflowOpenPage"
+    name="workflowOpenPageForm"
+    id="workflowOpenPageForm"
+    method="POST"
+    target="_top"
+    imwUserDataId=""
+    imwSystemMatterId=""
+    imwAuthUserCode=""
+    imwApplyBaseDate=""
+    imwNodeId=""
+    imwFlowId=""
+    imwCallOriginalParams=""
+    imwNextScriptPath="cactus/contents/screen/fin">
+    
+    <!-- ノード制御用カスタムロパティ -->
+	<input type="hidden" name="imwCustomParam" id="imwCustomParam" >
+    <!-- ノード設定 -->
+	<input type="hidden" name="imwNodeSetting" id="imwNodeSetting" >
+    
+</imart>
+
+</body>
+</html>

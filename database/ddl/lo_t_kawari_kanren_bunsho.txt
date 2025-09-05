@@ -1,0 +1,13 @@
+create table public.lo_t_kawari_kanren_bunsho (
+  bunsho_id character varying(20) not null
+  , bunsho_edaban smallint
+  , kanren_bunsho_id character varying(20) not null
+  , bunsho_cls character varying(20)
+  , shinsei_cls character varying(20)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (bunsho_id, bunsho_edaban)
+);

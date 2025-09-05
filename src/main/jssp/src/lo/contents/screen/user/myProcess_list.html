@@ -1,0 +1,660 @@
+<imart type="head">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcMyList" page="lo/contents/screen/user/myProcess_list" callback="searchResult" onErrorCallback="searchError"></IMART>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator_materialize.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<!-- link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/disable.radius.css">
+
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+    <script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	
+	<script type="text/javascript" src="lo_csjs/tabulator.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+
+	<style type="text/css">
+	<!--
+
+	footer .bne-information {
+	    margin-bottom: 20px;
+	}
+
+	#myprocess_table_wrapper {
+		width: 100%;
+	}
+	table.dataTable td {
+	  	word-break: break-word;
+		white-space: normal;
+	}
+	
+	#myprocess_table{
+		table-layout: fixed;
+	}
+	
+	#myprocess_table thead th:nth-child(1){
+		width: 100px;
+		min-width: 100px;
+	}
+	#myprocess_table thead th:nth-child(2){
+		width: 100px;
+		min-width: 100px;
+	}
+	#myprocess_table thead th:nth-child(3){
+		width: 100px;
+		min-width: 100px;
+	}
+	#myprocess_table thead th:nth-child(4){
+		width: 100px;
+		min-width: 100px;
+	}
+	#myprocess_table thead th:nth-child(5){
+		width: 100px;
+		min-width: 100px;
+	}
+	#myprocess_table thead th:nth-child(6){
+		width: 100px;
+		min-width: 100px;
+	}
+	#myprocess_table thead th:nth-child(7){
+		width: 200px;
+		min-width: 200px;
+	}
+	#myprocess_table thead th:nth-child(8){
+		width: 200px;
+		min-width: 200px;
+	}
+	#myprocess_table thead th:nth-child(9){
+		width: 200px;
+		min-width: 200px;
+	}
+	
+	--> 
+	</style>
+	<title><imart type="message" id="LO.TITLE.USER.MY_PROCESS_LIST" escapeXml="true" /></title>
+</imart>
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	<!-- header -->
+
+	<div class="container">
+		<div class="row">
+
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+
+			<!-- main contents -->
+			<div class="main col">
+
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display:none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<article id="page-upper-part">
+					<div class="page-information row my-4">
+						<div class="col-3">
+							<h1><imart type="message" id="LO.TITLE.USER.MY_PROCESS_LIST" escapeXml="true" /></h1>
+						</div>
+						<div class="col-6 mt-3">
+							<imart type="message" id="MY01I001" escapeJs="true"></imart>
+						</div>
+						<div class="col-3 d-flex align-items-end">
+							<div class="text-right" style="width: 100%;">
+								<span id="condition_hide"><i class="far fa-caret-square-up"></i>検索条件非表示</span>
+								<span id="condition_show" style="display: none;"><i class="far fa-caret-square-down"></i>検索条件表示</span>
+							</div>
+						</div>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-12 form-area search_condition mt-2 mb-2">
+								<div class="col-12 row"><h4 class="indent">検索条件</h4></div>
+								<form role="form" id="inputForm">
+									<div class="form-group row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">文書種別</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<span class="input-group" aria-label="">
+												<imart type="imuiSelect" class="custom-select" name="doc_type" list=$doc_type_list />
+											</span>
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">処理状況</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<div class="inputRadio pt-2 pl-2">
+												<imart type="imuiRadio" class="option-input" name="proc_type" value="1" label="未処理" checked="true" />
+												<imart type="imuiRadio" class="option-input" name="proc_type" value="2" label="処理済み" />
+												<imart type="imuiRadio" class="option-input" name="proc_type" value="3" label="完了" />
+											</div>
+										</div>
+									</div>									
+									<div class="form-group row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">IP</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<span class="input-group">
+												<imart type="imuiTextbox" maxlength="1024" id="pl_ip" name="pl_ip" class="form-control" value=$form.pl_ip />
+												<div class="input-group-append">
+													<button type="button" id="btn_ip_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+												</div>							
+											</span>
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">タイトル名</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<span class="input-group">
+												<imart type="imuiTextbox" maxlength="1024" id="pl_title_nm" name="pl_title_nm" class="form-control" value=$form.pl_title_nm />
+												<div class="input-group-append">
+													<button type="button" id="btn_title_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+												</div>							
+											</span>
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">文書番号</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<imart type="imuiTextbox" maxlength="255" id="doc_id" name="doc_id" class="form-control" value=$form.doc_id />
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">申請名</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<imart type="imuiTextbox" maxlength="100" id="shinsei_nm" name="shinsei_nm" class="form-control" value=$form.shinsei_nm />
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">申請日</div>
+										<div class="infl col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" id="shinsei_bi_from" name="shinsei_bi_from" class="form-control" value=$form.shinsei_bi_from escapeXml="true"/>
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#shinsei_bi_from" showMonthAfterYear="true" />
+												<span class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</span>
+											</div>
+											<span class="text-center blanc">～</span>
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" id="shinsei_bi_to" name="shinsei_bi_to" class="form-control" value=$form.shinsei_bi_to escapeXml="true"/>
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#shinsei_bi_to" showMonthAfterYear="true" />
+												<span class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</span>
+											</div>
+										</div>
+										<!-- ユーザの権限で表示項目を変える -->
+										<IMART type="decision" value=$userInfo.bneFlg case="1"> <!-- BNEの場合 -->
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">ライセンシー名</div>
+											<div class="col-6 col-lg-4 left-justified">
+												<span class="input-group">
+													<imart type="imuiTextbox" maxlength="255" id="kaisha_nm" name="kaisha_nm" class="form-control" value=$form.kaisha_nm />
+													<div class="input-group-append">
+														<button type="button" id="btn_kaisha_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+													</div>							
+												</span>
+											</div>
+										</IMART>
+									</div>
+									<div class="form-group row mb-2">
+										<!-- ユーザの権限で表示項目を変える -->
+										<IMART type="decision" value=$userInfo.bneFlg case="1"> <!-- BNEの場合 -->
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">ステータス</div>
+											<div class="col-4 col-lg-2 left-justified">
+												<div class="input-group">
+												<imart type="imuiSelect" class="custom-select form-control" id="kikaku_status" name="kikaku_status" list=$form.status_list />
+												</div>
+											</div>
+											<div class="col-3 col-lg-2 align-middle inputRadio mt-2">
+												<ul class="infl">
+													<li class="list_item">
+														<imart type="imuiCheckbox" id="not_finish" name="not_finish" label="完了以外" value=true checked=$form.not_finish />
+													</li>
+												</ul>
+											</div>
+										</IMART>
+										<!-- ユーザの権限で表示項目を変える -->
+										<IMART type="decision" value=$userInfo.bneFlg case="1"> <!-- BNEの場合 -->
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">公開範囲</div>											
+											<div class="col-3 col-lg-2 align-middle inputRadio mt-2">
+												<ul class="infl">
+													<li class="list_item">
+														<label><imart type="imuiCheckbox" id="gokuhi_flg" name="gokuhi_flg" label="" value="1" checked=$form.gokuhi_flg/>経路上公開</label>
+													</li>
+												</ul>
+											</div>
+										</IMART>
+									</div>
+									<div class="form-group row mb-2">
+										<div class="flex_btn">
+											<div class="col-12">
+												<button type="button" class="bg_orange txt_dark" id="tblsearch"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+												<button type="button" class="brdr_dkgray txt_dark" id="tblclear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="row" id="list_title">
+						<div class="col-12 col-lg-9"><h4>MY文書一覧</h4></div>
+						<div class="col-12 col-lg-3 text-right" style="padding-right: 0px;">
+							<!-- <div class="btn-group">
+							<button type="button" class="bg_ltblue txt_dark"><i class="fas fa-print fa-2x"></i><span>ファイル出力</span></button>
+							</div>
+							 -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-lg-9">
+							<div class="scrollbar" id="scrollbar"><div class="scroll-inner" id="scroll-inner"></div></div>
+						</div>
+					</div>
+				</article>
+				<article>
+					<section class="show">
+						<div class="container">
+							<div class="row">
+								<div id="myprocess_table"></div>
+							</div>
+						</div>
+					</section>
+				</article>
+
+				<IMART type="decision" value=$userInfo.licenseProductionFlg case="1"> <!-- プロダクションの場合 -->
+				<!-- 
+					<div class="mt-5 mb-5">
+						<article>
+							<h5><a class="h6" href="lo/contents/screen/user/charts">分析チャートを確認</a></h5>
+						</article>
+					</div>
+				 -->
+				</IMART>
+				
+				<div id="page-footer-part">
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="popup" id="js-popup">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/ip_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg"></div>
+	</div>
+	
+	<div class="popup" id="js-popup2">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn2"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/title_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg2"></div>
+	</div>
+	
+	<div class="popup" id="js-popup3">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn3"><i class="fas fa-times"></i></div><br>
+			<imart type="include" page="lo/contents/screen/common/kaisha_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg3"></div>
+	</div>
+	
+	<script type="text/javascript">
+
+	$(window).on('load', function() {
+		document.getElementById('body').style.display = 'block';
+		// IMUI Calendar のデフォルトのアイコンを非表示
+		$(".imui-calendar").next("img").hide();
+	});	
+
+	var tableUtil = null;
+
+	$(function () {
+		$("body").css("zoom","80%");
+
+		var licenseProductionFlg = ('<imart type="string" value=$userInfo.licenseProductionFlg />' == "1" ? true : false);
+		var licenseeFlg = ('<imart type="string" value=$userInfo.licenseeFlg />' == "1" ? true : false);
+
+		if (licenseProductionFlg) {
+			$("#myprocess_table thead tr th.licensee_hide").show();
+		}
+		
+		// カレンダーアイコンをクリック
+		$(document).on("click", ".fa-calendar", function(){
+			$(this).closest(".input-group").find("img").click();
+		});
+
+		$("#my_charge").on("click", function(){
+			var myName = '<imart type="string" value=$userInfo.userName />';
+			$("#tantou_sha").val(myName);
+		});
+
+		// 項目押下時のソートアイコン切り替え
+		$('#myprocess_table th').on('click', function () {
+			var classlist = $(this).attr('class').split(' '); 
+			// クリックした項目のasc,descを切り替え
+			if (classlist.indexOf('asc') > -1){
+				$(this).removeClass('asc');
+				$(this).addClass('desc');
+			}else if (classlist.indexOf('desc') > -1){
+				$(this).removeClass('desc');
+				$(this).addClass('asc');
+			}else{
+				$(this).addClass('asc');
+			}
+			// クリック項目以外はどっちも外す
+			$(this).siblings().removeClass('asc desc');
+		});
+
+		$("#tblclear").click(function () {
+			$('[name=doc_type]').val('');
+			$('#pl_ip').val('');
+			$('#pl_title_nm').val('');
+			$('#doc_id').val('');
+			$('#shinsei_nm').val('');
+			$('#shinsei_bi_from').val('');
+			$('#shinsei_bi_to').val('');
+			$('#tantou_sha').val('');
+			$('#kaisha_nm').val('');
+			$('#kikaku_status').val('');
+			$("#not_finish").prop("checked", true);
+			$("[name=proc_type]").each((index, elem)=>{
+				if(elem.value == 1) {
+					elem.checked = true;
+				} else {
+					elem.checked = false;
+				}
+			});
+			
+			$("#gokuhi_flg").prop("checked", false);
+		});
+		
+		// 企画ステータスと完了以外の整合性担保
+		$(document).on('change', '#kikaku_status', function() {
+			if($(this).val() != '') {
+				$('#not_finish').prop('checked', false);
+			}
+		}).on('change', '#not_finish', function() {
+			if($(this).prop('checked') == true) {
+				$('#kikaku_status').val('');
+			}
+		});
+		
+		// ENTERで検索
+		var enterPressFlg = false;
+		$('form#inputForm input').keyup(function() {
+			if(event.keyCode == 13 && !enterPressFlg) {
+				enterPressFlg = true;
+				$('#tblsearch').click();
+			}
+		});
+
+		// ツールチップ
+		var tooltipNullFunc = function(cell) {
+			if (!cell.getValue()) {
+				return "※登録なし";
+			}
+			return cell.getValue();
+		};
+		var defaultMaxWidth = 900;
+		var columns = [
+       		{title:"文書種別", field:"doc_type_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth
+	       		, sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
+		       	    //a, b - the two values being compared
+		       	    //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+		       	    //column - the column component for the column being sorted
+		       	    //dir - the direction of the sort ("asc" or "desc")
+		       	    //sorterParams - sorterParams object from column definition array
+
+	       	    	return new Number(aRow.getData().doc_type) - new Number(bRow.getData().doc_type); //you must return the difference between the two values
+	       		}
+       		},
+       		{title:"文書番号", field:"id", visible: true, headerTooltip:true, tooltip:true, maxWidth:defaultMaxWidth
+       			, formatter: function(cell, formatterParams, onRendered) {
+	       			var value = cell.getValue();
+	       			var data = cell.getData();
+	       			if (value == null) {
+	       				return "";
+	       			}
+	
+	       			if (data.target_doc_type == "1"){
+	       				if (licenseeFlg == true && (data.status_name == '一時保存' || data.status_name == '修正依頼')){
+	       					return '<a href="lo/contents/screen/kikaku/planning_form_new?kikaku_id=' + value + '">' + value + '</a>';
+	       				}else{
+	       					return '<a href="lo/contents/screen/kikaku/planning_detail_new?kikaku_id=' + value + '">' + value + '</a>';
+	       				}
+	       			}
+	       			if (data.target_doc_type == "2"){
+	       				if (licenseeFlg == true && (data.status_name == '一時保存' || data.status_name == '修正依頼')){
+	       					return '<a href="lo/contents/screen/kyodaku/permission_register?kyodaku_id=' + value+ '">' + value + '</a>';
+	       				}else{
+	       					return '<a href="lo/contents/screen/kyodaku/permission_product_detail?kyodaku_id=' + value + '">' + value + '</a>';
+	       				}
+	       			}
+	       			if (data.target_doc_type == "3"){
+	       				return '<a href="lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_detail?keiyaku_naiyo_id=' + value + '">' + value + '</a>';
+	       			}
+	       			if (data.target_doc_type == "4"){
+	       				if ("<imart type="string" value=$userInfo.userCd />" == data.nyuryoku_sha_id && (data.status_name == '一時保存' || data.status_name == '修正依頼' || data.status_name == '差戻')){
+	       					return '<a href="lo/contents/screen/kawari/kawari_register?bunsho_id=' + value + '">' + value + '</a>';
+	       				}else{
+	       					return '<a href="lo/contents/screen/kawari/kawari_detail?bunsho_id=' + value + '">' + value + '</a>';
+	       				}	       				
+	       			}
+	       			if (data.target_doc_type == "7"){
+	       				if ("<imart type="string" value=$userInfo.userCd />" == data.nyuryoku_sha_id && (data.status_name == '一時保存' || data.status_name == '修正依頼' || data.status_name == '差戻')){
+	       					if(value.substr(0,2) =="AS"){
+	       						return '<a href="lo/contents/screen/account/account_register?shinsei_id=' + value + '">' + value + '</a>';
+	       					}else{
+	       						return '<a href="lo/contents/screen/account/shanai_account_register?shinsei_id=' + value + '">' + value + '</a>';
+	       					}
+	       				}else{
+	       					if(value.substr(0,2) =="AS"){
+	       						return '<a href="lo/contents/screen/account/account_detail?shinsei_id=' + value + '">' + value + '</a>';
+	       					}else{
+	       						return '<a href="lo/contents/screen/account/shanai_account_detail?shinsei_id=' + value + '">' + value + '</a>';
+	       					}
+	       				}	       				
+	       			}
+	       			return value;
+       			}
+       		},
+       		{title:"役割", field:"wf_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+       		{title:"文書ステータス", field:"status_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth
+       			, formatter: function(cell, formatterParams, onRendered) {
+	       			var value = cell.getValue();
+	       			var data = cell.getData();
+	       			if (value == null) {
+	       				return "";
+	       			}
+	       			var data = cell.getData();
+	       			return '<span class="' + data.mydoc_status_style + '">' + value + '</span>';
+       			}
+	       		, sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
+		       	    //a, b - the two values being compared
+		       	    //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+		       	    //column - the column component for the column being sorted
+		       	    //dir - the direction of the sort ("asc" or "desc")
+		       	    //sorterParams - sorterParams object from column definition array
+	
+	       	    	return new Number(aRow.getData().status_cd) - new Number(bRow.getData().status_cd); //you must return the difference between the two values
+	       		}
+       		},
+       		<IMART type="decision" value=$userInfo.licenseProductionFlg case="1">
+       		{title:"ライセンシー名", field:"kaisha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+       		</IMART>
+       		{title:"IP", field:"ip", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+       		{title:"タイトル名", field:"title_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+       		{title:"申請名", field:"shinsei_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+       		{title:"申請日", field:"shinsei_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+       	];
+
+        tableUtil = new TabulatorUtil("#myprocess_table", columns, "id");
+
+		//検索を行う
+		$('#tblsearch').click(function () {
+			
+			// フォーム内にあるname属性と入力値を一括で取得する
+			var whereParam = $('#inputForm').serializeInputValue();
+			if($.trim($("#kikaku_status").val()) != "") {
+				whereParam.kikaku_status = $.trim($("#kikaku_status").val()).split(",");
+			}
+			if(!$("#not_finish").prop("checked")) {
+				whereParam.not_finish = "off";
+			}
+
+			setUrlParam(whereParam);
+			
+			// 検索
+			jsspRpcMyList.searchMyList(whereParam);
+			
+			// インジケータ表示
+			showIndicator();
+			
+		});
+		
+		// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+		window.searchResult = function(ret) {
+
+			// インジケータ非表示
+	        hideIndicator();
+	        enterPressFlg = false;
+
+	        tableUtil.setData(ret.data);
+			$(document).trigger("resizeTabulator");
+			if (document.documentElement.clientHeight >= 1000) {
+				document.getElementById("myprocess_table").style.height="696px";
+			} else if (document.documentElement.clientHeight >= 900) {
+				document.getElementById("myprocess_table").style.height="546px";
+			}
+
+	    }
+		// 検索エラー後コールバック
+		window.searchError = function(res) {
+	        hideIndicator();
+	        enterPressFlg = false;
+			try {
+				imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+				return;
+			} catch (ex) {
+				imuiShowErrorMessage(ex.message, [], true, 5000, true);
+			}
+
+	    }
+	
+		
+		<imart type="condition" validity=$initialSearching>
+		var $proc_type = '<imart type="string" value=$form.proc_type />';
+		if($proc_type) {
+			$("[name=proc_type]").each((index, elem)=>{
+				if(elem.value == $proc_type) {
+					elem.checked = true;
+				} else {
+					elem.checked = false;
+				}
+			});
+		}
+		$('#tblsearch').trigger("click");
+		</imart>
+		
+		// IP 検索
+		$("#btn_ip_search").click(function(e, data){
+			$('#js-popup').addClass('is-show');
+		});
+		$("#js-popup").on("ipSearchSelected", function(e, selectedRecords) {
+			$('#js-popup').removeClass('is-show');
+			if (selectedRecords.length > 0) {
+				var selectedRecord = selectedRecords[0];
+				$("#pl_ip").val(selectedRecord.ip_nm);
+			}
+        });
+		
+		// タイトル検索
+		$("#btn_title_search").click(function(e, data){
+			$('#js-popup2').addClass('is-show');
+		});
+		$("#js-popup2").on("selectedTitleDatas", function(e, selectedTitleDatas) {
+			$('#js-popup2').removeClass('is-show');
+			if (selectedTitleDatas.length > 0) {
+				var selectedTitleData = selectedTitleDatas[0];
+				$("#pl_title_nm").val(selectedTitleData.title_nm);
+				$("#pl_ip").val(selectedTitleData.ip_nm);
+			}
+        });
+		// ライセンシー検索
+		$("#btn_kaisha_search").click(function(e, data){
+			$('#js-popup3').addClass('is-show');
+		});
+		$("#js-popup3").on("selectedkaishaDatas", function(e, selectedkaishaDatas) {
+			$('#js-popup3').removeClass('is-show');
+			if (selectedkaishaDatas.length > 0) {
+				$("#kaisha_nm").val(selectedkaishaDatas[0].kaisha_nm);
+			}
+        });
+		
+		
+		$(document).on("click", "#condition_hide, #condition_show", function(){
+			var $this = $(this);
+			$this.hide();
+			if ($this.is("#condition_hide")) {
+				$(".search_condition").hide();
+				$("#condition_show").show();
+			} else {
+				$(".search_condition").show();
+				$("#condition_hide").show();
+			}
+			$(document).trigger("resizeTabulator");
+			if ($this.is("#condition_hide")) {
+				if (document.documentElement.clientHeight >= 1000) {
+					document.getElementById("myprocess_table").style.height="1076px";
+				} else if (document.documentElement.clientHeight >= 900) {
+					document.getElementById("myprocess_table").style.height="926px";
+				}
+			} else {
+				if (document.documentElement.clientHeight >= 1000) {
+					document.getElementById("myprocess_table").style.height="696px";
+				} else if (document.documentElement.clientHeight >= 900) {
+					document.getElementById("myprocess_table").style.height="546px";
+				}
+			}
+		});
+
+		
+	});
+	</script>
+</body>

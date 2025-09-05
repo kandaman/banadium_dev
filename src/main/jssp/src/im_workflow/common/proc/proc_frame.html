@@ -1,0 +1,163 @@
+<imart type="head">
+<style>
+<!--
+html, body, iframe, form {margin: 0px; padding: 0px;}
+iframe {width: 100%; height: 100%;}
+-->
+</style>
+<imart type="jsspRpc" name="jsActionProcFrame" page="im_workflow/common/proc/proc_frame" />
+<imart type="imwCommonJs" />
+<imart type="workflowOpenPageCsjs" />
+<script type="text/javascript" src="csjs/im_json.js"></script>
+<script type="text/javascript">
+
+window.onload = function() {
+    showProcMain();
+    initParseJSON();
+}
+
+var userParams;
+function showProcMain() {
+    var pageSize = getPageSize(), w = pageSize.pageWidth, h = pageSize.windowHeight - 10;
+    var iframe = document.getElementById("IMW_PROC_MAIN");
+    iframe.style.width = w + "px";
+    iframe.style.height = h + "px";
+    document.imwProcMainForm.submit();
+}
+
+function initParseJSON() {
+    userParams = ImJson.parseJSON(document.imwProcTopDataForm.imwUserParamsJSON.value);
+}
+
+function closeImwProcScreen(imwWorkflowParams) {
+    if (saveImwWorkflowParams(imwWorkflowParams)) {
+        GB_closeWithImwCallBack();
+    } else {
+        GB_close();
+    }
+}
+
+function saveImwWorkflowParams(imwWorkflowParams) {
+    var targetFormId = document.imwProcTopDataForm.imwOpenPageFormName.value;
+    var targetForm = parent.parent.document.getElementById(targetFormId);
+    var imwWorkflowParamsEncoded;
+    try {
+        imwWorkflowParamsEncoded =
+                jsActionProcFrame.encodeImwWorkflowParams(imwWorkflowParams);
+    } catch (ex) {
+        alert(ex);
+        return false;
+    }
+    if (targetForm.imwWorkflowParams) {
+        targetForm.imwWorkflowParams.value = imwWorkflowParamsEncoded;
+    } else {
+        var elmHiddenImwWorkflowParams = parent.parent.document.createElement("INPUT");
+        elmHiddenImwWorkflowParams.setAttribute("type", "hidden");
+        elmHiddenImwWorkflowParams.setAttribute("name", "imwWorkflowParams");
+        elmHiddenImwWorkflowParams.setAttribute("id", "imwWorkflowParams");
+        elmHiddenImwWorkflowParams.setAttribute("value", imwWorkflowParamsEncoded);
+        targetForm.appendChild(elmHiddenImwWorkflowParams);
+    }
+    if (targetForm.imwCallType) {
+        targetForm.imwCallType.value = "1";
+    } else {
+        var elmHiddenImwCallType = parent.parent.document.createElement("INPUT");
+        elmHiddenImwCallType.setAttribute("type", "hidden");
+        elmHiddenImwCallType.setAttribute("name", "imwCallType");
+        elmHiddenImwCallType.setAttribute("id", "imwCallType");
+        elmHiddenImwCallType.setAttribute("value", "1");
+        targetForm.appendChild(elmHiddenImwCallType);
+    }
+    return true;
+}
+
+function goNext(imwWorkflowParams) {
+    <IMART type="condition" validity=oDisplay.isSetSessionAfterExec>
+    var mainForm = document.imwProcMainForm;
+    try {
+        jsActionProcFrame.setLastProcessedMatterInfoInSerial(mainForm.imwSystemMatterId.value, mainForm.imwNodeId.value);
+    } catch (ex) {
+        alert(ex);
+        return false;
+    }
+    </IMART>
+    if (document.imwProcTopDataForm.noNextFlag &&
+            document.imwProcTopDataForm.noNextFlag.value == "1") {
+        var data = {};
+        if (typeof imwWorkflowParams.systemMatterId != 'undefined') {
+            data.imwSystemMatterId = imwWorkflowParams.systemMatterId;
+        }
+        <imart type="decision" case="1" value=oRequest.imwPageType>
+        if (typeof imwWorkflowParams.userDataId != 'undefined') {
+            data.imwUserDataId     = imwWorkflowParams.userDataId;
+        }
+        </imart>
+        GB_closeWithImwCallBack(data);
+    } else {
+        if (typeof imwWorkflowParams.systemMatterId != 'undefined') {
+            document.imwProcTopNextForm.imwSystemMatterId.value = imwWorkflowParams.systemMatterId;
+        }
+        <imart type="decision" case="1" value=oRequest.imwPageType>
+        if (typeof imwWorkflowParams.userDataId != 'undefined') {
+            document.imwProcTopNextForm.imwUserDataId.value     = imwWorkflowParams.userDataId;
+        }
+        </imart>
+        document.imwProcTopNextForm.submit();
+    }
+}
+</script>
+</imart>
+
+<body style="min-width:0px;">
+<form name="imwProcTopDataForm" method="POST">
+    <imart type="hidden"
+        imwNextApplicationId =oRequest.imwNextApplicationId
+        imwNextServiceId     =oRequest.imwNextServiceId
+        imwUserParamsJSON    =oRequest.imwUserParamsJSON
+        imwOpenPageFormName  =oRequest.imwOpenPageFormName
+        noNextFlag           =oDisplay.noNextFlag />
+</form>
+
+<imart type="tag" tagname="form" name="imwProcTopNextForm" method="POST"
+        action=oDisplay.nextAction  target=oRequest.imwOpenPageFormTarget escapeXml="true">
+    <imart type="hidden" imwCallOriginalParams=oRequest.imwCallOriginalParams />
+    <input type="hidden" name="imwSystemMatterId" value="">
+    <imart type="decision" case="1" value=oRequest.imwPageType>
+    <input type="hidden" name="imwUserDataId" value="">
+    </imart>
+    <imart type="condition" validity=oDisplay.isSetImwCallOriginalPagePath>
+    <imart type="hidden" imwCallOriginalPagePath=oRequest.imwCallOriginalPagePath />
+    </imart>
+</imart>
+
+<imart type="tag" tagname="form" name="imwProcMainForm" method="POST" target="IMW_PROC_MAIN"
+        action=oDisplay.procMainPagePath>
+    <!-- edit License_out_system 20200915 imwCustomParam　add-->
+    <!-- edit License_out_system 20200915 imwUserParamsJSON　add-->
+    <imart type="hidden"
+        imwAuthUserCode         =oRequest.imwAuthUserCode
+        imwSystemMatterId       =oRequest.imwSystemMatterId
+        imwUserDataId           =oRequest.imwUserDataId
+        imwNodeId               =oRequest.imwNodeId
+        imwApplyBaseDate        =oRequest.imwApplyBaseDate
+        imwFlowId               =oRequest.imwFlowId
+        imwPageType             =oRequest.imwPageType
+        imwMatterStatus         =oRequest.imwMatterStatus
+        imwCallType             =oRequest.imwCallType
+        imwWorkflowParams       =oRequest.imwWorkflowParams
+        imwForcedParamFlag      =oRequest.imwForcedParamFlag
+        imwNodeSetting          =oRequest.imwNodeSetting 
+        imwCustomParam          =oRequest.imwCustomParam 
+        imwUserParamsJSON    	=oRequest.imwUserParamsJSON
+        />
+        
+    <imart type="condition" validity=oDisplay.imwMatterNameHiddenFlag>
+        <imart type="hidden" imwMatterName=oRequest.imwMatterName />
+    </imart>
+    <imart type="condition" validity=oDisplay.imwCommentHiddenFlag>
+        <imart type="hidden" imwComment=oRequest.imwComment />
+    </imart>
+</imart>
+
+<iframe id="IMW_PROC_MAIN" name="IMW_PROC_MAIN" frameborder="0"></iframe>
+</body>

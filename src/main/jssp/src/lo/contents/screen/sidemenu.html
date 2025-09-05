@@ -1,0 +1,194 @@
+<link rel="stylesheet" type="text/css" href="lo_csjs/menu.css">
+<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+<style>
+.category-icon{
+	display:none;
+}
+.circle{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffa500;
+  text-align:center;
+  line-height: 20px;
+}
+</style>
+<div class="page-wrapper chiller-theme toggled">
+	<nav id="sidebar" class="sidebar-wrapper">
+		<div class="sidebar-content">
+			<div class="sidebar-brand">
+				<div id="close-sidebar" class="close-sidebar-position">
+					<i class="fas fa-arrow-left"></i>
+				</div>
+			</div>
+			<div class="sidebar-menu">
+				<ul>
+					<li class="sidebar-dropdown active h5">
+						<a>
+							<img class="category-icon" src="lo_csjs/images/c021.png"/>
+							<span class="circle"></span>
+							<span class="category-title">MY文書</span>
+						</a>
+						<div class="sidebar-submenu">
+							<ul>
+								<li><a class="h6" href="lo/contents/screen/user/myProcess_list">MY文書の一覧をみる</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="sidebar-dropdown active h5">
+						<a>
+							<img class="category-icon" src="lo_csjs/images/c004.png"/>
+							<span class="circle"></span>
+							<span class="category-title">企画</span>
+						 </a>
+						<div class="sidebar-submenu">
+							<ul>
+								<imart type="condition" validity=$pubGrpLicenseeFlg>
+									<li><a class="h6" href="lo/contents/screen/kikaku/planning_form_new?kikaku_shubetsu_cd=1">商品企画を申請する</a></li>
+									<li><a class="h6" href="lo/contents/screen/kikaku/planning_form_new?kikaku_shubetsu_cd=2">楽曲企画を申請する</a></li>
+									<li><a class="h6" href="lo/contents/screen/kikaku/planning_form_new?kikaku_shubetsu_cd=3">イベント企画を申請する</a></li>
+									<li><a class="h6" href="lo/contents/screen/kikaku/planning_form_new?kikaku_shubetsu_cd=4">ゲームコラボ企画を申請する</a></li>
+								</imart>
+								<li><a class="h6" href="lo/contents/screen/kikaku/planning_list_new">企画申請の一覧をみる</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="sidebar-dropdown active h5">
+						<a>
+							<img class="category-icon" src="lo_csjs/images/c028.png"/>
+							<span class="circle"></span>
+							<span class="category-title">許諾</span>
+						</a>
+						<div class="sidebar-submenu">
+							<ul>
+								<imart type="condition" validity=$pubGrpLicenseeFlg>
+									<li><a class="h6" href="lo/contents/screen/kyodaku/permission_register">商品化権許諾を申請する</a></li>
+								</imart>
+								<li><a class="h6" href="lo/contents/screen/kyodaku/permission_list">許諾申請の一覧をみる</a></li>
+							</ul>
+						</div>
+					</li>
+					<li class="sidebar-dropdown active h5">
+						<a>
+							<img class="category-icon" src="lo_csjs/images/c023.png"/>
+							<span class="circle"></span>
+							<span class="category-title">契約</span>
+						</a>
+						<div class="sidebar-submenu">
+							<ul>
+								<li><a class="h6" href="lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_list">契約の一覧をみる</a></li>
+								<imart type="condition" validity=$pubBneFlg>
+									<li><a class="h6" href="lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_detail">契約内容を確認する</a></li>
+									<li><a class="h6" href="lo/contents/screen/keiyaku_naiyo/comment_destination_preset">プリセットを設定する</a></li>
+								</imart>
+							</ul>
+						</div>
+					</li>
+					<imart type="condition" validity=$pubGrpLicenseeFlg negative>
+						<li class="sidebar-dropdown active h5">
+							<a>
+								<img class="category-icon" src="lo_csjs/images/c008.png"/>
+								<span class="circle"></span>
+								<span class="category-title">代わり承認WF</span>
+							</a>
+							<div class="sidebar-submenu">
+								<ul>
+									<li><a class="h6" href="lo/contents/screen/kawari/kawari_register?bunsho_cls=4">新商品企画を申請する</a></li>
+									<li><a class="h6" href="lo/contents/screen/kawari/kawari_register?bunsho_cls=5">商品化権許諾を申請する</a></li>
+									<li><a class="h6" href="lo/contents/screen/kawari/kawari_register?bunsho_cls=6">LicenseProposal申請</a></li>
+									<li><a class="h6" href="lo/contents/screen/kawari/kawari_list">代わり承認の一覧をみる</a></li>
+								</ul>
+							</div>
+						</li>
+					</imart>                
+					<imart type="condition" validity=$pubGrpLicenseeFlg negative>
+						<li class="sidebar-dropdown active h5">
+							<a>
+								<img class="category-icon" src="lo_csjs/images/c008.png"/>
+								<span class="circle"></span>
+								<span class="category-title">アカウント申請</span>
+							</a>
+							<div class="sidebar-submenu">
+							<ul>
+								<imart type="condition" validity=$shanaiAccountManagementFlg>
+								<li><a class="h6" href="lo/contents/screen/account/shanai_account_register"><span>社内アカウント申請</span></a></li>
+								</imart>
+								
+								<li><a class="h6" href="lo/contents/screen/account/account_register?flow=bne"><span>社外アカウント申請</span></a></li>
+								
+								<li><a class="h6" href="lo/contents/screen/account/account_list"><span>アカウント申請一覧</span></a></li>						
+							</ul>	
+							</div>				
+						</li>
+					</imart>
+					<imart type="condition" validity=$pubGrpLicenseeFlg negative>
+                        <li class="h5">
+                            <div>
+                            <ul>
+                                <li><a class="h6" href="http://div-bnc-prd01/#/views/1/_TOP?:embed=yes"><span>ライセンスポータルレポート</span></a></li>                        
+                            </ul>    
+                            </div>                
+                        </li>
+                    </imart>
+					
+					<imart type="condition" validity=$pubGrpLicenseeFlg>
+					<li class="sidebar-dropdown active h5">
+							<a>
+								<img class="category-icon" src="lo_csjs/images/c008.png"/>
+								<span class="circle"></span>
+								<span class="category-title">アカウント申請</span>
+							</a>
+						<div class="sidebar-submenu">
+							<ul>
+							<li class="h5">
+								<a href="lo/contents/screen/account/account_register"><span>アカウント申請</span></a>						
+							</li>
+							<li><a class="h6" href="lo/contents/screen/account/account_list"><span>アカウント申請一覧</span></a></li>
+							</ul>
+						</div>
+					</imart>
+					</li>
+					
+					<li class="h5">
+						<a href="lo/contents/screen/file/file_download"><span>ファイルダウンロード<br>（マニュアル・申請書）</span></a>						
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	$(".sidebar-dropdown > a").click(function() {
+		$(this).next(".sidebar-submenu").slideUp(200);
+		if ($(this).parent().hasClass("active")) {
+			$(this).next(".sidebar-dropdown").removeClass("active");
+			$(this).parent().removeClass("active");
+		} else {
+			$(this).next(".sidebar-dropdown").removeClass("active");
+			$(this).next(".sidebar-submenu").slideDown(200);
+			$(this).parent().addClass("active");
+		}
+	});
+	
+	$("body").addClass("sidebar-on");
+	$("#close-sidebar").click(function() {
+		$(".page-wrapper").removeClass("toggled");
+		$("#lo_sidebar").hide();
+		$("#show-sidebar").show();
+		
+		// メインコンテンツ幅制御用
+		$("body").removeClass("sidebar-on").addClass("sidebar-off");
+	});
+	$("#show-sidebar").click(function() {
+		$(".page-wrapper").addClass("toggled");
+		$("#lo_sidebar").show();
+		$("#show-sidebar").hide();
+		
+		// メインコンテンツ幅制御用
+		$("body").addClass("sidebar-on").removeClass("sidebar-off");
+	});
+});
+</script>

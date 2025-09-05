@@ -1,0 +1,562 @@
+<imart type="jsspRpc" name="loFlowCommon" page="im_workflow/common/proc/lo/lo_common" />
+<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+<link rel="stylesheet" type="text/css" href="im_workflow_csjs/commentForm.css">
+<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+<script type="text/javascript">
+
+
+$(function(){
+	
+	//$("#GB_window",parent.parent.parent.document).next().next().css('width','1206px')
+	
+	// 戻るボタン押下
+	$("#comment_close").click(function(){
+		closeWindow();
+		return false;
+	});
+	// 処理ボタン押下
+	$("#comment_proc").click(function(){
+		
+		// テキストエリアの内容をimworkflow側にも反映 // todo いらんかも
+		$("#processComment").val($("#comment_area").val()); 
+
+		//  画面の入力値をuserParamsに格納
+		// ファイル
+		var tempushiryoList = [];
+		$("#after_tempu_file_select_area > .afterFileSelect").each(function(index, element) {
+			var divElement = $(element);
+			var tempushiryo = {
+					fileName : divElement.find('input[name="item_upFile_name"]').val(),
+					uniquefileName : divElement.find('input[name="item_upFile_resname"]').val()
+			};
+			tempushiryoList.push(tempushiryo);
+		});
+		parent.userParams["item_tempu_files"] = tempushiryoList;
+		// コメント
+		parent.userParams["item_comment"] = $("#comment_area").val();
+	
+		// 通知先設定取得
+		var mailuserList = {};
+		var arr = ['mail_1','mail_2','mail_3','mail_4','mail_5'];
+		$.each(arr, function(index, objId) {
+			var user = [];
+			$('#'+objId).find('input[name="userCd"]').each(function() {
+				user.push($(this).val());
+			});
+			mailuserList[objId] = user;
+		});		
+		
+		parent.userParams["item_mail_user"] = mailuserList;
+		
+		
+		// 経路設定取得(動的承認のみでOK)
+		var apprUserList = {};
+		
+		if('<imart type="string" value=$flowId />' == "lo_flow_account"){
+			var selectName = {
+					kian:"lo_node_kian",
+					appr_1:"lo_node_appr_1",
+					appr_2:"lo_node_appr_2"
+			};
+		}else{
+			//ルート定義に存在するノードは含める
+			var selectName = {
+					kian:"lo_node_kian",
+					appr_1:"lo_node_appr_1",
+					appr_2:"lo_node_appr_2"
+			};
+		}
+		
+		$.each(selectName, function(index, objId) {
+			var user = [];
+			$('#'+index).find('input[name="userCd"]').each(function() {
+				user.push($(this).val());
+			});
+			apprUserList[index] = user;
+		});
+		parent.userParams["item_appr_user"] = apprUserList;
+
+		var proc_name ='<imart type="string" value=$oUserParams.item_proc_name />';
+		var msg = proc_name + "します。よろしいですか？";
+		
+		$.imuiFormUtil.confirm(msg, '<imart type="string" value=oCaption.confirmProcTitle/>', function() {
+			
+			// 処理対象者の設定
+			var imwNodeId ='<imart type="string" value=$oUserParams.imwNodeId />';
+			var item_proc_status ='<imart type="string" value=$oUserParams.item_proc_status />';			
+			
+			
+			//画面で選択したユーザを反映させる（選択可能なノードのみ）
+			//申請時点ではnodeIDないので、ブランク
+
+			if(imwNodeId == 'lo_node_kian' || (imwNodeId == '' && '<imart type="string" value=$flowId />' != "lo_flow_account")
+					|| (imwNodeId == '' && '<imart type="string" value=$flowId />' == "lo_flow_account_in")
+					|| (imwNodeId == 'lo_node_apply' && '<imart type="string" value=$flowId />' == "lo_flow_account_in")
+			) {
+				var ret =setNodeSetting(apprUserList,selectName);
+				callProc();
+			}else{
+				callProc();
+			}
+			
+		});
+		
+		return false;
+	});
+});
+
+/**
+ * open関数
+ * ユーザ検索画面を呼び出し選択ユーザを追加する
+ */
+var targetid;
+function openSearchUser(id) {
+	targetid = id;//呼び出し元取得
+    var parameter = {
+        tabs : [
+            {
+                id    : "jp.co.intra_mart.master.app.search.tabs.user.tree_public_group",
+                title : "ユーザ検索"
+            }
+        ],
+        prop : {
+            'jp.co.intra_mart.master.app.search.tabs.user.list_user' : ['user_cd', 'user_name'],
+        },
+        "criteria" : {
+            "public_group_set" : {
+                "public_group_set_cd" : "license_out",
+                "public_group" : {
+                    "public_group_cd" : "lo_production_group",
+                    "compare" : "le"
+                }
+            }
+        },        
+        callback_function           : 'setUser',
+        basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+        wnd_title                   : "ユーザ検索",
+        message                     : "ユーザ検索",
+        wnd_close                   : true,
+        type                        : 'single',
+        deleted_data                : false,
+        target_locale               : 'ja',
+        additional_disp             : true,
+        additional_user_search_name : true,
+        additional_dept             : true
+    };
+    
+    // 検索画面を開く
+    imACMSearchDialog.open(parameter);
+}
+/**
+ * ユーザ追加（singl）(callback関数)
+ */
+function setUser(object){
+	var objId = '#'+targetid;
+	
+	//既存ユーザ削除
+	$(objId).empty();
+	
+	// 選択したユーザを追加
+	for (var i = 0; i < object.length; i++) {
+		var usernm = object[i].data.user_name;
+		var usercd = object[i].data.user_cd;
+		$(objId).append(userTag(usercd, usernm));
+		
+		/* 権限チェック等が必要な場合はここへ
+		if (targetid == 'kian') {
+			// 起案者に設定できるユーザかチェックする
+			if (checkKianUser(usercd)) {
+				$('#last_confirm').empty();
+				$('#last_confirm').append(userTag(usercd, usernm));
+			}
+
+		} else if (targetid == 'appr_1' || targetid == 'appr_2' ) {
+			// 承認者に設定できるユーザかチェックする
+			//checkShoninUser(usercd, objId);
+		}
+		*/
+	}
+}
+
+/**
+ * 起案者に設定できるユーザかチェックする
+ */
+function checkKianUser(userCd) {
+	var result = true;
+	if (!loFlowCommon.isNotPubGrpShozoku('license_out', 'lo_kawari_input_group', userCd)) {
+		imwShowErrorMessage('imui-container', '選択された方は、起案者に設定できません。');
+		$('#kian').empty();
+		$('#last_confirm').empty();
+		result = false;
+	}
+	return result;
+}
+
+/**
+ * 承認者に設定できるユーザかチェックする
+ */
+function checkShoninUser(userCd, objId) {
+	var result = true;
+	if (!loFlowCommon.isNotPubGrpShozoku('license_out', 'lo_kawari_input_group', userCd)) {
+		imwShowErrorMessage('imui-container', '選択された方は、承認者に設定できません。');
+		$(objId).empty();
+		$(objId).append(userTag("", "指定なし"));
+		result = false;
+	}
+	return result;
+}
+
+function userTag(userCd, userNm){
+	return	'<li><input type="hidden" name="userCd" value="'+userCd+'"/>'+userNm+'</li>';	
+}
+function userTagWithCheckBox(userCd, userNm){
+	return	'<li><input type="checkbox" name="userCd" value="'+userCd+'"/>'+userNm+'</li>';	
+}
+
+// ユーザ検索複数(通知設定用)
+function openSearchUserMult(id) {
+	targetid = id;//呼び出し元取得
+    var parameter = {
+        tabs : [
+            {
+                id    : "jp.co.intra_mart.master.app.search.tabs.user.tree_public_group",
+                title : "ユーザ検索"
+            }
+        ],
+        prop : {
+            'jp.co.intra_mart.master.app.search.tabs.user.list_user' : ['user_cd', 'user_name'],
+        },
+        "criteria" : {
+            "public_group_set" : {
+                "public_group_set_cd" : "license_out",
+                "public_group" : {
+                    "public_group_cd" : "lo_bne_group",
+                    "compare" : "le"
+                }
+            }
+        },        
+        callback_function           : 'setUserList',
+        basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+        wnd_title                   : "ユーザ検索",
+        message                     : "ユーザ検索",
+        wnd_close                   : true,
+        type                        : 'multiple',
+        deleted_data                : false,
+        target_locale               : 'ja',
+        additional_disp             : true,
+        additional_user_search_name : true,
+        additional_dept             : true
+    };
+    // 検索画面を開く
+    imACMSearchDialog.open(parameter);
+}
+
+/**
+ * ユーザ追加(複数)(callback関数)
+ */
+function setUserList(object){
+	var objId = '#'+targetid;
+	//既存ユーザ取得
+	var users=[];
+	$(objId).find('input:checkbox[name="userCd"]').each(function() {
+		users.push($(this).val());
+	});
+	// 一件もなければ指定なしを消す
+	if(users.length == 0 && object.length > 0){
+		$(objId).empty();
+	}
+	// 選択したユーザを追加
+	for (var i = 0; i < object.length; i++) {
+		var usernm = object[i].data.user_name;
+		var usercd = object[i].data.user_cd;
+		if (users.indexOf(usercd) == -1){ //まだ設定されていいないユーザのみ追加
+			$(objId).append(userTagWithCheckBox(usercd, usernm));
+		}
+	}
+}
+
+//ユーザクリア
+function clearUser(delid){
+	var objId = '#'+delid;
+	
+	imuiConfirm('ユーザ指定なしにします。よろしいですか？', '確認', function() {
+		$(objId).empty();
+		$(objId).append(userTag("", "指定なし"));
+		
+		/** 同時にクリアするノードがある場合は以下のように記述
+		if (delid == 'kian') {
+			$('#last_confirm').empty();
+			$('#last_confirm').append(userTag("", "指定なし"));
+		}
+		*/
+	});
+}
+
+
+// ユーザ削除
+function delUser(delid){
+	var objId = '#'+delid;
+	
+	// 削除対象ユーザ取得
+	var delobj = $(objId).find('input:checkbox[name="userCd"]:checked');
+	
+	// 一件も選択されてない
+	if(delobj.length == 0){
+		imuiAlert('削除ユーザが選択されていません。', '警告');
+		return false;
+	}
+	
+	// 削除
+	imuiConfirm('選択ユーザを削除します。よろしいですか？', '確認', function() {
+		delobj.each(function() {
+			$(this).parent().remove();
+		});
+		//削除の結果一件もなければ指定なし追加
+		if ($(objId).find('input:checkbox[name="userCd"]').length == 0){
+			$(objId).append(userTag("", "指定なし"));
+		}
+	});
+}
+
+
+// 経路設定デフォルト(画面表示時)
+function setDefExcexUser(){
+	//初期表示時ユーザが一件もなければ指定なし追加
+	var arr = ['#kian','#appr_1','#appr_2'];
+	$.each(arr, function(index, objId) {
+		if ($(objId).find('input:hidden[name="userCd"]').length == 0){
+			$(objId).append(userTag("", "指定なし"));
+		}
+	});
+	
+	var arr = ['#mail_1','#mail_2','#mail_3','#mail_4','#mail_5']
+	$.each(arr, function(index, objId) {
+		if (!$(objId + " li")[0]){
+			$(objId).append(userTag("", "指定なし"));
+		}
+	});
+	
+}
+
+</script>
+<style>
+.mark-req {
+	color: red;
+}
+.margin-top {
+	margin-top: 10px !important;
+}
+</style>
+	
+	<div class="modal-dialog modal-xl" id="pr" >
+		<div class="modal-content" id="pr2">
+			<form id="modalComment">
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>
+							<imart type="string" value=$label_comment />
+						</h2>
+						<div class="col-12 mt-2 mb-2">
+							<imart type="imuiTextArea" id="comment_area" name="comment_area" class="form-control" value="" rows="4" maxlength="500"></imart>
+							<p class="small"><imart type="string" value=$annotation_comment /></p>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+			</form>
+			<!-- 経路、通知先表示 ------->
+			<imart type="condition" validity=$showFlg>
+				<!-- 経路設定可能 ------->
+				<imart type="condition" validity=$routeFlg>
+					<form role="form" id="nodeUsersForm">
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10">
+								<h2>経路</h2>
+								<div class="form-group col-12 row ml-2">
+									<table class="route-table">
+										<tr><th style="width:200px;">役割</th><th style="width:200px;">担当者</th><th style="width:200px;">設定</th></tr>
+										<imart type="repeat" list=$nodeList item="item" index="idx">
+											<imart type="condition" validity=item.disabled negative>
+											<tr>
+											<td><imart type="string" value=item.node_name escapeJs="false" escapeXml="true" /></td>
+											<td><ul id="<imart type="string" value=idx />">
+												<IMART type="repeat" list=item.user item="item2" index="idx2">
+													<li>
+														<imart type="hidden" userCd=item2.user_cd />
+														<imart type="string" value=item2.user_name />
+													</li>
+												</IMART>
+												</ul>
+											</td>
+											<td>
+												<imart type="condition" validity=item.dc_setting>
+													<div class="route-item-control" id="route-item-<imart type="string" value=idx />">
+														<a href="javascript:openSearchUser('<imart type="string" value=idx />')" id="route_select_<imart type="string" value=idx />" class="mr-2"><span class="im-ui-icon-common-16-user mr-2"></span>選択</a>
+														<a href="javascript:clearUser('<imart type="string" value=idx />');" class="mr-2"><span class="im-ui-icon-common-16-ng mr-2"></span>指定なし</a>
+													</div>
+												</imart>
+											</td>
+										</tr>
+											</imart>			
+										</imart>										
+									</table>
+								</div>
+							</div>
+							<div class="col-1"></div>
+						</div>
+					</form>
+					
+					<imart type="condition" validity=$approveMode>
+						<form role="form" id="sendMailUsersForm">
+							<div class="row">
+								<div class="col-1"></div>
+								<div class="col-10">
+									<h2>通知設定</h2>
+									<h3>事前通知<span class="comment2">※申請のタイミングで送信されます</span></h3>
+									<div class="form-group col-12 row ml-2">
+										<div class="route-item" style="width:300px;">
+											<imart type="condition" validity=$approveMode>
+												<div class="route-item-control">
+													<a href="javascript:openSearchUserMult('mail_1')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+													<a href="javascript:delUser('mail_1');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+												</div>
+											</imart>
+											<h4>起案時通知先</h4>
+											<ul id="mail_1">
+												<IMART type="repeat" list=$mailDefUsers.mail_1 item="item" index="idx">
+													<li>
+														<imart type="condition" validity=$approveMode>
+															<imart type="imuiCheckbox" name="userCd" value=item.user_cd />
+														</imart>
+														<imart type="condition" validity=$approveMode negative>
+															<imart type="hidden" name="userCd" value=item.user_cd />
+														</imart>
+														<imart type="string" value=item.user_name />
+													</li>
+												</IMART>
+											</ul>
+										</div>										
+									</div>
+									
+									<h3>完了通知<span class="comment2">※完了のタイミングで送信されます</span></h3>
+									<div class="form-group col-12 row ml-2">
+										<div class="route-item" style="width:300px;">
+											<imart type="condition" validity=$approveMode>
+												<div class="route-item-control">
+													<a href="javascript:openSearchUserMult('mail_3')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+													<a href="javascript:delUser('mail_3');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+												</div>
+											</imart>
+											<h4>完了通知先</h4>
+											<ul id="mail_3">
+												<IMART type="repeat" list=$mailDefUsers.mail_3 item="item" index="idx">
+													<li>
+														<imart type="condition" validity=$approveMode>
+															<imart type="imuiCheckbox" name="userCd" value=item.user_cd />
+														</imart>
+														<imart type="condition" validity=$approveMode negative>
+															<imart type="hidden" name="userCd" value=item.user_cd />
+														</imart>
+														<imart type="string" value=item.user_name />
+													</li>
+												</IMART>
+											</ul>
+										</div>
+									</div>									
+								</div>
+								<div class="col-1"></div>
+							</div>
+						</form>
+					</imart>
+				</IMART>
+				<!-- end経路設定可能 ------->
+				<!-- 経路表示のみ----------->
+				<imart type="condition" validity=$routeFlg negative>
+					<form role="form" >
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10">
+								<h2>経路</h2>
+								<div class="form-group col-12 row ml-2">
+									<table class="route-table">
+										<tr><th style="width:200px;">役割</th><th style="width:200px;">担当者</th></tr>
+										<imart type="repeat" list=$nodeList item="item" index="idx">
+											<imart type="condition" validity=item.disabled negative>
+											<tr>
+												<td><imart type="string" value=item.node_name /></td>
+												<td>
+													<ul>
+													<IMART type="repeat" list=item.user item="item2" index="idx2">
+														<li><imart type="string" value=item2.user_name /></li>
+													</IMART>
+													</ul>
+												</td>
+											</tr>
+											</imart>
+										</imart>										
+									</table>
+								</div>
+							</div>
+							<div class="col-1"></div>
+						</div>
+					</form>
+					
+					<form role="form" id="sendMailUsersForm">
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10">
+								<h2>通知設定</h2>
+								<h3>事前通知<span class="comment2">※起案のタイミングで送信されます</span></h3>
+								<div class="form-group col-12 row ml-2">
+									<div class="route-item" style="width:300px;">
+										<h4>起案時通知先</h4>
+										<ul id="mail_1">
+											<IMART type="repeat" list=$mailDefUsers.mail_1 item="item" index="idx">
+												<li><imart type="string" value=item.user_name /></li>
+											</IMART>
+										</ul>
+									</div>									
+								</div>
+								
+								<h3>完了通知<span class="comment2">※完了のタイミングで送信されます</span></h3>
+								<div class="form-group col-12 row ml-2">
+									<div class="route-item" style="width:300px;">
+										<h4>完了通知先</h4>
+										<ul id="mail_3">
+											<IMART type="repeat" list=$mailDefUsers.mail_3 item="item" index="idx">
+												<li><imart type="string" value=item.user_name /></li>
+											</IMART>
+										</ul>
+									</div>									
+								</div>
+							</div>
+							<div class="col-1"></div>
+						</div>
+					</form>
+				</IMART>
+				<!-- end経路表示のみ----------->
+			</imart>
+			<!-- end経路、通知先表示 ------->
+			
+			
+			
+			
+			<div class="row">
+				<div class="col-1"></div>
+				<div class="col-10"><hr></div>
+				<div class="col-1"></div>
+			</div>
+			<section class="show">
+				<div class="row">
+					<div class="flex_btn">
+						<div class="col-12">
+							<button type="button" class="center-block brdr_orange txt_orange" id="comment_close" data-dismiss="modal"><i class="fas fa-window-close fa-2x"></i><span>閉じる</span></button>
+							<button type="button" class="center-block bg_orange txt_dark" data-dismiss="modal" id="comment_proc"><i class="fas fa-check-circle fa-2x"></i><span><imart type="string" value=$oUserParams.item_proc_name /></span></button>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>

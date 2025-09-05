@@ -1,0 +1,21 @@
+create or replace view lo_v_title as
+select
+ t.title_cd
+ , t.title_nm
+ , t.ip_cd
+ , i.ip_nm
+ , t.tantou_group_cd
+ , g.public_group_name as tantou_group_nm
+ , t.kensaku_word
+ , t.sort_no
+from
+ lo_m_title t
+ left join lo_m_ip i
+   on t.ip_cd = i.ip_cd
+   and i.sakujo_flg = '0'
+ left join imm_public_grp g
+   on t.tantou_group_cd = g.public_group_cd
+   and g.locale_id = 'ja'
+where
+  t.sakujo_flg = '0'
+;

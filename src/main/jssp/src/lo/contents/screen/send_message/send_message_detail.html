@@ -1,0 +1,147 @@
+<imart type="head">
+<html lang="ja">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	
+	
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcPlannningWfCheck" page="lo/contents/screen/common/wf_check"></IMART>
+	
+	<title><imart type="message" id="LO.TITLE.COMMON.WF_CHECK" escapeXml="true" /></title>
+</imart>
+<style>
+	.border-radius {
+		border-radius: 10px;
+	}
+	.font {
+		font-size: 25px;
+	}
+	.font2 {
+		font-size: 20px;
+	}
+	.margin-left {
+		margin-left: 0px !important;
+	}
+</style>
+<body>
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+
+	<!-- 詳細画面遷移用 -->
+	<form id="sendFromMail" method="post"
+		action="lo/contents/screen/send_message/send_message">
+	</form>	
+	
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none"> <i
+					class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+				<article>
+					<div class="container">
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10 left-justified">
+								<h2 class="indent"><imart type="message" id="LO.TITLE.COMMON.MAIL_SEND" escapeXml="true" /></h2>
+							</div>
+							<div class="col-1"></div>
+						</div>
+						<div class="row mb-4">
+							<div class="col-1"></div>
+							<div class="col-10 form-area mt-2 mb-2 border-radius">
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<div class="row">
+									<div class="col-12 mb-4 text-center font">
+										<imart type="string" value=$message />
+									</div>
+									<div class="col-12 text-center font">
+										<a href="javascript:sendLink();"><imart type="string" value=$bnsyo_link /></a>
+									</div>
+								</div>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+							</div>
+							<div class="col-1"></div>
+						</div>
+						<div class="row">
+							<div class="col-1"></div>
+							<div class="col-10 left-justified">
+								<button type="button" class="bg_orange txt_dark font2 margin-left" id="btn_bunsyo">メール作成画面へ</button>
+							</div>
+							<div class="col-1"></div>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript">
+
+	var formId = "sendFromMail";
+
+	
+	$(function () {
+		// 当該画面に戻らないようにURL書き換え
+		let altUrl = document.getElementById(formId).action;
+		window.history.replaceState(null,null,altUrl);
+		
+		// MY文書一覧ボタン押下時
+        $('#btn_bunsyo').click(function () {
+        	$('#sendFromMail').submit();
+        });
+	});
+	
+</script>

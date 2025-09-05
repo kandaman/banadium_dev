@@ -1,0 +1,1 @@
+ALTER TABLE lo_t_kikaku_event ADD COLUMN sozaihi integer;

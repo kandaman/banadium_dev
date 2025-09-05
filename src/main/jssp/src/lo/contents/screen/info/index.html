@@ -1,0 +1,599 @@
+<imart type="head">
+	<html lang="ja">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator_materialize.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	
+	<!-- sidemenuなしは必要 -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/menu.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/tabulator.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js?version=20210714"></script>
+
+<style>
+
+	footer .bne-information {
+		margin-bottom: 20px;
+	}
+
+	.table td {
+		border-top-width: 1px !important;
+		border-top-style: solid !important;
+		border-top-color: rgb(222, 226, 230) !important;
+		border-left-width: 1px !important;
+		border-left-style: solid !important;
+		border-left-color: rgb(222, 226, 230) !important;
+		border-right-width: 1px !important;
+		border-right-style: solid !important;
+		border-right-color: rgb(222, 226, 230) !important;
+		border-bottom-width: 1px !important;
+		border-bottom-style: solid !important;
+		border-bottom-color: rgb(222, 226, 230) !important;
+	
+	}
+	
+	.word_wrap {
+		word-wrap: break-word;
+	}
+
+	#list_table{
+		table-layout: fixed;
+	}
+	#list_table{
+		width: 960px;
+		min-width: 720px;
+	}
+	
+</style>
+
+	<title>インフォメーション</title>
+</imart>
+<body id="body" style="display: none">
+	<form id="paramForm" >
+		<!-- 隠しパラメータ -->
+		<IMART type="hidden" pro_flg=$production_flg></IMART>
+	</form>
+	<div class="container">
+		<div class="row">
+			<!-- main contents -->
+			<div class="col">
+				
+				<article id="page-upper-part">
+					<div class="row" id="list_title">
+						<div class="col-12 col-lg-9"><h4><imart type="string" value=$form.header_title escapeXml="true"/></h4></div>
+						<div class="col-12 col-lg-3 text-right" style="padding-right: 0px;">
+							<div class="btn-group">
+							<!-- <button type="button" class="bg_ltblue txt_dark" id="outputfile" disabled><i class="fas fa-print fa-2x"></i><span>ファイル出力</span></button>-->
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-lg-9">
+							<div class="scrollbar" id="scrollbar"><div class="scroll-inner" id="scroll-inner"></div></div>
+						</div>
+					</div>
+				</article>
+				<article>
+					<section class="show">
+						<div class="container">
+							<div class="row">
+								<table class="table table_border_radius brdr_ltgray tbl_col bnadium-table" id="list_table">
+								<IMART type="decision" value=$form.type case="1">								
+								<thead class="bg_ltorange">
+									<tr>
+										<th class="col_50">#</th>
+										<th class="col_150">完了通知先グループ</th>
+										<th class="col_350">タイトル</th>
+										<th class="col_200">IP</th>										
+									</tr>
+								</thead>
+								<tbody class="text-break">
+									<!-- 商品数分ループ -->
+									<IMART type="repeat" list=$listData item="item" index="idx">
+										<tr class="brdr_ltgray">
+											<td class="brdr_ltgray text-center txt_dark"><imart type="string" value=item.edaban escapeXml="true"/></td>
+											<td class="brdr_ltgray txt_dark"><imart type="string" name="ok_ng" value=item.tantou_kakari_nm escapeXml="true"/></td><!--　OKNG -->
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" name="ok_ng" value=item.title_nm escapeXml="true"/></td><!--　OKNG -->
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" name="ok_ng" value=item.ip_nm escapeXml="true"/></td><!--　OKNG -->		  											
+									    </tr>
+									</IMART>
+								</tbody>								
+								</IMART>
+								<IMART type="decision" value=$form.type case="2">								
+								<thead class="bg_ltorange">
+									<tr>
+										<!-- <th>#</th>-->
+										<th class="col_300">承認経路名称</th>
+										<th>一次承認者</th>
+										<th>二次承認者</th>
+										<th>三次承認者</th>
+										<th>四次承認者</th>
+										<th>五次承認者</th>																			
+									</tr>
+								</thead>
+								<tbody class="text-break">
+									<!-- 商品数分ループ -->
+										<IMART type="repeat" list=$listData item="item" index="idx">
+										<tr class="brdr_ltgray">
+											<!-- <td class="brdr_ltgray text-center txt_dark"><imart type="string" value=item.edaban escapeXml="true"/></td>-->
+											<td class="brdr_ltgray txt_dark"><imart type="string" value=item.keiro_nm escapeXml="true"/></td>
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" value=item.ichiji_shonin_nm escapeXml="true"/></td>
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" value=item.niji_shonin_nm escapeXml="true"/></td>
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" value=item.sanji_shonin_nm escapeXml="true"/></td>
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" value=item.yoji_shonin_nm escapeXml="true"/></td>
+										  	<td class="brdr_ltgray txt_dark"><imart type="string" value=item.goji_shonin_nm escapeXml="true"/></td>
+												  											
+									    </tr>
+										</IMART>									
+								</tbody>
+								</IMART>
+							</table>
+							</div>
+						</div>
+					</section>
+				</article>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var tableUtil = null;
+		$(function () {
+			$("body").css("zoom","80%");
+			
+			extendOptions = {
+				paginationSize: 100
+				, persistenceWriterFunc: function(id, type, data){
+					
+			        console.log("persistenceWriterFunc");
+			        // Tablator生成が完了していない場合は、カラム情報の保存を実施しない
+			        if (isInitializedTabulatorUtil == false) {
+			        	return;
+			        }
+					
+			        //id - tables persistence id
+			        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+			        //data - array or object of data
+
+			        var storageKey = getStorageKey(id, type);
+			        var show_column_def = $("#show_column_def").val();			        
+			        
+			        var storageStr = localStorage.getItem(storageKey);
+			        console.log(storageStr);
+			        if (storageStr) {
+			        	var storageData = JSON.parse(storageStr);
+			        	
+			        	if (storageData.banadium_format_version == banadiumFormat.banadium_format_version) {
+			        		var hitIndex = storageData.show_column_defs.findIndex(function(elem){
+			        			if ('show_column_def' in elem) {
+				        			return elem.show_column_def === show_column_def;
+			        			}
+			        			return false;
+			        		});
+			        		if (hitIndex >= 0) {
+			        			storageData.show_column_defs[hitIndex].columns = data;
+			        		} else {
+			        			storageData.show_column_defs.push({show_column_def: show_column_def, columns: data});
+			        		}
+					        localStorage.setItem(storageKey, JSON.stringify(storageData));
+					        return;
+			        	}
+			        }
+			        
+			        var base = mergeDeeply({}, banadiumFormat)
+			        base.show_column_defs.push({show_column_def: show_column_def, columns: data});
+			        localStorage.setItem(storageKey, JSON.stringify(base));
+				}
+				, persistenceReaderFunc: function(id, type){
+
+			        console.log("persistenceReaderFunc");
+
+			        //id - tables persistence id
+			        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+
+			        var storageKey = getStorageKey(id, type);
+			        //var show_column_def = $("#show_column_def").val();
+			        var show_column_def = $("#show_column_def").val();
+
+			        var storageStr = localStorage.getItem(storageKey);
+
+			        if (storageStr) {
+			        	var storageData = JSON.parse(storageStr);
+			        	if (storageData.banadium_format_version == banadiumFormat.banadium_format_version) {
+			        		var hitElem = storageData.show_column_defs.find(function(elem){
+			        			return elem.show_column_def === show_column_def;
+			        		});
+			        		if (hitElem) {
+			        			return hitElem.columns;
+			        		}
+			        	}
+			        }
+			        
+			        return false;
+				}
+			};
+			
+			// ツールチップ
+			var tooltipNullFunc = function(cell) {
+				if (!cell.getValue()) {
+					return "※登録なし";
+				}
+				return cell.getValue();
+			};
+			var defaultMaxWidth = 900;
+			var columns = [
+				{title:"文書種別", field:"doc_type_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth
+					, sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
+						return new Number(aRow.getData().doc_type) - new Number(bRow.getData().doc_type);
+					}
+				},
+				{title:"ステータス", field:"kawari_status_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth
+					, formatter: function(cell, formatterParams, onRendered) {
+						var value = cell.getValue();
+						var data = cell.getData();
+						if (value == null) {
+							return "";
+						}
+						return '<span class="' + data.kawari_status_style + '">' + value + '</span>';
+					}
+					, sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
+						return aRow.getData().kawari_status_order - bRow.getData().kawari_status_order; //you must return the difference between the two values
+					}
+				},
+				{title:"文書番号", field:"bunsho_id", visible: true, headerTooltip:true, tooltip:true, maxWidth:defaultMaxWidth
+					, formatter: function(cell, formatterParams, onRendered) {
+						var value = cell.getValue();
+						var data = cell.getData();
+						if (value == null) {
+							return "";
+						}
+						var userCd = "<imart type="string" value=$userInfo.userCd />";
+
+						if ((data.kawari_status == '1' && data.koushin_sha == userCd) || (data.kawari_status == '3' && data.auth_user_cd == userCd)
+								|| (data.kawari_status == '5' && data.auth_user_cd == userCd && data.nyuryoku_sha_id == userCd)){
+							// 登録画面
+							return '<a href="lo/contents/screen/kawari/kawari_register?bunsho_cls=' + data.doc_type + '&bunsho_id=' + value+ '">' + value + '</a>';
+
+						} else {
+							// 参照画面
+							return '<a href="lo/contents/screen/kawari/kawari_detail?bunsho_id=' + value + '">' + value + '</a>';
+						}
+					}
+				},
+				{title:"IP", field:"ip_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"タイトル名", field:"title_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"件名", field:"bunsho_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"企画種別", field:"kikaku_cls_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"許諾種別", field:"kyodaku_cls_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"契約種別", field:"keiyaku_cls_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"申請日", field:"shinsei_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"商標調査", field:"shohyo", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"入力者", field:"nyuryoku_sha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"起案者", field:"kian_sha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"ライセンシー名", field:"kaisha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+				{title:"更新日", field:"koushin_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+			];
+
+			tableUtil = new TabulatorUtil("#kawari_table", columns, "kawari_id", [
+				{column:"kawari_status_name", dir:"asc"}
+				, {column:"shinsei_bi", dir:"desc"}
+				, {column:"bunsho_id", dir:"asc"}
+			],extendOptions);
+			
+			// Tablator生成済みとしてフラグをON
+            isInitializedTabulatorUtil = true;
+            
+			$("#show_column_def").on("change", function(){
+
+				var $this = $(this);
+				
+				// カラムの状態が保存されている場合は、並び替えは行わない為に、
+				// カラムの状態を変更する前に、保存データを取得する
+				// サーバー上のBANADIUMフォーマットバージョンと、クライアント上に保存されているBANADIUMフォーマットバージョンが異なる場合は
+				// この関数はfalse値を返す。
+				var storageData = extendOptions.persistenceReaderFunc(activeStorageKey.id, activeStorageKey.type);
+
+				// 非表示項目を表示する
+				var showColumnFields = getShowColumnFields();
+				var existsColumnOrder = [];
+				for (var showKey in showColumnFields) {
+					var showColumnName = showColumnFields[showKey];
+					var column = tableUtil.getColumn(showColumnName);
+					if (!column) {
+						continue;
+					}
+					existsColumnOrder.push(showColumnName);
+					if (!column.isVisible()) {
+						column.show();
+					}
+				}
+				// 表示項目を非表示にする
+				var columnDefinitions = tableUtil.getColumnDefinitions();
+				for (var defKey in columnDefinitions) {
+					var colDef = columnDefinitions[defKey];
+					var isHide = (showColumnFields.indexOf(colDef.field) == -1);
+					if (!isHide) {
+						continue;
+					}
+					var column = tableUtil.getColumn(colDef.field);
+					if (column.isVisible()) {
+						column.hide();
+					}
+				}
+
+				// カラムの表示順を変更すべきか判定
+				if (storageData) {
+					return;
+				}
+				for (var orderKey in existsColumnOrder) {
+					if (orderKey == 0) {
+						continue;
+					}
+					var columnOrder = existsColumnOrder[orderKey];
+					var column = tableUtil.getColumn(columnOrder);
+					column.move(existsColumnOrder[orderKey - 1], true);
+				}
+
+			});            
+
+
+			//検索を行う
+			$('#tblsearch').click(function () {
+				// 表のクリア
+				if ($.fn.dataTable.isDataTable('#kawari_table')) {
+					$('#kawari_table').DataTable().clear();
+					$('#kawari_table').DataTable().destroy();
+				}
+				// フォーム内にあるname属性と入力値を一括で取得する
+				var whereParam = $('#inputForm').serializeInputValue();
+				if($.trim($("#kawari_status").val()) != "") {
+					whereParam.kawari_status = $.trim($("#kawari_status").val()).split(",");
+				}
+				if(!$("#not_finish").prop("checked")) {
+					whereParam.not_finish = "off";
+				}
+				setUrlParam(whereParam);
+				// 検索
+				jsspRpcKawariSearch.searchKawariList(whereParam);
+				// インジケータ表示
+				showIndicator();
+			});
+
+			// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+			window.searchResult = function(ret) {
+				if(ret.data.length > 0) {
+					$("#outputfile").prop('disabled', false);
+				} else {
+					$("#outputfile").prop('disabled', true);
+				}
+				// インジケータ非表示
+				hideIndicator();
+				enterPressFlg = false;
+				tableUtil.setData(ret.data);
+				$(document).trigger("resizeTabulator");
+				
+			}
+
+			// 検索エラー後コールバック
+			window.searchError = function(res) {
+				hideIndicator();
+				enterPressFlg = false;
+				try {
+					imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+					return;
+				} catch (ex) {
+					imuiShowErrorMessage(ex.message, [], true, 5000, true);
+				}
+			}
+
+			// 項目押下時のソートアイコン切り替え
+			$('#kawari_table th').on('click', function () {
+				var classlist = $(this).attr('class').split(' ');
+				// クリックした項目のasc,descを切り替え
+				if (classlist.indexOf('asc') > -1){
+					$(this).removeClass('asc');
+					$(this).addClass('desc');
+				}else if (classlist.indexOf('desc') > -1){
+					$(this).removeClass('desc');
+					$(this).addClass('asc');
+				}else{
+					$(this).addClass('asc');
+				}
+				// クリック項目以外はどっちも外す
+				$(this).siblings().removeClass('asc desc');
+			});
+
+			// クリアボタン押下時
+			$('#tblclear').click(function () {
+				$('#ip').val('');
+				$('#title_nm').val('');
+				$('#bunsho_nm').val('');
+				$('#kawari_status').val('');
+				$('[name=doc_type]').val('');
+				$("#not_finish").prop("checked", true);
+				$('#bunsho_id').val('');
+				$('#shinsei_to').val('');
+				$('#shinsei_from').val('');
+				$('#kaisha_nm').val('');
+				$('#tantou_sha').val('');
+				$('#wf_user').val('');				
+				if(datatable){
+					datatable.search('').columns().search('').draw();
+				}
+			});
+
+			// ファイル出力ボタン押下時
+			$('#outputfile').click(function () {
+				showIndicator();
+				jsspRpcKawariCsv.getKikakuCsvData();
+			});
+			// CSVデータ取得コールバック
+			window.csvResult = function(ret) {
+				if (ret.error) {
+					try {
+						imuiShowErrorMessage(ret.errorMessage, [], true, 5000, true);
+					} catch (ex) {
+						imuiShowErrorMessage(ex.message, [], true, 5000, true);
+					}
+				} else {
+					if (ret.countRow > 0){
+						createCsv(ret.data, '代わり承認WF一覧.csv');
+					}
+				}
+				hideIndicator();
+			}
+			// CSVデータ取得エラー後コールバック
+			window.csvError = function(res) {
+				hideIndicator();
+				try {
+					imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+					return;
+				} catch (ex) {
+					imuiShowErrorMessage(ex.message, [], true, 5000, true);
+				}
+			}
+
+			$("#my_charge").on("click", function(){
+				var myName = '<imart type="string" value=$userInfo.userName />';
+				$("#tantou_sha").val(myName);
+			});
+
+			$("#my_charge_bne").on("click", function(){
+				var myName = '<imart type="string" value=$userInfo.userName />';
+				//$("#bne_tantou_sha").val(myName);
+				$("#wf_user").val(myName);
+			});
+
+			// ステータスと完了以外の整合性担保
+			$(document).on('change', '#kawari_status', function() {
+				if($(this).val() != '') {
+					$('#not_finish').prop('checked', false);
+				}
+			}).on('change', '#not_finish', function() {
+				if($(this).prop('checked') == true) {
+					$('#kawari_status').val('');
+				}
+			});
+
+			<imart type="condition" validity=$initialSearching>
+			$('#tblsearch').trigger("click");
+			</imart>
+
+			$('#list_20').click(function () {
+				datatable.page.len(20).draw();
+			});
+			$('#list_50').click(function () {
+				datatable.page.len(50).draw();
+			});
+			$('#list_100').click(function () {
+				datatable.page.len(100).draw();
+			});
+
+			$('.descbtn').click(function () {
+				if ($(this).text() == "▼") {
+					$(this).text("▲");
+				} else {
+					$(this).text("▼");
+				}
+			});
+
+			// カレンダーアイコンをクリック
+			$("#shinsei_to").parent().find(".fa-calendar").parent().click(function(){
+				$("#shinsei_to").next("img").click();
+			});
+			$("#shinsei_from").parent().find(".fa-calendar").parent().click(function(){
+				$("#shinsei_from").next("img").click();
+			});
+
+			// IP 検索
+			$("#btn_ip_search").click(function(e, data){
+				$('#js-popup').addClass('is-show');
+			});
+			$("#js-popup").on("ipSearchSelected", function(e, selectedRecords) {
+				$('#js-popup').removeClass('is-show');
+				if (selectedRecords.length > 0) {
+					var selectedRecord = selectedRecords[0];
+					$("#ip").val(selectedRecord.ip_nm);
+				}
+			});
+
+			// タイトル検索
+			$("#btn_title_search").click(function(e, data){
+				$('#js-popup2').addClass('is-show');
+			});
+			$("#js-popup2").on("selectedTitleDatas", function(e, selectedTitleDatas) {
+				$('#js-popup2').removeClass('is-show');
+				if (selectedTitleDatas.length > 0) {
+					var selectedTitleData = selectedTitleDatas[0];
+					$("#title_nm").val(selectedTitleData.title_nm);
+					$("#ip").val(selectedTitleData.ip_nm);
+				}
+			});
+			// ライセンシー検索
+			$("#btn_kaisha_search").click(function(e, data){
+				$('#js-popup3').addClass('is-show');
+			});
+			$("#js-popup3").on("selectedkaishaDatas", function(e, selectedkaishaDatas) {
+				$('#js-popup3').removeClass('is-show');
+				if (selectedkaishaDatas.length > 0) {
+					$("#kaisha_nm").val(selectedkaishaDatas[0].kaisha_nm);
+				}
+			});
+			// ユーザー検索
+			$("#btn_bne_user_search").click(function(e, data){
+				$('#js-popup4').addClass('is-show');
+			});
+			$("#js-popup4").on("selecteduserDatas", function(e, selecteduserDatas) {
+				$('#js-popup4').removeClass('is-show');
+				if (selecteduserDatas.length > 0) {
+					$("#wf_user").val(selecteduserDatas[0].user_nm);
+				}
+			});
+			$(document).on("click", "#condition_hide, #condition_show", function(){
+				var $this = $(this);
+				$this.hide();
+				if ($this.is("#condition_hide")) {
+					$(".search_condition").hide();
+					$("#condition_show").show();
+				} else {
+					$(".search_condition").show();
+					$("#condition_hide").show();
+				}
+				$(document).trigger("resizeTabulator");
+				
+			});
+		});
+
+		$(window).on("load", function() {
+			document.getElementById('body').style.display = 'block';
+			// カレンダー表示のアイコンを非表示
+			$("#shinsei_to").next("img").hide();
+			$("#shinsei_from").next("img").hide();
+			
+			$("#show_column_def").trigger("change");
+		});
+	</script>
+</body>
+</main>

@@ -1,0 +1,97 @@
+
+<imart type="head">
+  <title>
+  </title>
+  <imart type="workflowOpenPageCsjs" />
+  <script src="ui/libs/jquery-validation-1.9.0/jquery.validate.js"></script>
+  <script>
+    (function($) {
+      $(document).ready(function() {
+    	  
+	      // 処理用ページを変更する
+	      var nodeSetting = {
+		  	  "procPage" : "im_workflow/common/proc/custom/approve/approve", //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+    		  "BackNodeSetting" : { // 差し戻し処理
+      		    "planApplNode_02" : {   // 設定対象のノードIDをプロパティ名とする
+      		      	"displayID" : ["planApplNode_01"],    // 差し戻し画面として設定するノードIDを配列持ち
+      		    },
+        		"planApplNode_03" : {   // 設定対象のノードIDをプロパティ名とする
+            		"displayID" : ["planApplNode_01"],    // 差し戻し画面として設定するノードIDを配列持ち
+      		    },
+                "planApplNode_04" : {   // 設定対象のノードIDをプロパティ名とする
+                	"displayID" : ["planApplNode_01","planApplNode_03"],    // 差し戻し画面として設定するノードIDを配列持ち
+      		    },
+      		  },      		  
+		  };
+	      $('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));    	  
+    	  
+	      
+	      
+	      // 企画承認者のノード設定
+	  	/*var nodeSetting2 = {
+	  		"HVNodeSetting" : { //動的承認ノード設定
+	  			"planApplNode_04" : {   // 設定対象のノードIDをプロパティ名とする
+	  		      "displayFlag" : true,    // 画面表示をしない
+
+	  		       "matterNodeExpansions" : [
+					//ひとつめの展開ノード
+					{
+					   //"nodeName" : "planApplNode_04_001",
+		  			    "processTargetConfigModel" : [    // 任意の処理対象者を指定
+		  			        {
+		  			          "extensionPointId" : "jp.co.intra_mart.workflow.plugin.authority.node.dynamic",
+		  			          "pluginId" : "jp.co.intra_mart.workflow.plugin.authority.node.dynamic.user",
+		  			          "parameter" : 'maruyama' // ユーザを指定
+		  			        },
+		  			    ]
+					},
+					//2の展開ノード
+					{
+					   //"nodeName" : "planApplNode_04_002",
+		  			    "processTargetConfigModel" : [    // 任意の処理対象者を指定
+		  			        {
+		  			          "extensionPointId" : "jp.co.intra_mart.workflow.plugin.authority.node.dynamic",
+		  			          "pluginId" : "jp.co.intra_mart.workflow.plugin.authority.node.dynamic.user",
+		  			          "parameter" : 'katayama' // ユーザを指定
+		  			        },
+		  			    ]
+					}
+					
+					
+	  				]
+	      
+	  			}
+	  		}
+	  	}; 
+	      // パラメータに渡す
+	  	$('#imwNodeSetting').val(ImJson.toJSONString(nodeSetting2));	      
+	   */
+	    
+	      
+	      
+          workflowOpenPage('4'); // 標準画面に遷移
+          return false;
+      });
+    })(jQuery);
+  </script>
+</imart>
+<imart type="workflowOpenPage"
+    name="workflowOpenPageForm"
+    id="workflowOpenPageForm"
+    method="POST"
+    target="_top"
+    imwUserDataId=$data.imwUserDataId
+    imwSystemMatterId=$data.imwSystemMatterId
+    imwAuthUserCode=$data.imwAuthUserCode
+    imwApplyBaseDate=$data.imwApplyBaseDate
+    imwNodeId=$data.imwNodeId
+    imwFlowId=$data.imwFlowId
+    imwCallOriginalParams=$data.imwCallOriginalParams
+    imwNextScriptPath=$data.imwCallOriginalPagePath>
+    
+    <!-- ノード制御用カスタムロパティ -->
+	<input type="hidden" name="imwCustomParam" id="imwCustomParam" >
+    <!-- ノード設定 -->
+	<input type="hidden" name="imwNodeSetting" id="imwNodeSetting" >
+    
+</imart>

@@ -1,0 +1,15 @@
+<!-------  申請共通部 -------------------------------------------------------------------->
+<!-- 備考欄 -->
+<div class="form-group">
+    <label for="Memo" id="lbl_apply_note">■コンセプト/備考 </label> <img src="cactus_csjs/images/bikkuri.png">
+    <small><p>※1行70文字以内、10行以内で入力してください。</p>
+        <p>※簡潔に商品概要を記入してください。</p></small>
+    <textarea class="form-control required count-down-length" id="addNotices" name="item_apply_note" rows="10"
+    	 style="width: 75em"
+    	 onInput="LimitTextarea('#apply_note_row', '#addNotices' , 10);"><imart type="string" value=$form.item_apply_note escapeJs="false" escapeXml="true" /></textarea>
+    <p id="apply_note_row">残10行</p>
+    
+	<!-- @end 備考欄 -->
+</div><br>
+<!------- end申請共通部 -------------------------------------------------------------------->
+

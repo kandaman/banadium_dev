@@ -1,0 +1,140 @@
+<script type="text/javascript" src="cactus_csjs/navbar.js"></script>
+<link rel="stylesheet" href="cactus_csjs/navbar.css"/>
+
+
+<script type="text/javascript">
+// 申請書へ遷移
+//function onClickApplyFlow(flowId, nodeId) {
+function onClickApplyFlow(sheetType) {
+  /*var tab = $('#tabs').tabs().tabs('option','selected');*/
+  /*if (tab==0) {
+    document.applyForm.imwPageType.value = '<imart type="string" value=oResultFlow.imwPageType />';
+
+  } else {
+    document.applyForm.imwPageType.value = '<imart type="string" value=oResultTemp.imwPageType />';
+  }*/
+
+  /*申請*/
+  document.applyForm.imwPageType.value = '0';
+  /*document.applyForm.imwCallOriginalParams.value = $('#imwCallOriginalParams').val();*/
+  document.applyForm.imwCallOriginalParams.value = ImJson.toJSONString({'sheetType':sheetType});
+  //document.applyForm.imwCallOriginalParams.value = "";
+  document.applyForm.imwFlowId.value = '<imart type="string" value=$data.imwFlowId />';
+  document.applyForm.imwNodeId.value = '<imart type="string" value=$data.imwNodeId />';
+  document.applyForm.imwAuthUserCode.value = '<imart type="string" value=$data.login_user_cd />';
+
+  /*本日日付*/
+  /*var dateAttr = new Date();
+  var year = dateAttr.getFullYear();
+  var month = dateAttr.getMonth()+1;
+  var date = dateAttr.getDate();
+  var baseData = year +'/' + month + '/' + date;
+  document.applyForm.imwApplyBaseDate.value = baseData;
+  */
+  document.applyForm.imwApplyBaseDate.value = getNowData();
+  document.applyForm.imwCallOriginalPagePath.value = "cactus/contents/screen/top";
+
+  document.applyForm.submit();
+}
+
+// my文書一覧
+function onClickMyProcessListForm() {
+	  document.myProcessListForm.submit();
+}
+//全案件文書一覧
+function onClickAllProcessListForm() {
+	  document.allProcessListForm.submit();
+}
+
+
+
+</script>
+<section>
+	<div id="loader-bg">
+	  <div id="loader"></div>
+	</div>
+	<!-- ドロップダウンホバーなし -->
+	<nav id="example2" class="navbar navbar-inverse navbar-default"
+		role="navigation">
+		<div class="container-fluid">
+			<!-- ナビバーヘッダー -->
+			<div class="navbar-header">
+				<img class="navbar-brand" style="height:100%; margin-top:-10px; margin-left:-30px; margin-bottom:-10px; margin-right:-5px;" src="ui/theme/im_theme_dropdown_blue/images/logo.png">
+				<a class="navbar-brand" href="cactus/contents/screen/top">Cactus</a>
+			</div>
+			<!-- @end ナビバーヘッダー -->
+			<!-- ナビバーボディ -->
+			<div class="collapse navbar-collapse"
+				id="bs-example-navbar-collapse-1">
+				<!-- 親項目 -->
+				<ul class="nav navbar-nav">
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown">申請書起案 <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<!-- <li><a href="javascript: void(0);" onclick="onClickApplyFlow('8eme285inx1jpvz','planApplNode_01');">新商品企画申請書</a></li> -->
+							<li><a href="javascript: void(0);" onclick="onClickApplyFlow('1');">新商品企画申請書</a></li>
+							<li><a href="javascript: void(0);" onclick="onClickApplyFlow('3');">ダウンロードコンテンツ申請書</a></li>
+							<li><a href="javascript: void(0);" onclick="onClickApplyFlow('2');">販促物企画申請書</a></li>
+						</ul></li>
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown">ステータス確認／案件検索 <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="javascript: void(0);" onclick="onClickMyProcessListForm(); return false;">MY文書</a></li>
+                            <li><a href="javascript: void(0);" onclick="onClickAllProcessListForm(); return false;">全案件一覧</a></li>
+						</ul></li>
+					 <li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown">事業部<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="https://bandainamco.sharepoint.com/teams/P-BNE289/DocLib/Forms/AllItems.aspx" target="_blank">事業部用マニュアル</a></li>
+							<li><a href="https://bandainamco.sharepoint.com/teams/P-BNE289/FAQ/Forms/AllItems.aspx" target="_blank">FAQ（よくある質問）</a></li>
+							<li><a href="https://bandainamco.sharepoint.com/teams/P-BNE289/DocLib1/Forms/AllItems.aspx" target="_blank">メディア部版権担当一覧</a></li>
+						</ul></li>
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown">外部リンク<span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="https://bandainamco.sharepoint.com/sites/5200/SitePages/GroupwarePortal.aspx" target="_blank">ポータルTOP</a></li>
+							<li><a href="https://bandainamco.sharepoint.com/sites/5200/officeservice/wybern-wf/DocLib/保存文書：新商品企画申請書.aspx" target="_blank">wyBerN-WFデータ（63期以前案件）</a></li>
+						</ul></li>
+				</ul>
+				<!-- @end 親項目 -->
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="mailto:Cactus_support@bandainamcoent.co.jp?subject=【Cactusお問い合わせ】&amp;body=ご担当者様各位%0d%0a%0d%0a【社員番号】%0d%0a%0d%0a【氏名】%0d%0a%0d%0a【所属部署】%0d%0a%0d%0a【問い合わせ内容】"><img src="cactus_csjs/images/mail.png">
+							問い合わせ</a></li>
+					<li><a><img src="cactus_csjs/images/user.png">
+							<imart type="string" value=$form.login_user /></a></li>
+					<li><a href="logout"> ログアウト</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+			<!-- @end ナビバーボディ -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+</section>
+	<!-- 申請処理へ移動 -->
+  <form id="applyForm" name="applyForm" method="post" action="im_workflow/common/switch/switch_content" >
+    <imart type="hidden" imwCallOriginalParams=""
+           imwPageType=""
+           imwAuthUserCode=""
+           imwApplyBaseDate=""
+           imwFlowId="" imwNodeId="" imwUserDataId=""
+           imwCallOriginalPagePath="cactus/contents/screen/top" />
+  </form>
+  <!-- 一覧 -->
+  <form id="myProcessListForm" name="myProcessListForm" method="post" action="cactus/contents/screen/myProcess_list">
+    <imart type="hidden" imwCallOriginalParams=""
+           imwPageType=""
+           imwAuthUserCode=$data.login_user_cd
+           imwApplyBaseDate=""
+           imwFlowId="" imwNodeId="" imwUserDataId=""
+           imwCallOriginalPagePath="cactus/contents/screen/top" />
+  </form>
+  <!-- 一覧 -->
+  <form id="allProcessListForm" name="allProcessListForm" method="post" action="cactus/contents/screen/allProcess_list" >
+    <imart type="hidden" imwCallOriginalParams=""
+           imwPageType=""
+           imwAuthUserCode=$data.login_user_cd
+           imwApplyBaseDate=""
+           imwFlowId="" imwNodeId="" imwUserDataId=""
+           imwCallOriginalPagePath="cactus/contents/screen/top" />
+  </form>

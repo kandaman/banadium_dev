@@ -1,0 +1,12 @@
+create table lo_t_kikaku_tempu_file( 
+  kikaku_id character varying (20) not null
+  , file_no smallint not null
+  , file_name character varying (512)
+  , file_path character varying (512)
+  , sakujo_flg character varying (20)
+  , touroku_sha character varying (100)
+  , touroku_bi timestamp (6) without time zone
+  , koushin_sha character varying (100)
+  , koushin_bi timestamp (6) without time zone
+  , primary key (kikaku_id, file_no)
+);

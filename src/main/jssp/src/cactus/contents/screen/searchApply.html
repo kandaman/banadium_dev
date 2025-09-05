@@ -1,0 +1,239 @@
+<IMART type="jsspRpc" name="searchApplyObject"
+	page="cactus/contents/screen/searchApply"></IMART>
+
+<script>
+//ページ情報
+var $searchApplyPageInfo={
+	maxRow: 10 //１ページの最大行数
+	,MaxLinks:5 //リンク表示の最大数
+	//,nowPage:1 /現在のページ
+	//,totalCount:1 //データ数
+	,totalPage:1 //ページ数（件数/最大行数）
+};
+
+//画面終了時(データ選択時)のコールバック関数
+var $searchApplyEndFunction;
+//呼び出し元オブジェクト
+var $thisObj;
+//コールバック関数実行用
+var searchApplyCallback = function(func) {
+	func();
+};
+
+//　申請書検索ダイアログを開く
+function openSearchApplyDialog(thisObj,returnFunction,mode) {
+	// モード(0:全件検索（デフォルト） 1:新商品のみ)
+	mode = mode || 0;
+
+	// IEだとデフォルト引数に不具合があるようなのでundefined判定で空文字入れる
+	if (returnFunction　=== undefined) returnFunction="";
+
+	// 呼び出し元オブジェクト
+	$thisObj = thisObj;
+
+	// 選択したときの処理を格納
+	$searchApplyEndFunction = returnFunction;
+
+	// 取得したいDBの値とセットするidを指定(引数｛id：カラム名｝の連想配列)
+	//$searchApplyRetarnid = returnid;
+
+	$("#searchApplyResultTable").hide();
+	//中身をクリア
+	$("#searchApplyList").children().remove();
+	//ページャクリア
+	$("#searchApplyPager").children().remove();
+	//件数クリア
+	$("#searchApplyDataCount").text("");
+	//モード設定
+	$("#searchApply_mode").val(mode);
+
+	// 画面を開く
+	$('#searchApply_dialog').imuiDialog('open');
+}
+// 選択ボタン押下時の処理
+function setSearchApplyData() {
+
+	if ($searchCharacterEndFunction !=""){
+		var returndata=[];
+		// チェックボックスがチェックされている行のデータを取得
+		$("#searchApplyList").find("input[type='checkbox']:checked").each(function(i, elem) {
+			var appdata = $(elem).closest('tr').find('.apply_data').val();
+			returndata[i] = ImJson.parseJSON(appdata);
+		});
+		
+		if (returndata.length == 0){
+			alert("対象データが選択されてません");
+			return false;
+		}
+		
+		// コールバック関数に取得データをバインドし実行
+		searchApplyCallback($searchApplyEndFunction.bind($thisObj, returndata));
+	}
+	$('#searchApply_dialog').imuiDialog('close');
+}
+
+$(function() {
+	$(document).on("click",'#searchApplyPager li',function(event){
+		var pageNum =$(this).attr('page');
+		// ページャー移動
+		onPagerMove('searchApplyPager',pageNum);
+		// 表示データ
+		onPagerlistDraw("searchApplyList",pageNum,$searchApplyPageInfo.maxRow);
+	});
+	// 検索処理
+	$("#btn_searchApply").click(function() {
+		//中身をクリア
+		$("#searchApplyList").children().remove();
+
+		// 検索条件
+		var where = {
+			"subject": $.trim($("#searchApply_subject").val()),
+			"number": $.trim($("#searchApply_number").val()),
+			"userName": $.trim($("#searchApply_username").val()),
+			"orgz": $.trim($("#searchApply_orgz").val()),
+			"startDay": $.trim($("#searchApply_indate_start").val()),
+			"endDay": $.trim($("#searchApply_indate_end").val()),
+			"characterName": $.trim($("#searchApply_charname").val()),
+			"shinseiTypCd": $("#searchApply_mode").val() == 1 ? "1" : "",
+		};
+		
+		//検索
+		var ret = searchApplyObject.getApplyList(where);
+
+		if (ret.countRow > 0){
+			//$searchApplyData = ret.data;
+			$searchApplyPageInfo.totalPage = Math.ceil(ret.countRow / $searchApplyPageInfo.maxRow);
+
+			clreatePager('searchApplyPager',$searchApplyPageInfo.totalPage,$searchApplyPageInfo.MaxLinks);
+			$("#searchApplyResultTable").show();
+
+		}else{
+			clreatePager('searchApplyPager',0,$searchApplyPageInfo.MaxLinks);
+		}
+
+		if (ret.countRow > 0){
+			// data配列を順に処理
+			$.each(ret.data,function(index, elem) {
+				var str = '';
+				str += '<td class="check-box"><input type="checkbox" name="res" value="'+ index +'"></td>';
+				str += '<td>'+ elem.number + '</td>';
+				str += '<td>'+ elem.subject +'</td>';
+				str += '<td>'+ elem.character_nms + '</td>';
+				str += '<td>'+ elem.create_username +'</td>';
+				str += '<td>'+ elem.create_userorgz +'</td>';
+				str += '<td>'+ elem.create_date +'</td>';
+				str += '<input type="hidden" class="apply_data" value="">';
+				// 末尾に追加
+				var obj = $('<tr></tr>').append(str);
+				if (index >= $searchApplyPageInfo.maxRow){
+					obj.hide(); //最大表示数以上のデータは隠しておく
+				}
+				obj.find('.apply_data').val(ImJson.toJSONString(elem));　// データをjsonで変換して格納
+				obj.appendTo('#searchApplyList');
+			});
+		}
+
+		// 件数表示
+		$("#searchApplyDataCount").text("検索結果 ： " + ret.countRow + "件");
+	});
+});
+</script>
+
+<!-- ***************************************** ↓ 子画面　↓ ***************************************** -->
+<!-- 申請書検索子画面 -->
+ <!--<imart type="imuiDialog" autoOpen="false" id="searchApply_dialog"
+	name="userForm" position="center" title="申請書検索" resizable="false"
+	width="1280" height="820">  <h4 class="title">申請書検索子画面（サンプル）</h4>-->
+<imart type="imuiDialog" autoOpen="false" id="searchApply_dialog"
+	name="userForm" position="center" title="申請書検索" resizable="false"
+	width="1500" height="900">
+<!-- モード -->
+<input type="hidden" id="searchApply_mode">
+<!-- 検索条件 -->
+<div class="form-group" style="margin-top: 30px;">
+	<div class="panel">
+		<table class="table table-bordered table-condensed search-form">
+			<tr>
+				<th>タイトル名／件名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchApply_subject"></td>
+				<th>申請番号</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchApply_number"></td>
+			</tr>
+			<tr>
+				<th>キャラクター名</th>
+				<td colspan="3"><input type="text"
+					class="form-control input-sm" id="searchApply_charname"></td>
+			</tr>
+			<tr>
+				<th>起案者</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchApply_username"></td>
+				<th>起案部署</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchApply_orgz"></td>
+			</tr>
+			<tr>
+				<th>起案日</th>
+				<td colspan="3"><div class="form-inline">
+						<input type="text" class="form-control "
+							id="searchApply_indate_start" maxlength="10"> ～ <input type="text"
+							class="form-control " id="searchApply_indate_end" maxlength="10">
+						<!-- <imart type="imuiCalendar" floatable="true" format="yyyy/MM/dd" altField="#searchApply_indate_start" />
+											<imart type="imuiCalendar" floatable="true" format="yyyy/MM/dd" altField="#searchApply_indate_end" />
+											-->
+						<imart type="imuiCalendar" changeYear="true" changeMonth="true"
+							floatable="true" format="yyyy/MM/dd"
+							altField="#searchApply_indate_start" />
+						<imart type="imuiCalendar" changeYear="true" changeMonth="true"
+							floatable="true" format="yyyy/MM/dd"
+							altField="#searchApply_indate_end" />
+
+					</div></td>
+			</tr>
+		</table>
+	</div>
+	<button type="button" class="btn btn-hensyu" id="btn_searchApply">検索</button>
+	<!-- <small><p>※"%"で全検索。あいまい検索は"%検索%"のように囲って検索ください。</p></small> -->
+</div>
+<!-- @end 検索条件 -->
+<hr>
+<!-- 検索結果表示 -->
+<div class="form-group" style="width: 100%" id="searchApplyResultTable">
+	<div style="float: left;">
+		<label id="searchApplyDataCount">検索結果 ： 0件</label>
+	</div>
+	<!-- ページャー -->
+	<div id="searchApplyPager" style="float: right;"></div>
+
+    <!-- <div style="max-height: 500px; overflow: auto; clear: both;"> -->
+    <div style="clear: both;">
+		<div class="panel">
+			<table
+				class="table table-condensed table-striped res-table table-condensed">
+				<thead>
+					<tr>
+                        <th width="5%"></th>
+                        <th>申請番号</th>
+                        <th>タイトル名／件名</th>
+                        <th>キャラクター名</th>
+                        <th>起案者</th>
+                        <th>起案部署</th>
+                        <th>起案日時</th>
+					</tr>
+				</thead>
+				<tbody id="searchApplyList">
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="button">
+		<button type="button" class="btn btn-hensyu"
+			onclick="setSearchApplyData(); clearSearchForm();" style="width: 20%">選択</button>
+		<button type="button" class="btn btn-hensyu btn_dialog_close" onclick="clearSearchForm()" style="width: 20%">閉じる</button>
+	</div>
+</div>
+<!-- @end 検索結果表示 --> <!-- @end 申請書検索子画面 --> <!-- ***************************************** ↑ 子画面　↑ ***************************************** -->
+</imart>

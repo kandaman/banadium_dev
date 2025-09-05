@@ -1,0 +1,38 @@
+create table lo_t_keiyaku_naiyo (
+keiyaku_naiyo_id varchar(20) 
+,keiyakusho_hyodai varchar(2) 
+,keiyaku_cls character(1) 
+,keiyaku_naiyo_nm varchar(1000) 
+,ringi_sinsei_no varchar(100) 
+,ringi_sinsei_nm varchar(1000) 
+,homu_soudan_no varchar(100) 
+,keiyaku_hokan_no varchar(100) 
+,saiteihosho_ryo numeric(30, 6) 
+,sozai_seisaku_hi numeric(30, 6) 
+,keiyaku_status varchar(3) 
+,keiyaku_biko text 
+,kaisha_id varchar(100) 
+,kaisha_nm varchar(255) 
+,busyo_id varchar(100) 
+,busyo_nm varchar(255) 
+,licensee_keiyaku_tanto_id varchar(100) 
+,licensee_keiyaku_tanto_nm varchar(255) 
+,saisyu_kakunin_bi date 
+,keiyaku_teiketu_bi date 
+,keiyaku_kaishi_bi date 
+,keiyaku_manryo_bi varchar(20) 
+,keiyaku_encho_cls varchar(3)
+,tsuika_seisan_cls varchar(3)
+,kyodaku_chiiki text 
+,biko text 
+,keiyakusho_baitai character(1) 
+,ryoritsu varchar(100) 
+,keiyakusho_sofusaki_tanto_id varchar(100) 
+,seikyusho_sofusaki_eda varchar(100) 
+,sakujo_flg character(1) 
+,touroku_sha varchar(100) 
+,touroku_bi timestamp(6) without time zone 
+,koushin_sha varchar(100) 
+,koushin_bi timestamp(6) without time zone 
+,primary key (keiyaku_naiyo_id) 
+);

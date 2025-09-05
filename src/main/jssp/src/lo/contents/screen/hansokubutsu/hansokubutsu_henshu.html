@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<imart type="jsspRpc" name="jsActionRegister" page="lo/contents/screen/hansokubutsu/hansokubutsu_henshu" 
+		callback="registerCallback" onErrorCallback="registerError"></imart>
+	<imart type="jsspRpc" name="jsAction" page="lo/contents/screen/hansokubutsu/hansokubutsu_henshu"></imart>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_status_color.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css" />
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js" type="text/javascript"></script>
+	<script type="text/javascript" src="lo_csjs/lo_common.js" type="text/javascript"></script>
+
+	<title>販促物　編集画面</title>
+
+	<script>
+	var $fileList = [];
+	var $tempUpFileCount = 0;
+	var $tempUpFileSuccessCount = 0;
+	var $tempUpFileErrotCount = 0;
+	var $tempUpTempuFileCount = 0;
+	var $tempUpTempuFileSuccessCount = 0;
+	var $tempUpTempuFileErrotCount = 0;
+
+	$(window).on("load", function() {
+		// カレンダー表示のアイコンを非表示
+		$("#shiyo_jiki").next("img").hide();
+	});
+	
+	$(function() {
+
+//		$("#hansokubutsuStatusArea").addClass(getStatusColorClass("<imart type="string" value=$form.hansokubutsu_status />"));
+		$("#hansokubutsuStatusArea").addClass("bg_ltgray");
+		// ファイル選択ボタンをクリック
+		$("#file_upload_btn").on("click", function() {
+			var $form = $("#filesForm");
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+		});
+
+		// ファイル選択ボタンをクリック
+		$("#tempu_file_upload_btn").on("click", function() {
+			var $form = $("#tempuFilesForm");
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+		});
+
+		// 支払期限のカレンダーアイコンをクリック
+		$("#shiyo_jiki").parent().find(".fa-calendar").parent().click(function(){
+			$("#shiyo_jiki").next("img").click();
+		});
+
+		// TODO：仮に許諾で実装していただいているものを使用する。共通化するか、複数選択と単一選択で分けるかは検討が必要
+		$("#kikakuKensaku").click(function(e, data){
+			$('#js-popup').addClass('is-show');
+		});
+
+		// TODO：仮に許諾で実装していただいているものを使用する。共通化するか、複数選択と単一選択で分けるかは検討が必要
+		$("#js-popup").on("selectedKikakuDatas", function(e, selectedKikakuDatas) {
+			$.each(selectedKikakuDatas,function(index, selectedKikakuData) {
+				$("#kikakuId").val(selectedKikakuData.kikaku_id);
+				$("#kikakuMei").val(selectedKikakuData.kikaku_nm);
+				$("#taitoruMei").val(selectedKikakuData.title_nm);
+				$("#kaishaMei").val(selectedKikakuData.kaisha_nm);
+				$("#bushoMei").val(selectedKikakuData.busyo_nm);
+				$("#tantoSha").val(selectedKikakuData.tantou_sha);
+				$("kikakuId").val(selectedKikakuData.kikaku_id);
+			});
+		});
+
+		// 登録ボタン
+		$("#torokuBtn").on("click", function() {
+			var sendData = {};
+			var imageGazoList = [];
+			$("#after_file_select > .afterFileSelect").each(function(index, element) {
+				var divElement = $(element);
+				var imageGazo = {
+						fileName : divElement.find('input[name="item_upFile_name"]').val(),
+						uniquefileName : divElement.find('input[name="item_upFile_resname"]').val()
+				};
+				imageGazoList.push(imageGazo);
+			});
+			var tempushiryoList = [];
+			$("#after_tempu_file_select_area > .afterFileSelect").each(function(index, element) {
+				var divElement = $(element);
+				var tempushiryo = {
+						fileName : divElement.find('input[name="item_upFile_name"]').val(),
+						uniquefileName : divElement.find('input[name="item_upFile_resname"]').val()
+				};
+				tempushiryoList.push(tempushiryo);
+			});
+			
+			var formParams = $("#hansokubutsuForm").serializeObject();
+			var formModalParams = $("#modalComment").serializeObject();
+			sendData.imageGazoList = imageGazoList;
+			sendData.tempushiryoList = tempushiryoList;
+			sendData.formParams = formParams;
+			sendData.formModalParams = formModalParams;
+
+			jsActionRegister.hansokubutsuToroku(sendData);
+
+		});
+	});
+	
+	function registerCallback() {
+		window.location.href = "lo/contents/screen/hansokubutsu/hansokubutsu_list";
+	}
+	function registerError() {
+		alert("コールバック異常");
+	}
+	
+	// ---- 詳細資料ファイル -------
+	// ファイルアップロード前処理用
+	function onBeforeSendFiles(e, data) {
+		var acceptExt = ["jpg", "jpeg", "bmp", "png", "gif"];
+		for (var fIdx = 0; fIdx < data.files.length; fIdx++) {
+			var ext = getFileExtension(data.files[fIdx].name);
+			if (!acceptExt.includes(ext)) {
+				alert("「" + data.files[fIdx].name + "」は画像ではないため、選択できません。");
+				return false;
+			}
+		}
+		// TODO:アップロードするファイルのサイズや拡張子をチェック
+		// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		showIndicator();
+		$tempUpFileCount += data.files.length;
+		return true;
+	}
+	// ファイルアップロード成功時
+	function onSuccessFiles(e, data) {
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpFileSuccessCount += data.result.length;
+
+		$.each(data.result, function(index, res) {
+
+			var src ="lo/contents/screen/ses_file_dl?filePath=" + res.physicalName + "&fileName=" + res.name;
+			var a_src = $('<a>').attr({'href':src, 'download':''});
+			var clon = $("#after_file_select_template > .afterFileSelect").clone(true);
+			clon.find(".upfilenametext").text(res.name);
+			clon.find('input[name="item_upFile_name"]').val(res.name);
+			clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+			clon.find(".upfilenametext").wrap(a_src);
+
+			var img_src = $('<img>').attr('src', "lo/contents/screen/ses_file_dl?fileName="+ res.physicalName);
+			img_src.attr("class","img-responsive");
+			clon.find(".imgFile").html(img_src);
+			
+			clon.show();
+			clon.appendTo("#after_file_select");
+		});
+
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+			$tempUpFileCount = 0;
+			$tempUpFileSuccessCount = 0;
+			$tempUpFileErrotCount = 0;
+			//$("body").imuiIndicator("destroy");は再利用できないのでhide()で隠す
+			hideIndicator();
+		}
+	}
+
+	// アップロード失敗
+	function onErrorFiles(e, data) {
+		// TODO:失敗時の処理をいれる
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpFileErrotCount += data.files.length;
+		if ($tempUpFileCount == $tempUpFileSuccessCount + $tempUpFileErrotCount) {
+			$tempUpFileCount = 0;
+			$tempUpFileSuccessCount = 0;
+			$tempUpFileErrotCount = 0;
+			//$("body").imuiIndicator("destroy");は再利用できないのでhide()で隠す
+			hideIndicator();
+		}
+	}
+	// ---- 詳細資料ファイル -------
+
+	// ---- ファイルアップロード共通 -------
+	// アップロード削除
+	function upFileDel(targetEl){
+		// TODO:確認メッセージを表示
+		var targetObj = $(targetEl).closest("div");
+		targetObj.remove();
+	}
+	// ---- ファイルアップロード共通 -------
+
+	// ---- 添付ファイル -------
+	// ファイルアップロード前処理用
+	function onBeforeSendTempuFiles(e, data) {
+		showIndicator();
+		// TODO:アップロードするファイルのサイズや拡張子をチェック
+		// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpTempuFileCount += data.files.length;
+		return true;
+	}
+	// ファイルアップロード成功時
+	function onSuccessTempuFiles(e, data) {
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpTempuFileSuccessCount += data.result.length;
+
+		$.each(data.result, function(index, res) {
+			var clon = $("#after_tempu_file_select_template > .afterFileSelect").clone(true);
+			clon.find(".upfilename").text(res.name);
+			clon.find('input[name="item_upFile_name"]').val(res.name);
+			clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+			clon.show();
+			clon.appendTo("#after_tempu_file_select_area");
+		});
+
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		if ($tempUpTempuFileCount == $tempUpTempuFileSuccessCount + $tempUpTempuFileErrotCount) {
+			$tempUpTempuFileCount = 0;
+			$tempUpTempuFileSuccessCount = 0;
+			$tempUpTempuFileErrotCount = 0;
+			hideIndicator();
+		}
+	}
+
+	// アップロード失敗
+	function onErrorTempuFiles(e, data) {
+		// TODO:失敗時の処理をいれる
+		// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+		$tempUpTempuFileErrotCount += data.files.length;
+		if ($tempUpTempuFileCount == $tempUpTempuFileSuccessCount + $tempUpTempuFileErrotCount) {
+			$tempUpTempuFileCount = 0;
+			$tempUpTempuFileSuccessCount = 0;
+			$tempUpTempuFileErrotCount = 0;
+			hideIndicator();
+		}
+	}
+
+	// ---- 添付ファイル -------
+	</script>
+</imart>
+
+
+<body>
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	<!-- header -->
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div class="col-2" id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="col mt-3">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display:none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<div>
+					<article>
+						<section class="show">
+							<h1>販促物　編集画面</h1>
+						</section>
+					</article>
+				</div>
+				<article>
+					<section class="show">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header brdr_ltgray text-center font-weight-bold" id="hansokubutsuStatusArea">
+												<span><imart type="string" value=$form.hansokubutsu_status /></span>
+											</div>
+											<div class="col-2 align-middle">
+												<imart type="imuiTextbox" class="form-control imui-text-readonly" value=$form.data.hansokubutsu_id readonly="true" />
+											</div>
+											<div class="col"></div>
+											<div class="col-1 t-header bg_ltorange brdr_ltgray text-center font-weight-bold">
+												<span>申請日</span>
+											</div>
+											<div class="col-1 align-middle">
+												<imart type="imuiTextbox" class="form-control imui-text-readonly" value=$form.shinsei_bi readonly="true" />
+											</div>
+											<imart type="condition" validity=$userInfo.lisenceProductionFlg>
+												<div class="col-3"></div>
+											</imart>
+										</div>
+									</div>
+									<imart type="condition" validity=$userInfo.lisenceProductionFlg>
+										<div class="col-12 mt-2 mb-2">
+											<div class="form-group row mb-2">
+												<div class="col-7"></div>
+												<div class="col-1 t-header bg_ltorange brdr_ltgray text-center font-weight-bold">
+													<span>確認日</span>
+												</div>
+												<div class="col-1 align-middle">
+													<imart type="imuiTextbox" class="form-control imui-text-readonly" value=$form.kakunin_bi readonly="true" />
+												</div>
+												<div class="col-1 t-header bg_ltorange brdr_ltgray text-center font-weight-bold">
+													<span>BNE担当者</span>
+												</div>
+												<div class="col-2 align-middle">
+													<imart type="imuiTextbox" maxlength="1024" class="form-control imui-text-readonly" value=$form.bne_tantou_sha readonly="true" />
+												</div>
+											</div>
+										</div>
+									</imart>
+								</div>
+							</div>
+							<form id="hansokubutsuForm">
+							<div class="row">
+								<div class="col-12">
+									<h2>企画情報</h2>
+									<table class="table" style="width: 100%;">
+										<thead>
+											<tr class="brdr_ltgray" role="row">
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">企画番号</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">企画名</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">タイトル</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">会社名</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">部署名</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">担当者</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="brdr_ltgray" role="row">
+												<td class="brdr_ltgray text-center align-middle">
+													<imart type="imuiTextbox" id="kikakuId" name="kikakuId" class="form-control imui-text-readonly" readonly="true" value=$form.kikakuId escapeXml="true" />
+												</td>
+												<td class="brdr_ltgray text-center align-middle">
+													<imart type="imuiTextbox" id="kikakuMei" class="form-control imui-text-readonly" readonly="true" value=$form.kikakuMei escapeXml="true" />
+												</td>
+												<td class="brdr_ltgray text-center align-middle">
+													<imart type="imuiTextbox" id="taitoruMei" class="form-control imui-text-readonly" readonly="true" value=$form.taitoruMei escapeXml="true" />
+												</td>
+												<td class="brdr_ltgray text-center align-middle">
+													<imart type="imuiTextbox" id="kaishaMei" class="form-control imui-text-readonly" readonly="true" value=$form.kaishaMei escapeXml="true" />
+												</td>
+												<td class="brdr_ltgray text-center align-middle">
+													<imart type="imuiTextbox" id="bushoMei" class="form-control imui-text-readonly" readonly="true" value=$form.bushoMei escapeXml="true" />
+												</td>
+												<td class="brdr_ltgray text-center align-middle">
+													<imart type="imuiTextbox" id="tantoSha" class="form-control imui-text-readonly" readonly="true" value=$form.tantoSha escapeXml="true" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<imart type="condition" validity=$userInfo.lisenceProductionFlg negative>
+										<div class="text-right">
+											<button type="button" class="bg_orange txt_dark mr-0" id="kikakuKensaku"><i class="fas fa-search fa-2x"></i><span>企画検索</span></button>
+										</div>
+									</imart>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-12">
+									<h2>基本情報</h2>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">販促物名</div>
+											<div class="col-10">
+												<imart type="imuiTextbox" maxlength="20" id="hansokubutsu_nm" name="hansokubutsu_nm" class="form-control" value=$form.data.hansokubutsu_nm escapeXml="true"></imart>
+												<imart type="hidden" hansokubutsu_id=$form.data.hansokubutsu_id />
+												<imart type="hidden" himozukeId=$form.data.himozuke_id />
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">使用時期</div>
+											<div class="col-4 input-group">
+												<imart type="imuiTextbox" maxlength="10" id="shiyo_jiki" name="shiyo_jiki" class="form-control" value=$form.data.shiyo_jiki />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#shiyo_jiki" showMonthAfterYear="true" />
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">予定数量</div>
+											<div class="col-4 input-group">
+												<imart type="imuiTextbox" maxlength="20" id="yotei_suryo" name="yotei_suryo" class="form-control" value=$form.data.yotei_suryo />
+												<div class="input-group-append">
+													<span class="input-group-text" id="fca5">個</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">使用・配布予定場所</div>
+											<div class="col-10">
+												<imart type="imuiTextbox" maxlength="255" id="siyo_haihu_yotei_basho" name="siyo_haihu_yotei_basho" class="form-control" value=$form.data.siyo_haihu_yotei_basho escapeXml="true"></imart>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">種類数</div>
+											<div class="col-4 input-group">
+												<imart type="imuiTextbox" maxlength="20" id="shurui_su" name="shurui_su" class="form-control" value=$form.data.shurui_su />
+												<div class="input-group-append">
+													<span class="input-group-text" id="fca5">種類</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">形態</div>
+											<div class="col-10">
+												<imart type="imuiTextbox" maxlength="255" id="keitai" name="keitai" class="form-control" value=$form.data.keitai escapeXml="true"></imart>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">宣伝販促計画</div>
+											<div class="col-10">
+												<imart type="imuiTextbox" maxlength="1000" id="senden_hansoku_keikaku" name="senden_hansoku_keikaku" class="form-control" value=$form.data.senden_hansoku_keikaku escapeXml="true"></imart>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							</form>
+							<div class="row">
+								<div class="col-12">
+									<h2>使用素材</h2>
+									<imart type="condition" validity=$userInfo.lisenceProductionFlg>
+										<div class="col-12 mt-2 mb-2">
+											<div class="form-group row mb-2">
+												<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">有償/無償</div>
+												<div class="col-4 inputRadio mt-2">
+													<ul class="infl">
+														<li class="list_item">
+															<imart type="imuiRadio" name="usho_flg" class="option-input" value="usho" checked=$form.usho_flg_on label="有償"></imart>
+														</li>
+														<li class="list_item">
+															<imart type="imuiRadio" name="usho_flg" class="option-input" value="musho" checked=$form.usho_flg_off label="無償"></imart>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</imart>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">使用素材</div>
+											<div class="col-10">
+												<imart type="imuiTextbox" maxlength="255" id="shiyo_sozai" name="shiyo_sozai" class="form-control" value=$form.data.shiyo_sozai escapeXml="true"></imart>
+											</div>
+										</div>
+									</div>
+									<div class="col-12 mt-2 mb-2">
+										<div class="form-group row mb-2">
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">使用素材</div>
+											<div class="col-10">
+												<div class="fileupload-area">
+													<div class="filesSelect imui-fileupload-area" id="before_file_select">
+														<div class="fileupload-input-caption">ファイルをドラッグ&ドロップしてください</div>
+														<label id="file_upload_btn" for="file_upload" class="filesUploadLabel">ファイルを選択</label>
+													</div>
+													<div id="after_file_select_area">
+														<div id="after_file_select_template">
+															<div class="afterFileSelect" style="display: none">
+																<div class="thumbnail imgFile"></div>
+																<dl>
+																	<dt class="upfilename">
+																		<span class="upfilenametext"><imart type="string" value="" /></span>
+																	</dt>
+																	<imart type="hidden" item_upFile_name="" />
+																	<imart type="hidden" item_upFile_resname="" />
+																	<dd>
+																		<a href="javascript: void(0);" onclick="upFileDel(this)">
+																			<span class="fas fa-trash-alt fa-1x"></span>
+																		</a>
+																	</dd>
+																</dl>
+															</div>
+														</div>
+														<div id="after_file_select">
+															<imart type="repeat" list=$fileList item="item" index="idx">
+																<div class="afterFileSelect">
+																	<div class="thumbnail imgFile">
+																		<img class="img-responsive" src="lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.filePath />" />
+																	</div>
+																	<dl>
+																		<dt class="upfilename">
+																			<span class="upfilenametext"><imart type="string" value="" /></span>
+																		</dt>
+																		<imart type="hidden" item_upFile_name=item.fileName />
+																		<imart type="hidden" item_upFile_resname=item.filePath />
+																		<dd>
+																			<a href="javascript: void(0);" onclick="upFileDel(this)">
+																				<span class="fas fa-trash-alt fa-1x"></span>
+																			</a>
+																		</dd>
+																	</dl>
+																</div>
+															</imart>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h2>コメント</h2>
+									<div class="col-12 mt-2 mb-2">
+										<IMART type="include" page="lo/contents/screen/common/comment" ticketId=$ticketId ></IMART>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<div class="row">
+						<div class="col-12"><hr></div>
+					</div>
+					<section class="show">
+						<div class="row">
+							<div class="flex_btn center-block">
+								<button type="button" class="brdr_orange txt_orange"><i class="fas fa-caret-left fa-2x"></i><span>戻る</span></button>
+								<button type="button" class="bg_orange txt_dark"><i class="fas fa-check-circle fa-2x"></i><span>一時保存</span></button>
+								<button type="button" class="bg_orange txt_dark" data-toggle="modal" data-target="#modal-comment-input" data-backdrop="static"><i class="fas fa-check-circle fa-2x"></i><span>提出</span></button>
+							</div>
+						</div>
+					</section>
+					
+				</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form id="filesForm" name="filesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+		<div style="display:none;">
+			<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+			<imart type="imuiFileUpload" storeTo="/lo/upload"
+				autoUpload="true" uniqueFileName="true" id="imui-upload"
+				onBeforeSend="onBeforeSendFiles" 
+				onSuccess="onSuccessFiles"
+				onError="onErrorFiles" 
+				outerFormId="filesForm"
+				dropZone="#before_file_select" />
+				<imst:imSecureToken />
+		</div>
+	</form>
+
+	<form id="tempuFilesForm" name="tempuFilesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+		<div style="display:none;">
+			<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+			<imart type="imuiFileUpload" storeTo="/lo/upload"
+				autoUpload="true" uniqueFileName="true" id="imui-upload-tempu"
+				onBeforeSend="onBeforeSendTempuFiles" 
+				onSuccess="onSuccessTempuFiles"
+				onError="onErrorTempuFiles" 
+				outerFormId="tempuFilesForm"
+				dropZone="#before_tempu_file_select" />
+				<imst:imSecureToken />
+		</div>
+	</form>
+
+
+	<div id="modal-comment-input" class="modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<form id="modalComment">
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>コメント入力</h2>
+						<div class="col-12 mt-2 mb-2">
+							<imart type="imuiTextArea" maxlength="1000" id="comment" name="comment" class="form-control" value=""></imart>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				</form>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<h2>添付資料</h2>
+						<div class="col-12 mt-2 mb-2">
+							<div class="fileupload-area">
+								<div class="filesSelect imui-fileupload-area" id="before_tempu_file_select">
+									<div class="fileupload-input-caption">ファイルをドラッグ&ドロップしてください</div>
+									<label id="tempu_file_upload_btn" for="file_upload" class="filesUploadLabel">ファイルを選択</label>
+								</div>
+								<div id="after_tempu_file_select_area">
+									<div id="after_tempu_file_select_template">
+										<div class="afterFileSelect" style="display: none">
+											<dl>
+												<dt class="upfilename">
+													<imart type="string" value="" />
+												</dt>
+												<imart type="hidden" item_upFile_name="" />
+												<imart type="hidden" item_upFile_resname="" />
+												<dd>
+													<a href="javascript: void(0);" onclick="upFileDel(this)">
+														<span class="fas fa-trash-alt fa-1x"></span>
+													</a>
+												</dd>
+											</dl>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col-10"><hr></div>
+					<div class="col-1"></div>
+				</div>
+				<section class="show">
+					<div class="row">
+						<div class="flex_btn center-block">
+							<button type="button" class="brdr_orange txt_orange" data-dismiss="modal"><i class="fas fa-caret-left fa-2x"></i><span>戻る</span></button>
+							<button type="button" class="bg_orange txt_dark" data-dismiss="modal" id="torokuBtn"><i class="fas fa-check-circle fa-2x"></i><span>登録</span></button>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+
+
+<!-- TODO：仮に許諾で実装していただいているものを使用する。共通化するか、複数選択と単一選択で分けるかは検討が必要 -->
+	<div class="popup" id="js-popup">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn"><i class="fas fa-times"></i></div><br>
+			<IMART type="include" page="lo/contents/screen/common/kikaku_search"></IMART>
+		</div>
+		<div class="black-background" id="js-black-bg"></div>
+	 </div>
+
+</body>
+</html>

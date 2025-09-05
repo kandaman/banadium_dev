@@ -1,0 +1,15 @@
+create table public.lo_t_account_kaisha (
+  shinsei_id character varying(20) not null
+  ,kaisha_id character varying(100) not null  
+  , address1 character varying(1000)
+  , busho_nm character varying(255)
+  , yakushoku_nm character varying(255)
+  , kessaisha_nm character varying(100)
+  , keiyakusho_baitai character(1)
+  , sakujo_flg character varying(20) not null
+  , touroku_sha character varying(100) not null
+  , touroku_bi timestamp(6) without time zone not null
+  , koushin_sha character varying(100) not null
+  , koushin_bi timestamp(6) without time zone not null
+  , primary key (shinsei_id)
+);

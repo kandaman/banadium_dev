@@ -1,0 +1,12 @@
+create table public.lo_t_account_tanto_kakari (
+  shinsei_id character varying(20) not null
+  , shinsei_edaban smallint not null
+  , tanto_kakari_edaban smallint not null
+  , tanto_kakari_cd character varying(100)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (shinsei_id, shinsei_edaban, tanto_kakari_edaban)
+);

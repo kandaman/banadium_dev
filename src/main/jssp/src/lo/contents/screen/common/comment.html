@@ -1,0 +1,112 @@
+
+<imart type="condition" validity=$hasComment>
+	<table class="form-group comment-table bnadium-table" width="100%">
+		<colgroup>
+			<col style="width:14%;">
+			<col style="width:14%;">
+			<col style="width:8%;">
+			<col style="width:8%;">
+			<col style="width:8%;">
+			<imart type="condition" validity=$yobi001Disp>
+				<col style="width:10%;">
+			</imart>
+				<col>
+			<imart type="condition" validity=$yobi002Disp>
+				<col style="width:10%;">
+			</imart>
+			<imart type="condition" validity=$tempFileDisp>
+				<col style="width:14%;">
+			</imart>
+			<imart type="condition" validity=$yobi003Disp>
+				<col style="width:10%;">
+			</imart>
+		</colgroup>
+		<thead><tr>
+			<th>登録者</th>
+			<th>所属</th>
+			<th>役割</th>
+			<th>操作</th>
+			<th>登録日時</th>
+			<imart type="condition" validity=$yobi001Disp>
+				<th><imart type="string" value=$yobi001 /></th>
+			</imart>
+			<th>コメント</th>
+			<imart type="condition" validity=$yobi002Disp>
+				<th><imart type="string" value=$yobi002 /></th>
+			</imart>
+			<imart type="condition" validity=$tempFileDisp>
+				<th>添付ファイル</th>
+			</imart>
+			<imart type="condition" validity=$yobi003Disp>
+				<th><imart type="string" value=$yobi003 /></th>
+			</imart>
+		</tr></thead>
+		<tbody>
+		<imart type="repeat" list=$commentList item="record" index="idx">
+		<tr>
+			<imart type="condition" validity=record.isLicenseProduction>
+				<td class="brdr_ltgray text-center license-production-color">
+			</imart>
+			<imart type="condition" validity=record.isLicenseProduction negative>
+				<td class="brdr_ltgray text-center licensee-color">
+			</imart>
+				<imart type="string" value=record.torokushaName />
+			</td>
+			<imart type="condition" validity=record.isLicenseProduction>
+				<td class="brdr_ltgray text-center license-production-color">
+			</imart>
+			<imart type="condition" validity=record.isLicenseProduction negative>
+				<td class="brdr_ltgray text-center licensee-color">
+			</imart>
+				<imart type="string" value=record.shozoku />
+			</td>
+			<td class="brdr_ltgray text-center">
+				<imart type="string" value=record.yakuwari />
+			</td>
+			<td class="brdr_ltgray text-center">
+				<imart type="string" value=record.sosa />
+			</td>
+			<td class="brdr_ltgray text-center">
+				<imart type="string" value=record.torokuDt />
+			</td>
+			<imart type="condition" validity=$yobi001Disp>
+				<td class="brdr_ltgray text-center">
+					<imart type="string" value=record.yobi001 />
+				</td>
+			</imart>
+			<td class="brdr_ltgray">
+				<imart type="string" value=record.naiyo escapeXml="true" nl2br="true"/>
+			</td>
+			<imart type="condition" validity=$yobi002Disp>
+				<td class="brdr_ltgray text-center">
+					<imart type="string" value=record.yobi002 />
+				</td>
+			</imart>
+			<imart type="condition" validity=$tempFileDisp>
+				<td class="brdr_ltgray">
+					<imart type="repeat" list=record.fileList item="file" index="fIdx">
+						<a href="javascript: void(0);" onclick='fileDownload("<imart type="string" value=file.filePath/>","<imart type="string" value=file.fileName　escapeXml="true"/>");' oncontextmenu="return false;">
+							<imart type="string" value=file.fileName escapeXml="true" />
+							<span class='ml-1 fas fa-file-alt fa-1x'></span><br />
+						</a>
+					</imart>
+				</td>
+			</imart>
+			<imart type="condition" validity=$yobi003Disp>
+				<td class="brdr_ltgray text-center">
+					<imart type="string" value=record.yobi003 />
+				</td>
+			</imart>
+		</tr>
+		</imart>
+		</tbody>
+	</table>
+</imart>
+<imart type="condition" validity=$hasComment negative>
+	<div class="form-group row ml-2 mb-2">
+		<div col>コメントは登録されていません</div>
+	</div>
+	<script>
+		$("#commentArea").hide();
+	</script>
+</imart>

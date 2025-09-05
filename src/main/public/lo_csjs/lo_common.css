@@ -1,0 +1,606 @@
+@charset "utf-8";
+
+/* 項目背景色 */
+.back-color {
+	background-color: #f5f5f5;
+}
+
+/* 数値項目(入力制御用)*/
+.text-number {
+	text-align: right !important;
+}
+.text-decimal {
+	text-align: right !important;
+}
+
+/* 数値項目(バリデーションチェック用)*/
+.nat-only {
+	text-align: right !important;
+}
+.num-only {
+	text-align: right !important;
+}
+
+/* 中央寄せ*/
+.lo-center {
+	justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.license-production-color {
+	background-color : #98fb98;
+}
+
+.licensee-color {
+	background-color : #fafad2;
+}
+
+/* 画像ファイルの表示用 */
+.img-responsive {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+th {
+	font-weight: 500;
+}
+
+/* INGEN方式テキスト */
+.compact-full-text {
+	outline: 0!important;
+	border: none!important;
+	box-shadow: none!important;
+	background-color: transparent!important;
+	width: 100%!important;
+	font-size: 14px;
+	cursor: text!important;
+}
+
+/* 非活性ボタン */
+button[disabled], button[disabled]:hover {
+	color: #666;
+	background-color: #c8c8cb;
+}
+
+/* 印刷しない範囲 */
+.print-off {
+	display: none!important;
+}
+
+/* グラフ用コンテナ */
+.canvas-container {
+    overflow: hidden;
+    border: 1px solid;
+    padding: 15px 20px 20px;
+}
+
+.canvas-container table {
+	border-collspace:separate
+}
+
+/* グラフ用コンテナ内テーブルth */
+.canvas-container th {
+    font-size: 11px;
+    white-space: nowrap;
+    background-color: #ffffbb;
+    border: 1px solid #84919e;
+	padding: 5px 5px;
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.canvas-container th:before{
+	content: "";
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	border: 1px solid #84919e;
+	background-clip: padding-box;
+}
+
+/* グラフ用コンテナ内テーブルヘッダ角 */
+.canvas-container table .kado {
+	z-index: 2;
+}
+
+.canvas-container table .kado:before{
+	content: "";
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	border: 1px solid #84919e;
+	background-clip: padding-box;
+}
+
+/* グラフ用コンテナ内テーブルtd */
+.canvas-container td {
+    font-size: 11px;
+    white-space: nowrap;
+    background-color: #ffffff;
+    border: 1px solid #84919e;
+	padding: 0 2px;
+	position: sticky;
+	top: 0;
+	left: 0;
+}
+
+/* 企画ステータス(pr: プロダクション、li: ライセンシー) */
+.kikaku-status{
+	font-size: small;
+	font-weight: bold;
+	border-radius: 10px;
+	border-width: 0;
+	padding: 0 8px;
+}
+.kikaku-status.pr1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.kikaku-status.pr2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.kikaku-status.pr3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.kikaku-status.pr4{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kikaku-status.pr5{
+	color: #000000;
+	background-color: #f8cbad;
+}
+.kikaku-status.pr6,
+.kikaku-status.pr11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kikaku-status.pr7,
+.kikaku-status.pr8,
+.kikaku-status.pr9,
+.kikaku-status.pr10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+.kikaku-status.li1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.kikaku-status.li2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.kikaku-status.li3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.kikaku-status.li4,
+.kikaku-status.li5,
+.kikaku-status.li6,
+.kikaku-status.li11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kikaku-status.li7,
+.kikaku-status.li8,
+.kikaku-status.li9,
+.kikaku-status.li10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+
+/* 許諾ステータス(pr: プロダクション、li: ライセンシー) */
+.kyodaku-status{
+	font-size: small;
+	font-weight: bold;
+	border-radius: 10px;
+	border-width: 0;
+	padding: 0 8px;
+}
+.kyodaku-status.pr1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.kyodaku-status.pr2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.kyodaku-status.pr3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.kyodaku-status.pr4{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kyodaku-status.pr5{
+	color: #000000;
+	background-color: #f8cbad;
+}
+.kyodaku-status.pr6,
+.kyodaku-status.pr11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kyodaku-status.pr7,
+.kyodaku-status.pr8,
+.kyodaku-status.pr9,
+.kyodaku-status.pr10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+.kyodaku-status.li1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.kyodaku-status.li2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.kyodaku-status.li3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.kyodaku-status.li4,
+.kyodaku-status.li5,
+.kyodaku-status.li6,
+.kyodaku-status.li11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kyodaku-status.li7,
+.kyodaku-status.li8,
+.kyodaku-status.li9,
+.kyodaku-status.li10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+
+/* 代わり承認ステータス */
+.kawari-status{
+	font-size: small;
+	font-weight: bold;
+	border-radius: 10px;
+	border-width: 0;
+	padding: 0 8px;
+}
+.kawari-status.pr1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.kawari-status.pr2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.kawari-status.pr3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.kawari-status.pr4{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kawari-status.pr5{
+	color: #000000;
+	background-color: #f8cbad;
+}
+.kawari-status.pr6,
+.kawari-status.pr11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.kawari-status.pr7,
+.kawari-status.pr8,
+.kawari-status.pr9,
+.kawari-status.pr10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+
+/* MY 文書ステータス(pr: プロダクション、li: ライセンシー) */
+.mydoc-status{
+	font-size: small;
+	font-weight: bold;
+	border-radius: 10px;
+	border-width: 0;
+	padding: 0 8px;
+}
+.mydoc-status.pr1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.mydoc-status.pr2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.mydoc-status.pr3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.mydoc-status.pr4{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.mydoc-status.pr5{
+	color: #000000;
+	background-color: #f8cbad;
+}
+.mydoc-status.pr6,
+.mydoc-status.pr11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.mydoc-status.pr7,
+.mydoc-status.pr8,
+.mydoc-status.pr9,
+.mydoc-status.pr10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+.mydoc-status.li1{
+	color: #000000;
+	background-color: #fff2cc;
+}
+.mydoc-status.li2{
+	color: #000000;
+	background-color: #b4c6e7;
+}
+.mydoc-status.li3{
+	color: #000000;
+	background-color: #ffd966;
+}
+.mydoc-status.li4,
+.mydoc-status.li5,
+.mydoc-status.li6,
+.mydoc-status.li11{
+	color: #000000;
+	background-color: #c6e0b4;
+}
+.mydoc-status.li7,
+.mydoc-status.li8,
+.mydoc-status.li9,
+.mydoc-status.li10{
+	color: #000000;
+	background-color: #d9d9d9;
+}
+
+.comment-table {
+	padding-left: 0px;
+}
+
+.comment-table th {
+	padding: 2px;
+	text-align: center !important;
+}
+
+.comment-table td {
+	padding: 2px;
+}
+
+.left-justified {
+	padding-left: 0px !important;
+}
+.right-justified {
+	padding-right: 0px !important;
+}
+.brdr_ltgray {
+	border: 1px solid #c8c8cb !important;
+}
+.wrap {
+	word-wrap: break-word;
+}
+.margin-top {
+	margin-top: 40px !important;
+}
+.text-right {
+	text-align: right;
+}
+.margin-bottom {
+	margin-bottom: 0 !important;
+}
+.raido-padding {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+.mark-req {
+	color: red;
+}
+table.bnadium-table thead th .mark-req{
+	color: #ffffff;
+}
+.bg_ltorange {
+	background-color: #ffca80 !important;
+}
+.bg_sakura {
+	background-color: #fce8e6 !important;
+}
+.licensePro_color {
+	background-color : #98fb98;
+}
+.left-padding {
+	padding-left: 15px !important;
+}
+
+.responsive-table-wrapper{
+	display: block;
+	overflow-x: auto;
+}
+.table-responsive .table thead th{
+	white-space: nowrap;
+}
+
+body div.main{
+	margin-top: 5rem !important;
+}
+body.sidebar-on div.main{
+	width: calc(100% - 320px);
+}
+
+.input-group.nowrap{
+	flex-wrap: nowrap !important;
+}
+
+#GB_overlay {
+	z-index: 99900 !important;
+}
+
+#GB_window {
+	z-index: 99901 !important;
+}
+
+a.bn-orange,
+input[type=button].bn-orange,
+input[type=submit].bn-orange,
+button.bn-orange{
+	color: #ffffff !important;
+	font-size: 12px;
+	text-shadow: none !important;
+	border: 1px solid #e4762f !important;
+	border-radius: 4px !important;
+	background: linear-gradient(to bottom, #f7be33, #e4762f) !important;
+	text-decoration: none;
+}
+a.bn-orange:hover,
+input[type=button].bn-orange:hover,
+input[type=submit].bn-orange:hover,
+button.bn-orange:hover{
+	background: linear-gradient(to bottom, #e4762f, #da3732) !important;
+	text-decoration: none;
+}
+
+input[type=button].btn-gray,
+input[type=submit].btn-gray,
+button.btn-gray{
+	color: #121212 !important;
+	font-size: 12px;
+	text-shadow: none !important;
+	border: 1px solid #aaaaaa !important;
+	border-radius: 4px !important;
+	background: linear-gradient(to bottom, #ffffff, #dddddd) !important;
+}
+input[type=button].btn-gray:hover,
+input[type=submit].btn-gray:hover,
+button.btn-gray:hover{
+	background: linear-gradient(to bottom, #dddddd, #999999) !important;
+}
+
+.page-information h1{
+	color: #e4762f;
+    text-align: left;
+    font-weight: bold;
+    margin: 0 0 0 8px;
+}
+
+table.bnadium-table{
+	border: none !important;
+	border-bottom: 1px solid #cccccc !important;
+}
+.responsive-table-wrapper table.bnadium-table{
+	width: calc(100% - 1px) !important;
+}
+table.bnadium-table thead tr{
+	background: #e4762f;
+	color: #ffffff;
+}
+table.bnadium-table thead th{
+	text-align: center;
+	font-weight: normal;
+	border: none !important;
+	vertical-align: middle;
+}
+table.bnadium-table thead th.sortable{
+	cursor: pointer;
+	position: relative;
+}
+table.bnadium-table thead th.sortable::before,
+table.bnadium-table thead th.sortable::after{
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	border: 5px solid transparent;
+	right: 10px;
+	top: 50%;
+}
+table.bnadium-table thead th.sortable::before{
+	border-bottom-color: #f7be33;
+	margin-top: -10px;
+}
+table.bnadium-table thead th.sortable::after{
+	border-top-color: #f7be33;
+	margin-top: 2px;
+}
+table.bnadium-table thead th.sortable.asc::before{
+	border-bottom-color: #ffffff;
+}
+table.bnadium-table thead th.sortable.desc::after{
+	border-top-color: #ffffff;
+}
+table.bnadium-table tbody tr:nth-child(odd){
+	background: transparent;
+	border: none !important;
+}
+table.bnadium-table tbody tr:nth-child(odd) td{
+	border-top: none !important;
+	border-bottom: none !important;
+	border-left: 1px solid #cccccc !important;
+	border-right: 1px solid #cccccc !important;
+}
+table.bnadium-table tbody tr:nth-child(even){
+	background: #ffeedd;
+	border: none !important;
+}
+table.bnadium-table tbody tr:nth-child(even) td{
+	border: none !important;
+}
+
+.tabulator .tabulator-footer {
+	text-align: center;
+}
+
+.tabulator-headers .tabulator-col .tabulator-col-content {
+	background: #e4762f;
+	color: #ffff;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.tabulator-tableHolder .tabulator-table .tabulator-row-odd .tabulator-cell {
+	background: transparent;
+	border: none !important;
+}
+
+.tabulator-tableHolder .tabulator-table .tabulator-row-even .tabulator-cell {
+	background: #ffeedd;
+	border: none !important;
+}
+
+.tabulator-tableHolder::-webkit-scrollbar, .scrollbar::-webkit-scrollbar {
+	height: 15px;
+	width: 15px;
+}
+
+.scrollbar {
+	width: 100%;
+	height: 15px; 
+	overflow-x: scroll;
+	overflow-y: hidden;
+	background-color: white;
+	margin-right: 15px;
+}
+
+.scrollbar .scroll-inner {
+	height: 1px;
+}
+
+

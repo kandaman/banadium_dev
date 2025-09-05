@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<imart type="head">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+
+	<imart type="jsspRpc" name="jsActionSearch" page="lo/contents/screen/hansokubutsu/hansokubutsu_list" callback="searchCallback" onErrorCallback="searchErrorCallback" ></imart>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/popper.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/ja.js"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js" type="text/javascript"></script>
+	<script type="text/javascript" src="lo_csjs/footer.js" type="text/javascript"></script>
+
+	<title>素材費・一覧画面</title>
+
+	<script>
+		var $resultData = [];
+		var $dispData = [];
+		function searchErrorCallback() {
+			alert("検索エラー");
+		}
+	</script>
+</imart>
+
+<body>
+	<IMART type="include" page="lo/contents/screen/common/sidemenu"></IMART>
+	<div id="header">
+		<article>
+			<section class="show">
+				<div class="container">
+					<div class="row">
+						<div class="col-4"></div>
+						<div class="col-4">
+							<h3>販促物・一覧画面</h3>
+						</div>
+						<div class="col-4"></div>
+					</div>
+				</div>
+			</section>
+		</article>
+	</div>
+	<div id="main">
+		<article>
+			<div class="container">
+				<div class="row">
+					<div class="col-12 form-area mt-2 mb-2">
+						<form role="form">
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+									タイトル</div>
+								<div class="col-4">
+									<span class="input-group" id="inputGroupSelect04" aria-label="">
+										<imart type="imuiTextbox" class="form-control" id="pl_title_nm" />
+									</span>
+								</div>
+								<div class="col-6"></div>
+							</div>
+							<div class="collapse" id="colHidden">
+								<div class="form-group row mb-2">
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										企画番号</div>
+									<div class="col-4">
+										<span class="input-group" id="inputGroupSelect04" aria-label="">
+											<imart type="imuiTextbox" maxlength="20" class="form-control" id="kikaku_bango" />
+										</span>
+									</div>
+									<div class="col-6"></div>
+								</div>
+								<div class="form-group row mb-2">
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										IP</div>
+									<div class="col-4">
+										<span class="input-group" id="inputGroupSelect04" aria-label="">
+											<imart type="imuiTextbox" maxlength="1024" class="form-control" id="ip" />
+										</span>
+									</div>
+									<div class="col-6"></div>
+								</div>
+								<div class="form-group row mb-2">
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										販促物番号</div>
+									<div class="col-4">
+										<span class="input-group" id="inputGroupSelect04" aria-label="">
+											<imart type="imuiTextbox" maxlength="20" class="form-control" id="sozai_bango" />
+										</span>
+									</div>
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										販促ステータス</div>
+									<div class="col-4">
+										<div class="input-group">
+											<select class="custom-select" id="sozaihi_progress" aria-label="">
+												<option selected>&nbsp;</option>
+												<option value="1">申請中</option>
+												<option value="2">承認中</option>
+												<option value="3">差戻し</option>
+												<option value="4">最終承認</option>
+												<option value="5">完了</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row mb-2">
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										申請日</div>
+									<div class="infl col-4">
+										<span class="input-group date" id="datetimepicker1" data-target-input="nearest">
+											<imart type="imuiTextbox" maxlength="10" class="form-control datetimepicker-input"
+												data-target="#datetimepicker1" value="" />
+											<span class="input-group-append" data-target="#datetimepicker1"
+												data-toggle="datetimepicker">
+												<button type="button"
+													class="btn btn-outline-secondary searchbtn fa fa-calendar fa-1x"></button>
+											</span>
+										</span>
+										<span class="text-center blanc">～</span>
+										<span class="input-group date blanc" id="datetimepicker2"
+											data-target-input="nearest">
+											<imart type="imuiTextbox" maxlength="10" class="form-control datetimepicker-input"
+												data-target="#datetimepicker2" value="" />
+											<span class="input-group-append" data-target="#datetimepicker2"
+												data-toggle="datetimepicker">
+												<button type="button"
+													class="btn btn-outline-secondary searchbtn fa fa-calendar fa-1x"></button>
+											</span>
+										</span>
+									</div>
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										使用時期</div>
+									<div class="infl col-4">
+										<span class="input-group date" id="datetimepicker3" data-target-input="nearest">
+											<imart type="imuiTextbox" maxlength="10" class="form-control datetimepicker-input"
+												data-target="#datetimepicker3" value="" />
+											<span class="input-group-append" data-target="#datetimepicker3"
+												data-toggle="datetimepicker">
+												<button type="button"
+													class="btn btn-outline-secondary searchbtn fa fa-calendar fa-1x"></button>
+											</span>
+										</span>
+										<span class="text-center blanc">～</span>
+										<span class="input-group date blanc" id="datetimepicker4"
+											data-target-input="nearest">
+											<imart type="imuiTextbox" maxlength="10" class="form-control datetimepicker-input"
+												data-target="#datetimepicker4" value="" />
+											<span class="input-group-append" data-target="#datetimepicker4"
+												data-toggle="datetimepicker">
+												<button type="button"
+													class="btn btn-outline-secondary searchbtn fa fa-calendar fa-1x"></button>
+											</span>
+										</span>
+									</div>
+								</div>
+								<div class="form-group row mb-2">
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										BNE担当</div>
+									<div class="col-4">
+										<span class="input-group" id="inputGroupSelect04" aria-label="">
+											<imart type="imuiTextbox" maxlength="1024" class="form-control" id="bne_name" />
+										</span>
+									</div>
+									<div class="col-6"></div>
+								</div>
+
+
+								<div class="form-group row mb-2">
+									<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+										昇順降順</div>
+									<div class="col-3">
+										<div class="input-group">
+											<select class="custom-select" id="inputGroupSelect04" aria-label="">
+												<option selected>&nbsp;</option>
+												<option value="1">企画番号</option>
+												<option value="2">IP</option>
+												<option value="3">タイトル名</option>
+												<option value="4">販促物番号</option>
+												<option value="5">販促物名</option>
+												<option value="6">販促ステータス</option>
+												<option value="7">申請日</option>
+												<option value="8">使用時期</option>
+												<option value="9">BNE担当</option>
+											</select>
+											<div class="input-group-append">
+												<button type="button"
+													class="btn btn-outline-secondary descbtn">▼</button>
+											</div>
+										</div>
+									</div>
+									<div class="col-3">
+										<div class="input-group">
+											<select class="custom-select" id="inputGroupSelect04" aria-label="">
+												<option selected>&nbsp;</option>
+												<option value="1">企画番号</option>
+												<option value="2">IP</option>
+												<option value="3">タイトル名</option>
+												<option value="4">販促物番号</option>
+												<option value="5">販促物名</option>
+												<option value="6">販促ステータス</option>
+												<option value="7">申請日</option>
+												<option value="8">使用時期</option>
+												<option value="9">BNE担当</option>
+											</select>
+											<div class="input-group-append">
+												<button type="button"
+													class="btn btn-outline-secondary descbtn">▼</button>
+											</div>
+										</div>
+									</div>
+									<div class="col-3">
+										<div class="input-group">
+											<select class="custom-select" id="inputGroupSelect04" aria-label="">
+												<option selected>&nbsp;</option>
+												<option value="1">企画番号</option>
+												<option value="2">IP</option>
+												<option value="3">タイトル名</option>
+												<option value="4">販促物番号</option>
+												<option value="5">販促物名</option>
+												<option value="6">販促ステータス</option>
+												<option value="7">申請日</option>
+												<option value="8">使用時期</option>
+												<option value="9">BNE担当</option>
+											</select>
+											<div class="input-group-append">
+												<button type="button"
+													class="btn btn-outline-secondary descbtn">▼</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row mb-2">
+								<div class="col-2 t-header bg_ltorange brdr_dkgray text-center font-weight-bold">
+									表示件数</div>
+								<div class="col-3 inputRadio">
+									<ul class="infl">
+										<li class="list_item">
+											<label>
+												<input type="radio" class="option-input" name="cpipr05" checked=""
+													id="list_20">
+												20件
+											</label>
+										</li>
+										<li class="list_item">
+											<label>
+												<input type="radio" class="option-input" name="cpipr05"
+													id="list_50">
+												50件
+											</label>
+										</li>
+										<li class="list_item">
+											<label>
+												<input type="radio" class="option-input" name="cpipr05"
+													id="list_100">
+												100件
+											</label>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<a data-toggle="collapse" href="#colHidden" role="button" aria-expanded="false"
+											aria-controls="colHidden">詳細検索▽</a>
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="tblsearch"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+											<button type="button" class="brdr_dkgray txt_dark" id="tblclear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<section class="show">
+				<div class="container">
+					<div class="row">
+						<div class="col-9"></div>
+						<div class="col-3 flex_btn text-right">
+							<button type="button" class="bg_ltblue txt_dark"><i
+									class="fas fa-print fa-2x"></i><span>ファイル出力</span></button>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-12 mt-2 mb-2">
+							<table id="tableHeader_lisencee">
+								<thead>
+									<tr>
+										<th class="bg_ltorange col_150 text-center align-middle">
+											企画番号
+										</th>
+										<th class="bg_ltorange col_200 text-center align-middle">
+											IP
+										</th>
+										<th class="bg_ltorange col_600 text-center align-middle">
+											タイトル名
+										</th>
+										<th class="bg_ltorange col_150 text-center align-middle">
+											販促物番号
+										</th>
+										<th class="bg_ltorange col_200 text-center align-middle">
+											販促物名
+										</th>
+										<th class="bg_ltorange col_150 text-center align-middle">
+											販促ステータス
+										</th>
+										<th class="bg_ltorange col_150 text-center align-middle">
+											申請日
+										</th>
+										<th class="bg_ltorange col_150 text-center align-middle">
+											使用時期
+										</th>
+										<th class="bg_ltorange col_150 text-center align-middle">
+											BNE担当
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</section>
+		</article>
+	</div>
+	<br>
+	<br>
+	<br>
+	<!-- footer -->
+	<footer class="text-center mt-4 mb-2"></footer>
+
+	<script type="text/javascript">
+
+		function redrowTable() {
+			$('#tableHeader_lisencee tr').each(function (tri) {
+				var info_url = '';
+				$('td', this).each(function (tdi) {
+					switch (tdi) {
+						case 0:
+						case 3:
+						case 5:
+						case 6:
+						case 7:
+							$(this).addClass('text-center');
+					}
+
+					var bg_color;
+					if (0 == tdi) {
+						if($(this).text() != "データはありません。") {
+							$(this).html('<a href="./planning_detail' + info_url + '.html">' + $(this).text() + '</a>')
+						}
+					} else if (3 == tdi) {
+						$(this).html('<a href="lo/contents/screen/hansokubutsu/hansokubutsu_henshu?hansokubutsu_id=' + $(this).text() + '">' + $(this).text() + '</a>')
+					} else if (5 == tdi) {
+						for (var pti = 0; pti < pl_progress.length; pti++) {
+							if ($(this).text() == pl_progress[pti][0]) {
+								bg_color = pl_progress[pti][1];
+							}
+						}
+						$(this).html('<span class="txt_bright badge badge-pill ' + bg_color + '">' + $(this).text() + '</span>')
+					}
+				});
+			});
+		}
+
+		$(function () {
+
+			$('#datetimepicker3,#datetimepicker4,#datetimepicker1,#datetimepicker2').datetimepicker({
+				dayViewHeaderFormat: 'YYYY年 MMM',
+				format: 'YYYY/MM/DD',
+				viewMode: 'days',
+				locale: 'ja',
+				buttons: {
+					showClose: true
+				}
+			});
+			
+			$("#tblsearch, #tblsearch_title").click(function() {
+				jsActionSearch.searchHansokubutsu();
+			})
+
+			$('#tblclear').click(function () {
+				$('#pl_name').val('');
+				$('#pl_title_nm').val('');
+				$('#bne_name').val('');
+				$('#licensee_name').val('');
+				datatable.search('').columns().search('').draw();
+			});
+
+			if (datatable == null) {
+				datatable = $('#tableHeader_lisencee').DataTable();
+			}
+			drawTable();
+			datatable.on('draw', function () {
+				redrowTable();
+			});
+
+			$('#list_20').click(function () {
+				datatable.page.len(20).draw();
+			});
+			$('#list_50').click(function () {
+				datatable.page.len(50).draw();
+			});
+			$('#list_100').click(function () {
+				datatable.page.len(100).draw();
+			});
+
+			$('.descbtn').click(function () {
+				if ($(this).text() == "▼") {
+					$(this).text("▲");
+				} else {
+					$(this).text("▼");
+				}
+			});
+			
+		});
+		function searchCallback(ret) {
+			if (ret.countRow > 0) {
+				$dispData = ret.data;
+				drawTable();
+			}
+		}
+		var datatable = null;
+		function drawTable() {
+			var dataSet = [];
+
+			$.each($dispData, function(index, elem) {
+				dataSet.push([
+					elem.kikaku_id,
+					elem.ip_nm,
+					elem.title_nm,
+					elem.hansokubutsu_id,
+					elem.hansokubutsu_nm,
+					elem.hansoku_status_nm,
+					elem.shinsei_bi_ymd,
+					elem.shiyo_jiki_ymd,
+					elem.bne_tantou_sha_nm
+				]);
+			});
+
+			datatable.state.clear();
+			datatable.destroy();
+			$('#tableHeader_lisencee tbody > tr').remove();
+
+			datatable = $('#tableHeader_lisencee').DataTable({
+				data: dataSet,
+				ordering: false,
+				"pagingType": "full_numbers",
+				"drawCallback": function( settings ) {
+					$("#tableHeader_lisencee_length").hide();
+					$(".bg_ltorange").css('width','');
+					$(".hansokubutsuList").css('max-height', '100%');
+					$(".hansokubutsuList thead, .hansokubutsuList tbody").css('display', 'table-row-group');
+					$(".hansokubutsuList tbody").css('background-color', '#ffffff');
+
+					redrowTable();
+				},		
+				"pageLength": 20,
+				"lengthMenu": [20, 50, 100],
+				"dom": "<'hansokubutsuList'tr><'row'<'col-4'i><'col-8'p>>",
+				"language": {
+					"processing": "処理中...",
+					"lengthMenu": "_MENU_ 件表示",
+					"zeroRecords": "データはありません。",
+					"info": "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+					"infoEmpty": " 0 件中 0 から 0 まで表示",
+					"infoFiltered": "（全 _MAX_ 件より抽出）",
+					"infoPostFix": "",
+					"search": "検索:",
+					"url": "",
+					"paginate": {
+						"first": "<i class='fas fa-backward' aria-hidden='true'></i>",
+						"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+						"next": "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+						"last": "<i class='fas fa-forward' aria-hidden='true'></i>"
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

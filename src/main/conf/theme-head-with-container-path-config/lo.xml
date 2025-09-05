@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme-head-with-container-path-config xmlns="http://www.intra-mart.jp/theme/theme-head-with-container-path-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.intra-mart.jp/theme/theme-head-with-container-path-config theme-head-with-container-path-config.xsd ">
+	<!--  add suzuki ヘッダフッダを非表示 -->
+	<path libraries-version="iap-8.0.11">/lo/contents/screen/common/ip_search</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/common/title_search</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/common/kikaku_search</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/common/kyodaku_search</path>
+
+    <path>/lo/contents/screen/kikaku/planning_detail_eizo_new</path>
+    <path>/lo/contents/screen/kikaku/planning_detail_event_new</path>
+    <path>/lo/contents/screen/kikaku/planning_detail_item_new</path>
+    <path>/lo/contents/screen/kikaku/planning_detail_music_new</path>
+    <path>/lo/contents/screen/kikaku/planning_detail_new</path>
+    <path>/lo/contents/screen/kikaku/planning_form_eizo_new</path>
+    <path>/lo/contents/screen/kikaku/planning_form_event_new</path>
+    <path>/lo/contents/screen/kikaku/planning_form_item_new</path>
+    <path>/lo/contents/screen/kikaku/planning_form_music_new</path>
+
+
+    <path>/lo/contents/screen/kikaku/planning_form_new</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kikaku/planning_list_new</path>
+    <path>/lo/contents/screen/common/wf_check</path>
+
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kyodaku/permission_product_detail</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kyodaku/permission_list</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kyodaku/permission_register</path>
+
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kawari/kawari_list</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kawari/kawari_register</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/kawari/kawari_detail</path>
+
+    <path>/lo/contents/screen/hansokubutsu/hansokubutsu_list</path>
+    <path>/lo/contents/screen/hansokubutsu/hansokubutsu_henshu</path>
+    <path>/lo/contents/screen/hansokubutsu/hansokubutsu_shosai</path>
+    <path>/lo/contents/screen/sozaihi/sozaihi_list</path>
+    <path>/lo/contents/screen/sozaihi/sozaihi_henshu</path>
+    <path>/lo/contents/screen/sozaihi/sozaihi_shosai</path>
+
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_detail</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_list</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_comment</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/keiyaku_naiyo/comment_destination_preset</path>
+
+    <path>/lo/contents/screen/header</path>
+    <path>/lo/contents/screen/sidemenu</path>
+
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/user/myProcess_list</path>
+    <path>/lo/contents/screen/user/charts</path>
+
+    <!-- im_work外だと頭に/必要? -->
+    <path>lo/contents/screen/common/wf_check</path>
+     
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/account/account_list</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/account/account_register</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/account/account_detail</path> 
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/account/shanai_account_register</path>
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/account/shanai_account_detail</path>  
+
+    <path libraries-version="iap-8.0.11">/lo/contents/screen/file/file_download</path>
+    
+    <path libraries-version="iap-8.0.11">/lo/im_workflow/common/proc/lo/apply/apply_account</path>
+    <path libraries-version="iap-8.0.11">/lo/im_workflow/common/proc/lo/commentForm_account</path>
+     
+     <path libraries-version="iap-8.0.11">/lo/contents/screen/send_message/send_message</path>
+     
+     <path libraries-version="iap-8.0.11">/lo/contents/screen/info/index</path>
+     
+</theme-head-with-container-path-config>

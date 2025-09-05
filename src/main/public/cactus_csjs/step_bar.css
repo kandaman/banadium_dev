@@ -1,0 +1,149 @@
+/***************************ステップバーデザイン**************************/
+#step_bar_box {
+	text-align: center; /*バーを中央に*/
+	overflow: hidden;
+	margin-bottom: 30px;
+}
+
+.step_bar {
+	list-style: none; /*リスト表示の無効化*/
+}
+
+.step_bar li {
+	/*↓　後で変更*/
+	background-color: #e7ebf1;
+	/*↑　後で変更*/
+	line-height: 47px; /*ラインの高さ*/
+	color: #000000; /*文字色*/
+	text-decoration: none; /*文字の下線: なし*/
+	padding: 0 15px 0 35px; /*:上　右　下　左*/
+	display: inline-block; /*要素の横並び*/
+}
+
+.step_bar li small {
+	font-size: 80%;
+}
+
+.step_bar li::after { /*各要素のすぐ後*/
+	content: " ";
+	position: relative; /*相対位置*/
+	display: block;
+	margin-top: -25px; /*上マージン*/
+	margin-left: auto; /*左マージン*/
+	margin-right: -25px; /*右マージン*/
+	height: 23px;
+	width: 20px;
+	/*要素の傾斜変形*/
+	-webkit-transform: skew(-30deg);
+	-moz-transform: skew(-30deg);
+	-ms-transform: skew(-30deg);
+	-o-transform: skew(-30deg);
+	transform: skew(-30deg);
+	/*↓　後で変更*/
+	background-color: #e7ebf1;
+	border-right: 3px solid white; /*右枠線: 太さ　線の種類　色*/
+}
+
+.step_bar li::before { /*各要素のすぐ前*/
+	content: " ";
+	float: right; /*要素の寄せ：右*/
+	display: block;
+	margin-bottom: -25px; /*下マージン*/
+	margin-left: auto; /*左マージン*/
+	margin-right: -25px; /*右マージン*/
+	height: 22px;
+	width: 21px;
+	/*要素の傾斜変形*/
+	-webkit-transform: skew(30deg);
+	-moz-transform: skew(30deg);
+	-ms-transform: skew(30deg);
+	-o-transform: skew(30deg);
+	transform: skew(30deg);
+	/*↓　後で変更*/
+	background-color: #e7ebf1;
+	border-right: 3px solid white;
+}
+
+.step_bar li:first-child { /*一番最初の要素の仕様*/
+	padding-left: 20px;
+	/*要素の丸み*/
+	-webkit-border-radius: 5px 0 0 5px;
+	-moz-border-radius: 5px 0 0 5px;
+	-ms-border-radius: 5px 0 0 5px;
+	-o-border-radius: 5px 0 0 5px;
+	border-radius: 5px 0 0 5px;
+}
+
+.step_bar li:last-child { /*一番最後の要素の仕様*/
+	padding-left: 35px;
+	padding-rigth: 40px;
+	-webkit-border-radius: 0 5px 5px 0;
+	-moz-border-radius: 0 5px 5px 0;
+	-ms-border-radius: 0 5px 5px 0;
+	-o-border-radius: 0 5px 5px 0;
+	border-radius: 0 5px 5px 0;
+}
+
+.step_bar li:last-child::before {
+	border: 0;
+	background: transparent !important;
+}
+
+.step_bar li:last-child::after {
+	border: 0;
+	background: transparent !important;
+}
+
+.step_bar li.current {
+	background: #000000;
+	color: #FFFFFF;
+}
+
+.step_bar li.current::before {
+	background: #000000;
+}
+
+.step_bar li.current::after {
+	background: #000000;
+}
+
+.step_bar li.current:last-child {
+	margin-right: -35px;
+}
+
+.step_bar li.current:last-child::before {
+	border: 0;
+	background: transparent !important;
+}
+
+.step_bar li.current:last-child::after {
+	border: 0;
+	background: transparent !important;
+}
+
+.step_bar li.fin {
+	background: #d1d1d1;
+	color: #ffffff;
+}
+
+.step_bar li.fin::before {
+	background: #d1d1d1;
+}
+
+.step_bar li.fin::after {
+	background: #d1d1d1;
+}
+
+.step_bar li.fin:last-child {
+	margin-right: -35px;
+}
+
+.step_bar li.fin:last-child::before {
+	border: 0;
+	background: transparent !important;
+}
+
+.step_bar li.fin:last-child::after {
+	border: 0;
+	background: transparent !important;
+}

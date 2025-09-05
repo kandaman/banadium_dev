@@ -1,0 +1,258 @@
+
+<script type="text/javascript">
+
+
+//企画承認者変更時コールバック処理
+function setPlanAuthUser(dataObj) {
+	// 選択されたデータをセット
+	$('#plan_auth_name').text(dataObj.user_name);
+	$('#plan_auth_dep').text(dataObj.department_inc_name);
+	$('#plan_auth_post').text(dataObj.post);
+
+    // 全情報をJSONにして格納
+	$('input[name="item_plan_auth_data"]').val(ImJson.toJSONString(dataObj));
+
+    // 企画承認者のノード設定
+	var nodeSetting = {
+		"DCNodeSetting" : {　//動的承認ノード設定
+			"planApplNode_02" : {   // 設定対象のノードIDをプロパティ名とする
+		         "displayFlag" : false,    // 画面表示をしない
+			     "processTargetConfigs" : [    // 任意の処理対象者を指定
+			        {
+			          "extensionPointId" : "jp.co.intra_mart.workflow.plugin.authority.node.dynamic",
+			          "pluginId" : "jp.co.intra_mart.workflow.plugin.authority.node.dynamic.user",
+			          "parameter" : dataObj.user_cd // ユーザを指定
+			        },
+			    ]
+			}
+		}
+	};
+
+    // 必須項目チェック
+    requiredCheck();
+
+    // パラメータに渡す
+	$('#imwNodeSetting').val(ImJson.toJSONString(nodeSetting));
+  }
+
+  // メール通知者設定
+  function setMailAddress(dataObj) {
+
+	  $('.flow_setting_mail_tr').remove();
+
+	  // 戻り値がない場合は空データを一行入れる
+	  if (dataObj.length == 0){
+		  dataObj[0] = {"user_cd":"", "user_name":"","department_inc_name":"","post":""};
+	  }
+
+	  var row = 0;
+	  $.each(dataObj, function( key, data ) {
+		row++;
+
+		var trObj;
+		if (row == 1){
+			trObj = $('#flow_setting_mail');
+		}else{
+			// テンプレート行をコピー
+			trObj  = $('#flow_setting_mail_tmp').clone(true);
+			// id変更 クラス追加
+			trObj.removeAttr('id');
+			trObj.attr('id','flow_setting_mail'+row);
+			trObj.attr('class','flow_setting_mail_tr');
+			trObj.show();
+			// 後に追加
+			if(row == 2) {
+				trObj.insertAfter('#flow_setting_mail');
+			} else {
+				trObj.insertAfter('#flow_setting_mail'+(row-1));
+			}
+		}
+		//データを反映
+		trObj.find('.name').text(data.user_name);
+		trObj.find('.department').text(data.department_inc_name);
+		trObj.find('.post').text(data.post);
+	    // 全情報をJSONにして格納
+	    if (data.user_cd !=""){
+			trObj.find('input[name="item_mailsend_user_data"]').val(ImJson.toJSONString(data));
+	    }else{
+			trObj.find('input[name="item_mailsend_user_data"]').val("");
+	    }
+
+	  });
+  }
+
+
+$(function() {
+	var dataObj = [];
+	var prm = {"user_cd":""}	// ユーザ判定用パラメータ
+
+	// 一時保存データから承認者を設定
+	var flowData = '<imart type="string" value=$form.item_flowDataJSON escapeJs="true"/>';
+	if (flowData != "") {
+		dataObj = ImJson.parseJSON(flowData); // jsonで配列に戻す
+		//　承認者を設定
+		for(var i=0; i<dataObj.length; i++) {
+			if (dataObj[i].node_kbn == "01") {
+				prm.user_cd = dataObj[i].shorisha;
+				var userData = searchUserObject.getUserList(prm).data[0];
+				setPlanAuthUser(userData);
+				break;
+			}
+		}
+	}
+
+	// 一時保存データからメール通知者を設定
+	var mailUserData = '<imart type="string" value=$form.item_mailUserDataJSON escapeJs="true"/>';
+	if (mailUserData != "") {
+		dataObj = ImJson.parseJSON(mailUserData); // jsonで配列に戻す
+		//　メール通知者を設定
+		var userDataAry = [];
+		for(var i=0; i<dataObj.length; i++) {
+			if (dataObj[i].user_group_kbn == "01") {
+				prm.user_cd = dataObj[i].user_group_cd;
+				userDataAry.push(searchUserObject.getUserList(prm).data[0]);
+			}
+		}
+		setMailAddress(userDataAry);
+	}
+
+	// 一時保存データから社内共有事項が設定されている場合、文字数カウントダウンを実行する。
+	// ※社内共有事項自体は単なる文字列なので、直接 textarea タグにバインドする。
+	var shanaimukeKyoyujiko = $('#item_company_comment').text();
+	if ( shanaimukeKyoyujiko != "" ) {
+		CountDownLength( '#company_comment_len', shanaimukeKyoyujiko, 280 );
+	}
+
+	$("#btn_mailsenduser").click(function() {
+		// リストに存在するデータを配列で取得
+		var arr = $('input[name="item_mailsend_user_data"][value!=""]').map(function(){
+		    return $(this).val();
+		}).get();
+		// 検索画面を開く
+		openSearchUserMultiDialog(this,arr,setMailAddress);
+	})
+});
+
+</script>
+
+<!-- ノード設定用パラメータ-->
+<input type="hidden" id="imwNodeSetting" name="imwNodeSetting" value="">
+
+<!-- 承認テーブル -->
+<div class="form-group">
+	<label for="TitleName">■承認者設定</label>
+	<div class="panel">
+		<table class="table table-condensed table-condensed">
+			<thead>
+				<tr>
+					<th width="10%"></th>
+					<th colspan="2">氏名・グループ（版権元）</th>
+					<th>所属</th>
+					<th>役職</th>
+					<th width="10%"></th>
+				</tr>
+			</thead>
+			<tbody id="flow_setting">
+				<tr>
+					<th style="border-left: none;">企画承認者 <small>
+							<p>※マネージャー以上</p>
+					</small>
+					</th>
+					<td colspan="2" id="plan_auth_name"></td>
+					<td id="plan_auth_dep"></td>
+					<td id="plan_auth_post"></td>
+					<td>
+						<!--<button type="button" class="btn center-block" onclick="openSearchUserDialog({plan_auth_name:'user_name',plan_auth_dep:'department', plan_auth_post:'post'});">編集</button> -->
+						<button type="button" class="btn btn-hensyu center-block"
+							onclick="openSearchUserDialog('',setPlanAuthUser);">編集</button>
+					</td>
+					<input type="hidden" name="item_plan_auth_data" value="" class="required"/>
+				</tr>
+				<tr>
+					<th style="border-left: none;">受付担当者</th>
+					<td colspan="2">受付担当者グループ</td>
+					<td></td>
+					<td></td>
+					<td>
+						<button type="button" class="btn btn-hensyu center-block"
+							herf="#dummy" disabled>編集</button>
+					</td>
+				</tr>
+				<tr id="hanmoto_flow">
+					<th class="honmoto_row" rowspan=1 style="border-left: none;">版権担当者</th>
+					<td class="hanmoto_nm"></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<button type="button" class="btn btn-hensyu center-block"
+							herf="#dummy" disabled>編集</button>
+					</td>
+				</tr>
+				<!--
+					<tr>
+						<td>株式会社円谷プロダクション（国内）</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><div class="button">
+								<button class="btn" herf="#dummy" disabled>編集</button>
+							</div></td>
+					</tr>
+					 -->
+				<!-- メール通知者用テンレート行（非表示） -->
+				<tr id="flow_setting_mail_tmp" hidden>
+					<td colspan="2" class="name"></td>
+					<td class="department"></td>
+					<td class="post"></td>
+					<input type="hidden" name="item_mailsend_user_data" value="" />
+
+				</tr>
+				<!----------------------------------->
+				<tr id="flow_setting_mail">
+					<th rowspan="100" class="flow_setting_mail_tmp"
+						style="border-left: none; border-bottom: none;">メール通知者 <span class="label label-info">任意</span> <small>
+							<p>※WFが完了したことを通知します。</p>
+					</small></th>
+					<td colspan="2" class="name"></td>
+					<td class="department"></td>
+					<td class="post"></td>
+					<td rowspan="100" class="flow_setting_mail_tmp">
+						<!--<button type="button" class="btn center-block" onclick="openSearchUserMultiDialog(this,,setMailAddress);">編集</button> -->
+						<button type="button" class="btn btn-hensyu center-block"
+							id="btn_mailsenduser">編集</button>
+					</td>
+					<input type="hidden" name="item_mailsend_user_data" value="" />
+				</tr>
+				<!--
+					<tr>
+						<td colspan="2">小菅 寛史 Hiroshi Kosuge<br>00055580
+						</td>
+						<td>CS事業部 第1制作宣伝部 2課</td>
+						<td>マネージャー</td>
+					</tr>
+					 -->
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- @end 承認テーブル -->
+
+<!-- コメント入力画面 -->
+<div class="form-group">
+	<label for="TitleName">■社内向け共有事項 <span class="label label-info">任意</span></label>
+
+	<textarea class="form-control count-down-length" name="item_company_comment" rows="4"
+		style="width: 70%" id="item_company_comment" maxlength="280"
+		oninput="CountDownLength( '#company_comment_len' , value , 280 );"><imart type="string" value=$form.shanaimuke_kyoyujiko escapeJs="false" escapeXml="true"/></textarea>
+	<p id="company_comment_len">残280文字</p>
+</div>
+
+<!-- バリデーションメッセージ -->
+<div class="form-group">
+	<p class="validation_msg"></p>
+</div>
+
+<ui id="errorList" hidden> </ui>
+
+<!-- @end コメント入力画面 -->

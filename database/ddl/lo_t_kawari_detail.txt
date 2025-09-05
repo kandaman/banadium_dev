@@ -1,0 +1,32 @@
+create table public.lo_t_kawari_detail (
+  bunsho_id character varying(20) not null
+  , bunsho_cls character varying(20) not null
+  , bunsho_edaban smallint not null
+  , shohin_category smallint
+  , shohin_hansokubutsu_hanbetsu character(1)
+  , shohin_nm character varying(255)
+  , zeinuki_jodai numeric(30, 6)
+  , mokuhyo_hanbai_su integer
+  , shokai_seisanyotei_su integer
+  , chiiki character(1)
+  , hanbai_jiki character varying(20)
+  , kokuchi_kaishi_jiki character varying(20)
+  , hatsubai_bi date
+  , ryoritsu numeric(30, 6)
+  , royalty_kingaku numeric(30, 6)
+  , siyoryo numeric(30, 6)
+  , saiteihosho_su_shinseisu numeric(30, 6)
+  , saiteihosho_ryo_kyodakuryo numeric(30, 6)
+  , shoshi character(1)
+  , mihon_suryo integer
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (bunsho_id, bunsho_edaban)
+);
+
+--2021.12.03 カラム名修正 mokuhyo_hambai_su → mokuhyo_hanbai_su
+--2021.12.24 型変更 royalty_kingaku integer → numeric(30, 6)
+

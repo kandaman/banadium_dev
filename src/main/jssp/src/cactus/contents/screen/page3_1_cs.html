@@ -1,0 +1,123 @@
+
+
+
+<!-- 新商品企画申請書・CS事業部時のみ表示 -->
+<div class="form-group">
+	<button type="button" id="btn_newItemAdd_cs"
+		class="btn btn-hensyu pull-right"
+		onclick="newItemtbl_addRow('newItemtbody_cs','newItemtbl_cs');newItemtbl_rowno('#newItemtbl_cs')"
+		style="width: auto; height: auto; font-size: 18px; margin-top: -45px; margin-right: -255px;">行追加</button>
+</div>
+
+<div class="form-group">
+	<div class="panel" style="width: 120% !important">
+		<table class="table table-condensed sticky_table"
+			id="newItemtbl_cs">
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>商品名<small><p>※通常版限定版なども行ごとに記入してください</p>
+							<p>記入例)太鼓の達人 セッションでドドンがドン！太鼓とバチ同梱版</p></small></th>
+					<th>地域</th>
+					<th>通貨</th>
+					<th>プラットフォーム</th>
+					<th>発売予定日<small><p>※8ケタの半角数字</p></small></th>
+					<th>価格(税抜)<small><p>※半角数字のみ</p></small></th>
+					<th>目標数量<small><p>※半角数字のみ</p></small></th>
+					<th>DL版／価格(税抜)</th>
+					<th colspan="2"></th>
+				</tr>
+			</thead>
+			<tbody id="newItemtbody_cs" hidden>
+				<tr class="table-bordered">
+					<td rowspan="2" class="id_rowno">0</td>
+					<td><input type="text" class="form-control id_content_name count-down-length"
+						name="item_content_name" maxlength="50"
+						oninput="CountDownLengthRow(this,'.id_length_1', 50 );">
+						<p class="id_length_1">残50文字</p></td>
+					<td>
+						<div class="id_area"></div> <input type="hidden"
+						class="id_area_name" name="item_area_name" value=""> <input
+						type="hidden" class="id_area_cd" name="item_area_cd" value="">
+						<button type="button" class="btn btn-hensyu btn_setarea"
+							onclick="openAreaRadio(this);" style="width: auto;">地域選択</button>
+					</td>
+					<td><imart class="form-control id_currency" type="imuiSelect"
+							name="item_currency" list=$form.list_m_tuka width="auto" /> <!-- <select class="form-control id_money" name="item_currency">
+						<option value="1">日本円（JPY）</option>
+						<option value="2" disabled>米ドル（USD）</option>
+						<option value="3" disabled>ユーロ（EUR）</option>
+						<option value="4" disabled>香港ドル（HKD）</option>
+						<option value="5" disabled>台湾ドル（TWD）</option>
+						<option value="6" disabled>ウォン（KRW）</option>
+						<option value="7" disabled>シンガポールドル（SGD）</option>
+						<option value="8" disabled>その他</option>
+				</select>
+				 --> <input type="text" class="form-control id_otherCurrency"
+						name="item_otherCurrency" maxlength="40" style="display: none" /></td>
+					<td class="platform"><select class="form-control id_platform"
+						name="item_platform" style="width: auto">
+							<option value=""></option>
+							<!--<option>PS4</option>
+							<option>PS3</option>
+							<option>PS Vita</option>
+							<option>Switch</option>
+							<option>3DS</option>
+							<option>XboxONE</option>
+							<option>Steam</option>
+							<option>その他</option>-->
+					</select> <input type="text" class="form-control id_otherPlatform"
+						style="display: none" name="item_otherPlatform" maxlength="40"></td>
+					<td>
+						<div class="form-inline">
+							<input type="text" value=""
+								class="form-control imCalendar id_sale-date" style="width: 75%"
+								name="item_sale_date" maxlength="10"/>
+						</div>
+					</td>
+					<td>
+						<!-- <select class="form-control id_price_select" style="display: none" name="item_price_type">
+							<option value="1">販売価格</option>
+							<option value="2">FOB価格</option>
+							<option value="3">TP価格</option>
+							<option value="4">NET価格</option>
+						</select> --> <input type="text"
+						class="form-control text-number id_price" name="item_price">
+					</td>
+					<td><input type="text"
+						class="form-control text-number id_suryo" name="item_suryo">
+					</td>
+					<td><select class="form-control id_dl_flg" name="item_dl_flg"
+						style="width: auto">
+							<option value=""></option>
+							<option value="1">あり</option>
+							<option value="2">DL版のみ</option>
+							<option value="0">なし</option>
+					</select> <input type="text" class="form-control text-number id_dlPrice"
+						name="item_dlPrice" style="display: none"></td>
+					<td rowspan="2">
+						<div style="margin-bottom: 3px">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="newItemtbl_copyRow(this);newItemtbl_rowno('#newItemtbl_cs')">コピー</button>
+						</div>
+						<button type="button" class="btn btn-hensyu center-block"
+							onclick="delTbody(this);newItemtbl_rowno('#newItemtbl_cs')">削除</button>
+					</td>
+					<td align="center" rowspan="2"><img
+						src="cactus_csjs/images/chevron.png" alt="上へ移動"
+						onclick="upLine(this);newItemtbl_rowno('#newItemtbl_cs')" /><br>
+						<img src="cactus_csjs/images/chevron-expand.png" alt="下へ移動"
+						onclick="downLine(this);newItemtbl_rowno('#newItemtbl_cs')" /></td>
+				</tr>
+				<tr>
+					<td colspan="8">備考<input type="text"
+						class="form-control id_note count-down-length" name="item_note" maxlength="50"
+						oninput="CountDownLengthRow(this,'.id_length_2', 50 );">
+						<p class="id_length_2">残50文字</p></td>
+				</tr>
+				<!-- @end テンプレート行 -->
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- @end新商品企画申請書・CS事業部時のみ表示 -->

@@ -1,0 +1,12 @@
+create table lo_t_kawari_tempu_file (
+bunsho_id character varying(20) not null
+,file_no smallint not null
+,file_name character varying(512)
+,file_path character varying(512) not null
+--削除,bunsho_cls character varying(20) not null
+,sakujo_flg character varying(20)
+,touroku_sha character varying(100)
+,touroku_bi timestamp(6) without time zone
+,koushin_sha character varying(100)
+,koushin_bi timestamp(6) without time zone
+,primary key (bunsho_id, file_no));

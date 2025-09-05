@@ -1,0 +1,662 @@
+
+<imart type="head">
+  <title> 新企画-申請</title>
+  <imart type="workflowOpenPageCsjs" />
+  <imart type="include" page="im_workflow/common/parts/window_popup/imw_window_popup" />
+
+  <imart type="imuiValidationRule" rule="cactus/contents/screen/apply#validateRule" rulesName="rules" messagesName="messages" />
+  <imart type="imuiValidationRule" rule="cactus/contents/screen/apply#validateRuleTempsave" rulesName="rulesTmp" messagesName="messages" />
+  <script src="ui/libs/jquery-validation-1.9.0/jquery.validate.js"></script>
+
+  <IMART type="jsspRpc" name="jsActionApply" page="cactus/contents/screen/apply"></IMART>
+
+
+  <!-- stylesheet -->
+  <link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
+  <link rel="stylesheet" href="cactus_csjs/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="cactus_csjs/bootstrap-datepicker.min.css">
+
+
+  <!-- @end stylesheet -->
+
+  <!-- javascript -->
+  <!-- <script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+
+<!--
+  <script type="text/javascript" src="cactus_csjs/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="cactus_csjs/bootstrap-datepicker.min.js"></script>
+  <script type="text/javascript" src="cactus_csjs/bootstrap-datepicker.ja.min.js"></script>
+-->
+  <!-- @end javascript -->
+
+  <!-- mycontents -->
+  <script type="text/javascript" src="cactus_csjs/const.js"></script>
+  <script type="text/javascript" src="cactus_csjs/proc.js"></script>
+  <script type="text/javascript" src="cactus_csjs/sksgjs.js"></script>
+  <script type="text/javascript" src="cactus_csjs/addpf.js"></script>
+  <script type="text/javascript" src="cactus_csjs/pager.js"></script>
+  <script type="text/javascript" src="cactus_csjs/common.js"></script>
+<!--   <script type="text/javascript" src="cactus_csjs/navbar.js"></script> -->
+
+
+  <link rel="stylesheet" href="cactus_csjs/sksg.css">
+  <link rel="stylesheet" href="cactus_csjs/step_bar.css">
+  <link rel="stylesheet" href="cactus_csjs/frozen-header.css">
+  <!-- <link rel="stylesheet" href="cactus_csjs/navbar.css">-->
+  <!-- @end mycontents -->
+
+  <!-- workflow/csjs/greybox.jsの　showGreyBoxを変更 -->
+  <script type="text/javascript" src="workflow/csjs/greybox_cactus.js"></script>
+
+  <script>
+/**
+ * window.onbeforeunload イベントを設定する。
+ */
+function onBeforeUnloadHandler() {
+	window.onbeforeunload = function(e) {
+		// 実際にはこのメッセージは出せない。
+		// ＞参考：https://www.chromestatus.com/feature/5349061406228480
+		var message = "申請が完了していません。このまま移動しますか？";
+		e.returnValue = message;
+		return message;
+	};
+}
+/**
+ * window.onbeforeunload イベントをオフにする。
+ * 省略可能引数 ms を指定した場合は setTimeout で指定時間後にイベントを復活させる。
+ * （一時的にイベントをオフにして、その後すぐに戻したい場合に使う）
+ */
+function offBeforeUnloadHandler(ms) {
+	window.onbeforeunload = null;
+
+	if (ms) {
+		setTimeout( onBeforeUnloadHandler, ms );
+	}
+}
+
+  	//var disabledObj; //disabledの項目
+var thidid;
+    (function($) {
+    	// common.js onbeforeunload イベントを登録。
+    	onBeforeUnloadHandler();
+
+
+      $(document).ready(function() {
+
+		//初期表示
+		initDisplay();
+
+        //formの２度押し登録防止
+        imuiDisableOnSubmit('form[name="doRegisterForm"]', 100);
+
+	    // ブラウザバック禁止---------------------------
+		history.pushState(null, null, null);
+		$(window).on("popstate", function (event) {
+    		if (!event.originalEvent.state) {
+        		history.pushState(null, null, null);
+        		return;
+    		}
+		});
+	    // @endブラウザバック禁止-----------------------
+
+
+        // 申請ボタン押下------------------------------------------------------------
+        $('#submit_buttons').delegate('input,button', 'click', function() {
+
+          	var nodeSetting = {};
+          	switch($(this).attr('id')) {
+            	case 'openPage0' :        //申請
+			        // 処理用ページを変更する
+	      			nodeSetting.procPage = "im_workflow/common/proc/custom/apply/apply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+	      			$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+
+              		workflowOpenPage('0');
+              		break;
+            	case 'openPage1' :      //一時保存
+			        // 処理用ページを変更する
+	      			//nodeSetting.procPage = "im_workflow/common/proc/custom/temporary_save/temporary_save"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+	      			//$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+              		//workflowOpenPage('1');
+              		break;
+            	case 'openPage3' :
+			        // 処理用ページを変更する
+	      			nodeSetting.procPage = "im_workflow/common/proc/custom/reapply/reapply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+	      			$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+
+              		workflowOpenPage('3');
+              		break;
+            	defaut:
+              		break;
+          	}
+          	return false;
+        });
+        // end@申請ボタン押下------------------------------------------------------------
+
+        // 戻るボタン
+        $('#btnBack').bind('click', function(){
+        	// offBeforeUnload(); //戻るの場合も警告しておく。嫌ならコメントアウト解除。
+        	window.location.href = '<imart type="string" value=$data.imwCallOriginalPagePath />';
+        });
+        // 一時保存ボタン
+        $('#btn_tmpsave').bind('click', function(){
+        	callTempSave();
+        	offBeforeUnloadHandler(); //　一時保存時　window.onbeforeunload イベントをオフにする。
+        	return false;
+        });
+
+
+
+	    // パンくずリスト押下--------------------------------------------------------------
+	    $(".pan,.panPre,.panNext ").bind('click',function(event){
+	        event.preventDefault();
+	        event.stopPropagation();
+
+			var thisNum = $(this).attr('href');
+	        if(typeof thisNum === 'undefined'){
+	         		thisNum = $(this).val();
+	        }
+
+		    $(".pan").each(function(i, elem) {
+		  		var num = $(elem).attr('href');
+		        if (thisNum == num) {
+		      		$('#pan'+num).addClass('current');
+		            //$(elem).addClass('link-disabled');
+		            $(elem).hide();
+		            $(elem).after('<div>'+ $(elem).text() +'</div>')
+		            $('#step'+num).css('display', 'block');
+		        } else {
+		      	 	$('#pan'+num).removeClass('current');
+		            //$(elem).removeClass('link-disabled');
+		            $(elem).show();
+		            $(elem).closest('li').find('div').remove();
+		            $('#step'+num).css('display', 'none');
+		        }
+		    });
+
+	        // 前へ、次へも修正
+            $('.panPre').val(Number(thisNum) - 1);
+            $('.panNext').val(Number(thisNum) + 1);
+
+	        if (thisNum > 1){
+	            $('.panPre').prop("disabled", false);
+	        }else{
+	            $('.panPre').prop("disabled", true);
+	        }
+	        if (thisNum < 5){
+	        	$('.panNext').show();
+	        	$('#openPage0').hide();
+	        	$('#openPage3').hide();
+	        }else{
+
+	        	// 必須チェック
+		        requiredCheck();
+
+	        	$('.panNext').hide();
+	        	$('#openPage0').show();
+	        	$('#openPage3').show();
+	        }
+
+	     	// 文字数カウンタ発動
+	    	$(".count-down-length").trigger('input');
+
+	        return false;
+	    });
+	    // パンくずリスト押下 end --------------------------------------------------------------
+
+	 	// 文字数カウンタ発動
+	    $(".count-down-length").trigger('input');
+
+      });
+
+    })(jQuery);
+
+
+    // 一時保存処理
+    function callTempSave() {
+		// 入力フォームをの値をuserParamsに格納
+		var userParams = $('#workflowOpenPageForm').serializeObject();
+		if (userParams.item_itemNameJap == ""){
+        	imwShowErrorMessage('imui-container','件名/タイトル名を入力してください');
+            return;
+		}
+		// 一時保存用データ
+        var tempSaveParamObj = {
+    	"matterName" : userParams.item_itemNameJap,
+        "processComment" : "",
+        "applyBaseDate": userParams.imwApplyBaseDate,
+        "applyExecuteUserCode" : '<imart type="string" value=$data.imwUserCode />',
+	    "applyAuthUserCode" : userParams.imwAuthUserCode,
+    	"flowId" : userParams.imwFlowId,
+    	"userDataId" : userParams.imwUserDataId,
+    	"applyNodeId" : userParams.imwNodeId
+    	};
+
+
+        var oReqParam = {
+            "tempSaveParams": tempSaveParamObj,
+            "userParams"    : userParams,
+            "imwUserDataId" : userParams.imwUserDataId
+        };
+        try {
+            var res = jsActionApply.temporarySave(oReqParam);
+            if (!res.resultFlag) {
+                imwShowErrorMessage('imui-container',res.errorMessage);
+                return;
+            }else{
+                imuiShowSuccessMessage('一時保存しました');
+                $('input[name="item_matter_number"]').val(res.shinsei_no); //一時保存で作成された申請番号取得
+                return;
+            }
+        } catch (ex) {
+        	imwShowErrorMessage('imui-container',ex.message);
+            return;
+        }
+    }
+	// 対象フォーム内のname属性を取得しオブジェクトを返す
+	$.fn.serializeObject = function()
+	{
+	    var object = {};
+	    var array = this.serializeArray();
+	    $.each(array, function() {
+	        if (object[this.name] !== undefined) {
+	            if (!object[this.name].push) {
+	                object[this.name] = [object[this.name]];
+	            }
+	            object[this.name].push(this.value || '');
+	        } else {
+	            object[this.name] = this.value || '';
+	        }
+	    });
+	    return object;
+	};
+
+
+    // ファイルアップロード前処理用
+    function onP4upd_preupload(e, data) {
+    	var files = data.originalFiles;
+    	var uploaded_length;
+    	var file_size_mb;
+    	var file_nm_size;
+    	var max_file_size_mb;
+    	var msg;
+    	var addFlg = true;
+
+    	if(files[0].name == data.files[0].name) {
+    		// １件目は必ずチェック
+    		sessionStorage.setItem('upload_check', 1);
+    		// アップロード件数初期化
+    		sessionStorage.setItem('upload_num', 0);
+    	} else if(sessionStorage.getItem('upload_check') == 1) {
+    		// １件目にチェック通ってなければ強制終了
+    		return false;
+    	}
+
+    	// アップロードファイル１件目の場合のみチェック処理
+    	if(sessionStorage.getItem('upload_check') == 1) {
+	    	// ファイル件数チェック
+    		uploaded_length = $('.tmpfilename').filter(function(){return this.text != "";}).length;	// アップロード済み件数
+	    	if(files.length + uploaded_length > MAX_FILE_LENGTH) {
+	    		sessionStorage.setItem('upload_check', 1);
+	    		msg = '添付ファイルは' + MAX_FILE_LENGTH + '件以下でお願いいたします。'
+	    		imwShowErrorMessage('imui-container',msg);
+				return false;	// uploadしない用のreturn false;
+	    	}
+
+	    	// ファイルサイズチェック
+	    	max_file_size_mb = Math.ceil(MAX_FILE_SIZE/1024/1024*10)/10;
+	    	$.each(files, function(i, file){
+	    		file_size_mb = file.size / 1024 /1024;
+	    		file_nm_size = file.name+'('+Math.ceil(file_size_mb*10)/10+'MB)';
+	    		if(file.size > MAX_FILE_SIZE){
+	    			sessionStorage.setItem('upload_check', 1);
+	    			msg = file_nm_size + '<br/>添付ファイルは' + max_file_size_mb + 'MB以下でお願いいたします。'
+	        		imwShowErrorMessage('imui-container',msg);
+	    			addFlg = false;
+	    			return false;	// each抜ける用のreturn false;
+	    		}
+	    	});
+    	}
+
+    	// アップロード処理開始
+    	if(addFlg) {
+    		if(files[0].name == data.files[0].name) sessionStorage.setItem('upload_check', 0);	// チェックOK
+    		startLoading();
+	   		return true;
+    	}else{
+    		return false;
+    	}
+    }
+    // ファイルアップロード成功時
+    function onP4upd_success(e, data) {
+
+    	var file = data.files[0];
+    	var res = data.result[0];
+
+    	var addFlg = true;
+
+    	//必須チェック用
+    	$('[name="proposalList"]').val("1");
+
+    	// ファイル名をセット
+		$("#filetmpList").children().each(function(i, elem) {
+			if ($(elem).find('.tmpfilename').text() == ""){
+				$(elem).find('.tmpfilename').text(file.name);
+				//$(elem).find('.tmpfilename').attr("onclick", "onClickDownLoad(this)"); //イベント設定
+
+				$(elem).find('input[name="item_tmpFile_name"]').val(file.name); // 元の名前セット
+				$(elem).find('input[name="item_tmpFile_resname"]').val(res.physicalName); // 変換された名前セット
+				addFlg = false;
+			}
+		});
+
+    	if (addFlg){
+        	// テンプレート行をコピーし末尾に追加
+    		var coln = $("#tmpfileup").clone(true);
+    		coln.find('.tmpfilename').text(file.name);
+    		//coln.find('.tmpfilename').attr("onclick", "onClickDownLoad(this)"); //イベント設定
+    		coln.find('input[name="item_tmpFile_name"]').val(file.name); // 元の名前セット
+    		coln.find('input[name="item_tmpFile_resname"]').val(res.physicalName); // 変換された名前セット
+    		coln.show();
+    		coln.appendTo("#filetmpList");
+    	}
+		// no振り直し
+		$("#filetmpList").children().each(function(i, elem) {
+			$(elem).find('.no').text(i + 1);
+		});
+
+		// 全件アップロード後にローディング解除
+		sessionStorage.setItem('upload_num',parseInt(sessionStorage.getItem('upload_num'))+1);
+		if(sessionStorage.getItem('upload_num') == data.originalFiles.length) stopLoading();
+
+    }
+    // アップロード失敗
+    function onP4upd_error() {
+    	stopLoading();
+    }
+
+
+ 	// 詳細画面を開く
+    function onClickDetail(imwSystemMatterId, imwUserDataId, imwPageType) {
+        document.detailForm.imwPageType.value = imwPageType;
+        document.detailForm.imwSystemMatterId.value = imwSystemMatterId;
+        document.detailForm.imwUserDataId.value = imwUserDataId;
+        openPopupWindowDetail(document.detailForm);
+    }
+
+ 	// 申請書種類・事業部によって項目名を変更
+ 	var selectVal = '<IMART type="string" value=$form.item_sheetType />'
+ 	var meisaiTitle;
+ 	var titleNm;
+ 	var conceptNm;
+ 	var contentNm;
+ 	var dateNm;
+ 	var qtyNm;
+
+ 	switch(selectVal) {
+    // 新商品
+ 	case TYPE_APPLY_SINKIKAKU:
+ 		meisaiTitle　= "新商品企画詳細";
+    	titleNm = "タイトル名";
+    	conceptNm = "コンセプト/備考";
+    	contentNm = "商品名";
+    	dateNm = "";
+    	qtyNm = "目標数量";
+        break;
+    // DLC
+    case TYPE_APPLY_DLC:
+    	meisaiTitle　= "ダウンロードコンテンツ詳細";
+    	titleNm = "件名";
+    	conceptNm = "コンセプト/備考";
+    	contentNm　= "ダウンロードコンテンツ名";
+    	dateNm = "配信予定日";
+    	qtyNm = "";
+        break;
+    // 販促物
+    case TYPE_APPLY_HANSOKU:
+    	meisaiTitle　= "企画/販促物詳細";
+    	titleNm = "企画名/申請販促物";
+    	conceptNm = "内容/備考";
+    	contentNm　= "";
+    	dateNm = "";
+    	qtyNm = "数量";
+        break;
+	}
+
+ 	// 項目マッピング
+ 	var tagNameMap = {
+		 item_division:{'dispName':'事業部','page':1,'meisai':false}
+		,relationApplyList:{'dispName':'関連する新商品企画申請書・申請番号','page':1,'meisai':false}
+		,item_itemNameJap:{'dispName':titleNm,'page':1,'meisai':false}
+		,characterList:{'dispName':'キャラクター','page':2,'meisai':false}
+		,item_genre:{'dispName':'ジャンル','page':3,'meisai':false}
+		,item_content_name:{'dispName':contentNm,'page':3,'meisai':true}
+		,item_area_name:{'dispName':'地域','page':3,'meisai':true}
+		,item_currency:{'dispName':'通貨','page':3,'meisai':true}
+		,item_otherCurrency:{'dispName':'通貨','page':3,'meisai':true}
+		,item_platform:{'dispName':'プラットフォーム','page':3,'meisai':true}
+		,item_otherPlatform:{'dispName':'プラットフォーム','page':3,'meisai':true}
+		,item_sale_date:{'dispName':dateNm,'page':3,'meisai':true}
+		,item_price_type:{'dispName':'価格(税抜)','page':3,'meisai':true}
+		,item_price:{'dispName':'価格(税抜)','page':3,'meisai':true}
+		,item_suryo:{'dispName':qtyNm,'page':3,'meisai':true}
+		,item_dl_flg:{'dispName':'DL版有無','page':3,'meisai':true}
+		,item_dlPrice:{'dispName':'DL版価格(税抜)','page':3,'meisai':true}
+		,item_period:{'dispName':'実施期間','page':3,'meisai':true}
+		,item_event_name:{'dispName':'イベント名または実施場所','page':3,'meisai':true}
+		,item_apply_note:{'dispName':conceptNm,'page':3,'meisai':false}
+		,proposalList:{'dispName':'企画書添付','page':4,'meisai':false}
+		,item_plan_auth_data:{'dispName':'企画承認者','page':5,'meisai':false}
+	};
+
+ 	// マップの更新
+ 	function chengeTagNameMap(jigyobuCd){
+ 		switch(jigyobuCd) {
+ 	    // CS
+ 	 	case CD_DIV_CS:
+ 	 		tagNameMap['item_sale_date']['dispName'] = "発売予定日";
+ 	        break;
+ 	    // NE系
+ 	    case CD_DIV_NE:
+ 	  	case CD_DIV_BXD:
+ 	  	case CD_DIV_BNO:
+ 	    	tagNameMap['item_sale_date']['dispName'] = "配信予定日";
+ 	        break;
+ 	    // その他
+ 	    default:
+ 	   		tagNameMap['item_sale_date']['dispName'] = "発売予定日";
+ 	        break;
+ 		}
+ 	}
+
+ 	// 必須チェック
+    function requiredCheck(){
+    	var msg = "";
+    	var page= "";	//読み込み中ページ
+    	var meisaiNo = 0;	//読み込み中明細行No
+		var iniTag = "";	//明細の初期項目
+
+    	// 必須項目チェック
+    	for(var i=0; i<$('.required').length; i++){
+    		var val = $('.required')[i].value || "";
+
+    		// 読み込み中の明細行確認
+    		if(tagNameMap[$('.required')[i].name]['meisai']){
+				if(iniTag == "") iniTag = tagNameMap[$('.required')[i].name];
+				if(iniTag == tagNameMap[$('.required')[i].name]) meisaiNo ++;
+				// console.log(meisaiNo + " :" + tagNameMap[$('.required')[i].name]['dispName']);
+    		}
+
+    		// 明細が１行も表示されていない場合のメッセージ
+    		if(meisaiNo == 0 && $('.required')[i].name == 'item_apply_note') {
+    			page = tagNameMap[$('.required')[i].name]['page'];
+    			msg += "【" + $("'[href=" + page + "]'").text() + "】 ";
+    			msg += meisaiTitle + "を設定してください。<br />";
+    		}
+
+    		// 必須未入力抽出
+    		if(val == "") {
+    			page = tagNameMap[$('.required')[i].name]['page'];
+    			msg += "【" + $("'[href=" + page + "]'").text() + "】 ";
+    			if(tagNameMap[$('.required')[i].name]['meisai'] && selectVal != TYPE_APPLY_HANSOKU){
+    				// 明細の場合、何行目が未入力か出力してやる
+    				msg += meisaiTitle + "(No." + meisaiNo + ") " + tagNameMap[$('.required')[i].name]['dispName'] + "を設定してください。<br />";
+    			}else{
+    				msg += tagNameMap[$('.required')[i].name]['dispName'] + "を設定してください。<br />";
+    			}
+    		}
+    	}
+
+    	// ボタン制御
+		if(msg == "") {
+			$("#openPage0").prop("disabled", false);
+			$("#openPage3").prop("disabled", false);
+    	} else {
+    		$("#openPage0").prop("disabled", true);
+    		$("#openPage3").prop("disabled", true);
+    	}
+
+    	// メッセージ出力
+    	$('p.validation_msg').html(msg);
+    }
+
+  </script>
+</imart>
+
+<!-- ファイルアップロード用 -->
+<imart type="imuiFileUpload"
+		storeTo=$form.fileuploadPath
+		autoUpload="true"
+		uniqueFileName="true"
+		hidden="true"
+		id="imui-upload"
+		onBeforeSend="onP4upd_preupload"
+		onSuccess   ="onP4upd_success"
+		onError     ="onP4upd_error"
+/>
+
+<!-- ファイルダウンロード用 -->
+<IMART type="form" action="downloadfile" id="downloadForm">
+   <IMART type="hidden" fileName=""
+       filePath="" sinsei_no=""></IMART>
+</IMART>
+
+
+<!-- 詳細画面を開く用 -->
+<form id="detailForm" name="detailForm" method="POST" target="IMW_DETAIL" action="im_workflow/common/switch/switch_content_detail_cactus">
+<IMART type="hidden" imwPageType=""
+       imwSystemMatterId="" imwUserDataId="" imwCallOriginalPagePath="cactus/contents/screen/fin"></IMART>
+</form>
+
+
+<!-- navi-bar -->
+<IMART type="include" page="cactus/contents/screen/navibar"></IMART>
+
+<imart type="workflowOpenPage"
+    name="workflowOpenPageForm"
+    id="workflowOpenPageForm"
+    method="POST"
+    target="_top"
+    imwUserDataId=$data.imwUserDataId
+    imwSystemMatterId=$data.imwSystemMatterId
+    imwAuthUserCode=$data.imwAuthUserCode
+    imwApplyBaseDate=$data.imwApplyBaseDate
+    imwNodeId=$data.imwNodeId
+    imwFlowId=$data.imwFlowId
+    imwCallOriginalParams=$data.imwCallOriginalParams
+    imwNextScriptPath=$data.imwCallOriginalPagePath>
+
+
+
+
+
+
+<!-- step-bar -->
+<div class="form-group">
+<small>
+<p>※ブラウザの戻るボタンは使用しないでください</p>
+<p>※任意項目以外は全て必須です</p>
+<p>※ <img src="cactus_csjs/images/bikkuri.png"> の箇所は申請書に記載されます</p>
+</small>
+</div>
+
+	<div id="step_bar_box" style="padding-top:15px;">
+		<ol class="step_bar">
+			<li id="pan1" class="current"><a href="1" class="pan" hidden>商品名入力</a><div>商品名入力</div></li>
+            <li id="pan2"><a href="2" class="pan">キャラクター情報入力</a></li>
+            <li id="pan3"><a href="3" class="pan">申請内容入力</a></li>
+            <li id="pan4"><a href="4" class="pan">資料添付</a></li>
+            <li id="pan5"><a href="5" class="pan">承認者設定</a></li>
+			<li>申請完了</li>
+		</ol>
+	</div>
+
+    <!-- ノード制御用カスタムロパティ -->
+	<input type="hidden" name="imwCustomParam" id="imwCustomParam" >
+
+
+	<!-- ヘッダ入力------------------------------------------------------------------------------------------------>
+	<div id="step1">
+    	<IMART type="include" page="cactus/contents/screen/page1" data=$data form=$form></IMART>
+    </div>
+	<div id="step2" style="display:none">
+    	<IMART type="include" page="cactus/contents/screen/page2" form=$form></IMART>
+    </div>
+	<div id="step3" style="display:none">
+    	<IMART type="include" page="cactus/contents/screen/page3_1" form=$form></IMART>
+    	<IMART type="include" page="cactus/contents/screen/page3_2" form=$form></IMART>
+    	<IMART type="include" page="cactus/contents/screen/page3_3" form=$form></IMART>
+    	<IMART type="include" page="cactus/contents/screen/page3" form=$form></IMART>
+    </div>
+	<div id="step4" style="display:none">
+    	<IMART type="include" page="cactus/contents/screen/page4" form=$form></IMART>
+    </div>
+	<div id="step5" style="display:none">
+    	<IMART type="include" page="cactus/contents/screen/page5" form=$form></IMART>
+    </div>
+
+	<!-- 子画面 -->
+	<div id="stepx">
+    	<IMART type="include" page="cactus/contents/screen/searchUser"></IMART>
+    	<IMART type="include" page="cactus/contents/screen/searchUserMulti"></IMART>
+    	<IMART type="include" page="cactus/contents/screen/searchApply"></IMART>
+    	<IMART type="include" page="cactus/contents/screen/searchCharacter"></IMART>
+    	<IMART type="include" page="cactus/contents/screen/selectAreaRadio"></IMART>
+    	<IMART type="include" page="cactus/contents/screen/selectAreaCheck"></IMART>
+    </div>
+	<!-- @end 子画面 -->
+
+
+	<!-- サーバからの取得データ -->
+	<div id="form4JSON">
+		<imart type="hidden"
+			list_m_platform=$form.list_m_platformJSON
+			item_characterlistDataJSON=$form.item_characterlistDataJSON
+			item_flowDataJSON=$form.item_flowDataJSON
+			item_mailUserDataJSON=$form.item_mailUserDataJSON
+		/>
+	</div>
+
+
+	<div class="form-group">
+		<div class="button" id="submit_buttons">
+			<button type="button" class="btn btn-page panPre" value='0' disabled><< 前へ</button>
+			<!-- <button type="button" escapejs="false" name="openPage1" escapexml="true" id="openPage1" class="btn btn-hozon">一時保存</button> -->
+			<button type="button" escapejs="false" escapexml="true" id="btn_tmpsave" class="btn btn-hozon">一時保存</button>
+
+			<button type="button" class="btn btn-page panNext" value='2'>次へ >></button>
+	        <imart type="decision" case="0" value=$data.imwPageType>
+				<button type="button" escapejs="false" name="openPage0" escapexml="true" style="display:none" id="openPage0" class="btn btn-page">最終確認</button>
+      		</imart>
+	        <imart type="decision" case="1" value=$data.imwPageType>
+				<button type="button" escapejs="false" name="openPage0" escapexml="true" style="display:none" id="openPage0" class="btn btn-page">最終確認</button>
+      		</imart>
+	        <imart type="decision" case="3" value=$data.imwPageType>
+				<button type="button" escapejs="false" name="openPage3" escapexml="true" style="display:none" id="openPage3" class="btn btn-page">再申請確認</button>
+      		</imart>
+		</div>
+	</div>
+</imart>

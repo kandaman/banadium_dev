@@ -1,0 +1,16 @@
+create table public.lo_m_shonin_keiro (
+  keiro_id character varying(10) not null
+  , keiro_nm character varying(255) not null
+  , wf_shubetsu character(1) not null
+  , ichiji_shonin character varying(255)
+  , niji_shonin character varying(255)
+  , sanji_shonin character varying(255)
+  , yoji_shonin character varying(255)
+  , goji_shonin character varying(255)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (keiro_id)
+);

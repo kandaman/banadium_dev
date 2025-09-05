@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routing-jssp-config 
+  xmlns="http://www.intra-mart.jp/router/routing-jssp-config" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.intra-mart.jp/router/routing-jssp-config routing-jssp-config.xsd ">
+
+   <authz-default uri="service://lo/user" action="execute" />
+    
+   <file-mapping path="/lo/contents/screen/kikaku/planning_list_new" page="lo/contents/screen/kikaku/planning_list_new" />
+   <file-mapping path="/lo/contents/screen/common/sidemenu" page="lo/contents/screen/common/sidemenu" />
+   
+   
+   <file-mapping path="/im_workflow/common/proc/lo/apply/apply" page="im_workflow/common/proc/lo/apply/apply" />
+   <file-mapping path="/im_workflow/common/proc/lo/apply/apply_kawari" page="im_workflow/common/proc/lo/apply/apply_kawari" />
+   <file-mapping path="/im_workflow/common/proc/lo/apply/apply_account" page="im_workflow/common/proc/lo/apply/apply_account" />
+   <file-mapping path="/im_workflow/common/proc/lo/approve/approve" page="im_workflow/common/proc/lo/approve/approve" />
+   <file-mapping path="/im_workflow/common/proc/lo/approve/approve_kawari" page="im_workflow/common/proc/lo/approve/approve_kawari" />
+   <file-mapping path="/im_workflow/common/proc/lo/approve/approve_account" page="im_workflow/common/proc/lo/approve/approve_account" />
+   <file-mapping path="/im_workflow/common/proc/lo/temporary_save/temporary_save" page="im_workflow/common/proc/lo/temporary_save/temporary_save" />
+   <file-mapping path="/im_workflow/common/proc/lo/reapply/reapply" page="im_workflow/common/proc/lo/reapply/reapply" />
+   <file-mapping path="/im_workflow/common/proc/lo/reapply/reapply_kawari" page="im_workflow/common/proc/lo/reapply/reapply_kawari" />
+   <file-mapping path="/im_workflow/common/proc/lo/reapply/reapply_account" page="im_workflow/common/proc/lo/reapply/reapply_account" />
+   <file-mapping path="/im_workflow/common/proc/lo/confirm/confirm" page="im_workflow/common/proc/lo/confirm/confirm" />
+   <file-mapping path="/im_workflow/common/proc/lo/commentForm" page="im_workflow/common/proc/lo/commentForm" />
+   <file-mapping path="/im_workflow/common/proc/lo/commentForm_kawari" page="im_workflow/common/proc/lo/commentForm_kawari" />
+   <file-mapping path="/im_workflow/common/proc/lo/commentForm_account" page="im_workflow/common/proc/lo/commentForm_account" />
+   
+   
+   <file-mapping path="/lo/contents/screen/tmp_file_dl" page="lo/contents/screen/tmp_file_dl" >
+   	<authz mapper="welcome-all" />
+   </file-mapping>
+   <file-mapping path="/lo/contents/screen/read_text" page="lo/contents/screen/read_text" >
+   	<authz mapper="welcome-all" />
+   </file-mapping>
+   
+   
+   <folder-mapping path-prefix="/lo" folder="lo"/>
+</routing-jssp-config>

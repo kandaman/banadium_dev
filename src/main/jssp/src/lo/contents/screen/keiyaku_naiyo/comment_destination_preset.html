@@ -1,0 +1,853 @@
+<imart type="head">
+	<meta charset="utf-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" href="lo_csjs/cform.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="im_workflow_csjs/commentForm.css">
+
+	<script type="text/javascript" src="lo_csjs/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/popper.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/ja.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/selectize.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/custom.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator_materialize.css">
+	<script type="text/javascript" src="lo_csjs/tabulator.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="lo_csjs/form-change-trigger.js"></script>
+	
+	
+  	<!-- workflowOpenPageCsjs -->
+	<!-- imart type="workflowOpenPageCsjs" / -->
+  	<!-- workflow/csjs/greybox.jsのshowGreyBoxを変更 -->
+  	<script type="text/javascript" src="workflow/csjs/greybox_lo.js"></script>
+	
+    <imart type="imACMSearch" librariesVersion="iap-8.0.11" noscript="false" />
+    <imart type="imACMSearchDialog" librariesVersion="iap-8.0.11" noscript="false" />
+
+	<imart type="jsspRpc" name="jsspRpcKeiyakuDetail" page="lo/contents/screen/keiyaku_naiyo/comment_destination_preset"></imart>
+
+	<title><imart type="message" id="LO.TITLE.COMMENT_DESTINATION_PRESET" escapeXml="true" /></title>
+</imart>
+
+<!-- https://www.it-swarm.jp.net/ja/jquery/jqueryui%E3%83%A2%E3%83%BC%E3%83%80%E3%83%AB%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%81%AB%E9%96%89%E3%81%98%E3%82%8B%E3%83%9C%E3%82%BF%E3%83%B3%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%AA%E3%81%84%EF%BC%88x%EF%BC%89/940825731/ -->
+<style>
+.ui-dialog-titlebar-close {
+  background: url("http://code.jquery.com/ui/1.10.3/themes/smoothness/images/ui-icons_888888_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+  border: medium none;
+}
+.ui-dialog-titlebar-close:hover {
+  background: url("http://code.jquery.com/ui/1.10.3/themes/smoothness/images/ui-icons_222222_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+}
+</style>
+    
+<style>
+	.full_width {
+		 width: 100% !important;
+	}
+	.padding-top {
+		padding-top: 0.7rem !important;
+	}
+	.line-height {
+		line-height: 100px;
+	}
+	.margin-all {
+		margin: 28px !important;
+	}
+	
+	
+</style>
+<style>
+
+	.tabulator .tabulator-footer {
+		text-align: center;
+	}
+
+	.tabulator-headers {
+			background: #e4762f;
+	}
+	.tabulator-headers .tabulator-col .tabulator-col-content {
+		background: #e4762f;
+		color: #ffff;
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	.tabulator-tableHolder .tabulator-table .tabulator-row-odd .tabulator-cell {
+		background: transparent;
+		border: none !important;
+	}
+
+	.tabulator-tableHolder .tabulator-table .tabulator-row-even .tabulator-cell {
+		background: #ffeedd;
+		border: none !important;
+	}
+</style>
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	
+	
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+		
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none"> <i
+					class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+				<div class="page-information row my-4">
+					<div class="col-12 col-lg-auto">
+						<h1><imart type="message" id="LO.TITLE.COMMENT_DESTINATION_PRESET" escapeXml="true" /></h1>
+					</div>
+				</div>
+				<article class="col-12">
+					<div class="row mb-2">
+						<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">設定方法</div>
+						<div class="col-10 left-justified">
+							<div class="row">
+								<div class="col-2">
+									<div class="inputRadio pt-2 pl-2">
+										<imart type="imuiRadio" class="option-input" name="proc_type" value="1" label="新規" checked="true" />
+										<imart type="imuiRadio" class="option-input" name="proc_type" value="2" label="更新" />
+									</div>
+								</div>
+								<div class="col-10" id="preset_list_div" style="display: none;">
+									<div class="row">
+										<div class="col-4 t-header bg_ltorange brdr_dkgray text-center">更新プリセット選択</div>
+										<div class="col-8 left-justified">
+											<span class="input-group" aria-label="">
+												<imart type="imuiSelect" id="preset_list" name="preset_list" class="custom-select" />
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-2">
+						<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">プリセット名</div>
+						<div class="col-10 left-justified">
+							<div class="row">
+								<div class="col-5">
+									<imart type="imuiTextbox" id="preset_nm" name="preset_nm" maxlength="100" class="form-control" />
+									<imart type="imuiTextbox" id="preset_id" name="preset_id" hidden="true" />
+									<imart type="imuiTextbox" id="koushin_bi" name="koushin_bi" hidden="true" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<h2>TO</h2>
+							<div class="form-group col-12 row ml-2">
+								<div class="route-item">
+									<div class="route-item-control">
+									</div>
+									<h4>案件にて指定</h4>
+									<ul id="dest_to_matter">
+										<imart type="repeat" list=$matter_items item="item" index="idx">
+											<li>
+												<imart type="imuiCheckbox" name="itemCd" value=item.item_cd checked=item.checked />
+												<imart type="string" value=item.item_nm />
+											</li>
+										</imart>
+									</ul>
+								</div>
+								<div class="route-item">
+									<div class="route-item-control">
+										<a href="javascript:openSearchDialog('dest_to_public_group', 'public_group')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+										<a href="javascript:delItem('dest_to_public_group');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+									</div>
+									<h4>パブリックグループで指定</h4>
+									<ul id="dest_to_public_group">
+										<imart type="repeat" list=$preset.dest_to.public_group_items item="item" index="idx">
+											<li>
+												<imart type="imuiCheckbox" name="itemCd" value=item.item_cd />
+												<imart type="string" value=item.item_nm />
+											</li>
+										</imart>
+									</ul>
+								</div>
+								<div class="route-item">
+									<div class="route-item-control">
+										<a href="javascript:openSearchDialog('dest_to_user', 'user')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+										<a href="javascript:delItem('dest_to_user');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+									</div>
+									<h4>個人を指定</h4>
+									<ul id="dest_to_user">
+										<imart type="repeat" list=$preset.dest_to.user_items item="item" index="idx">
+											<li>
+												<imart type="imuiCheckbox" name="itemCd" value=item.item_cd />
+												<imart type="string" value=item.item_nm />
+											</li>
+										</imart>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+					<div class="row">
+						<div class="col-12">
+							<h2>CC</h2>
+							<div class="form-group col-12 row ml-2">
+								<div class="route-item">
+									<div class="route-item-control">
+									</div>
+									<h4>案件にて指定</h4>
+									<ul id="dest_cc_matter">
+										<imart type="repeat" list=$matter_items item="item" index="idx">
+											<li>
+												<imart type="imuiCheckbox" name="itemCd" value=item.item_cd checked=item.checked />
+												<imart type="string" value=item.item_nm />
+											</li>
+										</imart>
+									</ul>
+								</div>
+								<div class="route-item">
+									<div class="route-item-control">
+										<a href="javascript:openSearchDialog('dest_cc_public_group', 'public_group')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+										<a href="javascript:delItem('dest_cc_public_group');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+									</div>
+									<h4>パブリックグループで指定</h4>
+									<ul id="dest_cc_public_group">
+										<imart type="repeat" list=$preset.dest_cc.public_group_items item="item" index="idx">
+											<li>
+												<imart type="imuiCheckbox" name="itemCd" value=item.item_cd />
+												<imart type="string" value=item.item_nm />
+											</li>
+										</imart>
+									</ul>
+								</div>
+								<div class="route-item">
+									<div class="route-item-control">
+										<a href="javascript:openSearchDialog('dest_cc_user', 'user')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+										<a href="javascript:delItem('dest_cc_user');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+									</div>
+									<h4>個人を指定</h4>
+									<ul id="dest_cc_user">
+										<imart type="repeat" list=$preset.dest_cc.user_items item="item" index="idx">
+											<li>
+												<imart type="imuiCheckbox" name="itemCd" value=item.item_cd />
+												<imart type="string" value=item.item_nm />
+											</li>
+										</imart>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12">
+							<h2>ライセンシー毎の設定</h2>
+							<div id="licensee_table"></div>
+						</div>
+					</div>
+					<div class="row border-bottom mt-2">
+						<div class="col-12 text-right mb-2 kyodaku-add-hide">
+							<button type="button" id="licensee_row_add_btn" class="bg_orange txt_dark mb-2"><i class="fas fa-check-circle"></i><span>追加</span></button>
+							<button type="button" id="licensee_row_del_btn" class="brdr_orange txt_orange mb-2"><i class="fas fa-trash-alt"></i><span>削除</span></button>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-12">
+							<div class="col-12 mt-2 mb-2">
+								<div class="form-group row mb-2">
+									<div class="flex_btn">
+										<button type="button" id="delete_btn" class="brdr_orange txt_orange mb-2">
+											<i class="fas fa-trash-alt"></i><span>削除</span>
+										</button>
+										<button type="button" id="save_btn" class="bg_orange txt_dark mb-2">
+											<i class="fas fa-check-circle fa-2x"></i><span>登録</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	
+    function itemTagWithCheckBox(itemCd, itemNm){
+    	return	'<li><input type="checkbox" name="itemCd" value="'+itemCd+'"/>'+itemNm+'</li>';	
+    }
+
+    var targetType = null;
+	var targetId = null;
+	var typeDefs = {
+	    "user" : {
+	    	itemCd : "user_cd"
+	    	, itemNm : "user_name"
+		    , target : "jp.co.intra_mart.master.search.user"
+	    	, searchTabId : "jp.co.intra_mart.master.app.search.tabs.user.tree_public_group"
+	    	, searchTitle : "ユーザ検索"
+	    }
+	    , "public_group" : {
+	    	itemCd : "public_group_cd"
+	    	, itemNm : "public_group_name"
+	    	, target : "jp.co.intra_mart.master.search.public_group"
+	    	, searchTabId : "jp.co.intra_mart.master.app.search.tabs.public_group.tree"
+	    	, searchTitle : "パブリックグループ検索"
+	    }
+	}
+	/**
+     * ユーザ追加(複数)(callback関数)
+     */
+	function setItemList(list){
+        var objId = '#'+targetId;
+        var typeDef = typeDefs[targetType];
+    	//既存アイテム取得
+    	var items=[];
+       	$(objId).find('input:checkbox[name="itemCd"]').each(function() {
+       		items.push($(this).val());
+    	});
+       	// 一件もなければ指定なしを消す
+    	if(items.length == 0 && list.length > 0){
+    		$(objId).empty();
+    	}
+       	// 選択したユーザを追加
+        for (var i = 0; i < list.length; i++) {
+            var itemNm = "";
+            var itemCd = "";
+            if (list[i].data) {
+                itemNm = list[i].data[typeDef.itemNm];
+                itemCd = list[i].data[typeDef.itemCd];
+            } else {
+                itemNm = list[i].itemNm;
+                itemCd = list[i].itemCd;
+            }
+            if (items.indexOf(itemCd) == -1){ //まだ設定されていいないアイテムのみ追加
+                $(objId).append(itemTagWithCheckBox(itemCd, itemNm));
+            }
+        }
+    }
+
+
+    function getImACMSearchParameter() {
+
+        var typeDef = typeDefs[targetType];
+    	// https://www.intra-mart.jp/apidoc/iap/apilist-jssp-tagdoc/doc/imart_tag_im_master_api/imACMSearchDialog/index.html
+    	// https://www.intra-mart.jp/document/library/iap/public/im_master/im_master_search_specification/texts/im_common_master_search_screen/how_to_call_search_screen.html
+        var parameter = {
+			target : typeDef.target, 
+            tabs : [
+                {
+                    id    : typeDef.searchTabId,
+                    title : typeDef.searchTitle
+                },
+            ],
+            prop : {},
+            callback_function           : 'setItemList',
+            basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+            wnd_title                   : typeDef.searchTitle,
+            message                     : typeDef.searchTitle,
+            wnd_close                   : true,
+            type                        : 'multiple',
+            deleted_data                : false,
+            target_locale               : 'ja',
+            additional_disp             : true,
+            additional_user_search_name : true,
+            additional_dept             : true
+        };
+    	
+    	parameter.prop[typeDef.searchTabId] = [typeDef.itemCd, typeDef.itemNm];
+    	
+    	if (typeDef.criteria) {
+        	parameter.criteria = typeDef.criteria;
+    	}
+		// parameter.criteria = {"company" : [ { "company_cd" : "3001" } , { "company_cd" :  "4007" }]};
+        return parameter;
+        
+    }
+
+    /**
+     * open関数
+     */
+    function openSearchDialog(id, type) {
+    	targetId = id;
+    	targetType = type;
+    	var parameter = getImACMSearchParameter();
+        // 検索画面を開く
+        imACMSearch.open(parameter);
+        //imACMSearchDialog.open(parameter);
+    }
+
+    // ユーザ削除
+    function delItem(delid){
+        var objId = '#'+delid;
+    	
+    	// 削除対象ユーザ取得
+       	var delobj = $(objId).find('input:checkbox[name="itemCd"]:checked');
+       	
+       	// 一件も選択されてない
+    	if(delobj.length == 0){
+    		imuiAlert('削除対象が選択されていません。', '警告');
+    		return false;
+    	}
+    	
+       	// 削除
+    	imuiConfirm('選択対象を削除します。よろしいですか？', '確認', function() {
+    		delobj.each(function() {
+    	   		$(this).parent().remove();
+    		});
+    	   	//削除の結果一件もなければ指定なし追加
+    	   	if ($(objId).find('input:checkbox[name="itemCd"]').length == 0){
+//    	        $(objId).append(userTag("", "指定なし"));
+    	   	}
+    	});
+    }
+
+    $(function() {
+    	
+    	var companyList = <imart type="string" value=$company_list />;
+    	
+    	var companyOptionListLookup = function (cell) {
+	        console.log("companyOptionListLookup");
+	        
+			var data = cell.getData();
+			var list = [];
+        	for (var key in companyList) {
+        		var company = companyList[key];
+        		list.push({
+        			label : company.kaisha_nm
+        			, value : company.kaisha_id
+        		});
+        	}
+	        
+    		return {values: list};
+    	};
+
+    	var companyFormatter = function(cell, formatterParams, onRendered) {
+	        console.log("companyFormatter");
+    		
+			var companyCd = cell.getValue();
+        	for (var key in companyList) {
+        		var company = companyList[key];
+        		if (company.kaisha_id == companyCd) {
+        			return company.kaisha_nm;
+        		}
+        	}
+        	return "";
+    	};
+
+    	var companyCellEdited = function(cell) {
+	        console.log("companyCellEdited");
+    	    //cell - cell component
+    	    
+	        if (cell.getValue() != cell.getOldValue()) {
+	        	cell.getData().user_cd = '';
+	        }
+    	};
+    	
+    	var retrieveUserList = function(companyCd) {
+    		if (companyCd) {
+    			showIndicator();
+    	        var result = jsspRpcKeiyakuDetail.retrieveUserList({kaisha_id : companyCd});
+    			hideIndicator();
+	        	return result;
+    		}
+	        return [];
+    	};
+    	
+    	var userOptionListLookup = function(cell) {
+	        console.log("userOptionListLookup");
+	        
+			var data = cell.getData();
+			var list = [];
+	        var userList = retrieveUserList(data.company_cd);
+        	for (var key in userList) {
+        		var user = userList[key];
+        		list.push({
+        			label : user.user_nm
+        			, value : user.user_cd
+        		});
+        	}
+	        
+    		return {values: list};
+    	};
+    	
+    	var userFormatter = function(cell, formatterParams, onRendered) {
+	        console.log("userFormatter");
+    		
+			var data = cell.getData();
+			var userCd = cell.getValue();
+	        var userList = retrieveUserList(data.company_cd);
+        	for (var key in userList) {
+        		var user = userList[key];
+        		if (user.user_cd == userCd) {
+        			return user.user_nm;
+        		}
+        	}
+        	return "";
+    	};
+    	
+		var columns = [
+            {formatter:"rowSelection", titleFormatter:"rowSelection", width: 50, headerHozAlign:"center", hozAlign:"center", headerSort:false, cellClick:function(e, cell){
+                cell.getRow().toggleSelect();
+             }},
+			{title:"ライセンシー", field:"company_cd", visible: true, editor:"select", editorParams : companyOptionListLookup, formatter : companyFormatter, cellEdited : companyCellEdited},
+			{title:"TO/CC", field:"recipient_type", visible: true, editor:"select", editorParams:{values:{"TO":"TO", "CC":"CC"}}},
+			{title:"ユーザ", field:"user_cd", visible: true, editor : "select", editorParams : userOptionListLookup, formatter : userFormatter},
+		];
+        var pagination = {
+	       "page_size":"Page Size", //label for the page size select element
+           "page_title":"Show Page",//tooltip text for the numeric page button, appears in front of the page number (eg. "Show Page" will result in a tool tip of "Show Page 1" on the page 1 button)
+           "first":"<<", //text for the first page button
+           "first_title":"First Page", //tooltip text for the first page button
+           "last":">>",
+           "last_title":"Last Page",
+           "prev":"<",
+           "prev_title":"Prev Page",
+           "next":">",
+           "next_title":"Next Page",
+           "all":"All",
+       };
+       licenseeTable = new Tabulator("#licensee_table", {
+            reactiveData:true, //enable reactive data
+			index: "id",
+			columns: columns,
+			layout:"fitColumns",
+			pagination: "local",
+			paginationSize: 50,
+			scrollHorizontal: function(left) {
+		        //left - the current horizontal scroll position
+		        console.group("scrollHorizontal");
+		        console.log(left);
+		        $("#scrollbar").scrollLeft(left);
+		        console.groupEnd("scrollHorizontal");
+		    },
+		    tableBuilding: function(){
+		        console.log("tableBuilding");
+		    },
+		    tableBuilt: function(){
+		        console.log("tableBuilt");
+		    },
+		    renderStarted: function() {
+		        console.log("renderStarted");
+		    },
+		    renderComplete: function() {
+		        console.log("renderComplete");
+		    },
+		    pageLoaded: function(pageno) {
+		    	//pageno - the number of the loaded page
+		        console.group("pageLoaded");
+		        console.log(pageno);
+		        console.groupEnd("pageLoaded");
+		    },
+		    dataLoading: function(data){
+		        //data - the data loading into the table
+		        console.group("dataLoading");
+		        console.log(data);
+		        console.groupEnd("dataLoading");
+		    },
+		    dataLoaded: function(data){
+		        //data - all data loaded into the table
+		        console.group("dataLoaded");
+		        console.log(data);
+		        console.groupEnd("dataLoaded");
+		    },
+		    dataChanged: function(data){
+		        //data - the updated table data
+		        console.group("dataChanged");
+		        console.log(data);
+		        console.groupEnd("dataChanged");
+		    },
+		    rowAdded: function(row){
+		        //row - row component
+		        console.group("rowAdded");
+		        console.log(row);
+		        console.groupEnd("rowAdded");
+		    },
+		    rowUpdated: function(row){
+		        //row - row component
+		        console.group("rowUpdated");
+		        console.log(row);
+		        console.groupEnd("rowUpdated");
+		    },
+		    rowDeleted: function(row){
+		        //row - row component
+		        console.group("rowDeleted");
+		        console.log(row);
+		        console.groupEnd("rowDeleted");
+		    },
+		    rowMoved: function(row){
+		        //row - row component
+		        console.group("rowMoved");
+		        console.log(row);
+		        console.groupEnd("rowMoved");
+			},
+		    rowResized: function(row){
+		        //row - row component of the resized row
+		        console.group("rowResized");
+		        console.log(row);
+		        console.groupEnd("rowResized");
+			},
+			columnMoved: function(column, columns){
+			    //column - column component of the moved column
+			    //columns- array of columns in new order
+		        console.group("columnMoved");
+		        console.log(column);
+		        console.log(columns);
+		        console.groupEnd("columnMoved");
+			},
+			columnResized: function(column){
+			    //column - column component of the resized column
+		        console.group("columnResized");
+		        console.log(column);
+		        console.groupEnd("columnResized");
+			},
+			columnVisibilityChanged: function(column, visible){
+			    //column - column component
+			    //visible - is column visible (true = visible, false = hidden)
+		        console.group("columnVisibilityChanged");
+		        console.log(column);
+		        console.log(visible);
+		        console.groupEnd("columnVisibilityChanged");
+			},
+			columnTitleChanged: function(column){
+			    //column - column component
+		        console.group("columnTitleChanged");
+		        console.log(column);
+		        console.groupEnd("columnTitleChanged");
+		    },
+		    langs:{
+		        "ja-jp":{
+		        	pagination: pagination
+		        }
+			}
+		});
+		licenseeTable.setLocale("ja-jp");
+       
+		$("#licensee_row_add_btn").on("click", function(){
+        	licenseeTable.addRow({company_cd : "", recipient_type : "TO", user_cd : ""});
+		});
+		$("#licensee_row_del_btn").on("click", function(){
+			var rows = licenseeTable.getRows('selected');
+			for (var key in rows) {
+				var row = rows[key];
+				row.delete();
+			}
+		});
+       
+		var destKeys = ["dest_to", "dest_cc"];
+		$("#save_btn").on("click", function(){
+
+			var preset = {
+				preset_nm : $("#preset_nm").val()
+				, preset_id : $("#preset_id").val()
+				, koushin_bi : $("#koushin_bi").val()
+			};
+
+			for (var key in destKeys) {
+				var destKey = destKeys[key];
+				var matterItems = [];
+				$("#" + destKey + "_matter").find('input[name="itemCd"]').each(function() {
+					var $this = $(this);
+					if ($this.prop('checked')) {
+						matterItems.push({item_cd : $this.val()});
+					}
+				});
+				var publicGroupItems = [];
+				$("#" + destKey + "_public_group").find('input[name="itemCd"]').each(function() {
+					var $this = $(this);
+					publicGroupItems.push({item_cd : $this.val()});
+				});
+				var userItems = [];
+				$("#" + destKey + "_user").find('input[name="itemCd"]').each(function() {
+					var $this = $(this);
+					userItems.push({item_cd : $this.val()});
+				});
+				preset[destKey] = {
+					matter_items : matterItems
+					, public_group_items : publicGroupItems
+					, user_items : userItems
+				};
+			}
+			preset.licensee_items = licenseeTable.getData();
+			var param = {preset : preset};
+			showIndicator();
+	        var result = jsspRpcKeiyakuDetail.updatePreset(param);
+			hideIndicator();
+	        alert(result.message);
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+	        location.href = "lo/contents/screen/keiyaku_naiyo/comment_destination_preset";
+		});
+		$("#delete_btn").on("click", function(){
+			var preset = {
+				preset_id : $("#preset_id").val()
+			};
+			var param = {preset : preset};
+			showIndicator();
+	        var result = jsspRpcKeiyakuDetail.deletePreset(param);
+			hideIndicator();
+	        alert(result.message);
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+	        location.href = "lo/contents/screen/keiyaku_naiyo/comment_destination_preset";
+		});
+		
+		
+		$("#preset_list").on("change", function(){
+			var $this = $(this);
+			var presetId = $this.val();
+			initializer();
+			if (!presetId) {
+				return;
+			}
+			showIndicator();
+	        var result = jsspRpcKeiyakuDetail.retrievePreset({preset_id : presetId});
+			hideIndicator();
+	        var preset = result.preset;
+	        /*
+	    	var preset = {
+	    		    preset_id : ""
+	    		    , preset_nm : ""
+	    		    , koushin_bi : ""
+	    			, dest_to : {
+	    				matter_items : []
+	    				, public_group_items : []
+	    				, user_items : []
+	    			}
+	    			, dest_cc : {
+	    				matter_items : []
+	    				, public_group_items : []
+	    				, user_items : []
+	    			}
+	    			, licensee_items : []
+	    	};
+	        */
+			$("#preset_id").val(preset.preset_id);
+			$("#preset_nm").val(preset.preset_nm);
+			$("#koushin_bi").val(preset.koushin_bi);
+			
+			for (var key in destKeys) {
+				var destKey = destKeys[key];
+				var dest = preset[destKey];
+				
+				$("#" + destKey + "_matter").find('input[name="itemCd"]').each(function() {
+					var $this = $(this);
+					var hitMatterItems = dest.matter_items.filter(function(element, index, array){
+						return element.itemCd == $this.val();
+					});
+					if (hitMatterItems.length > 0) {
+						$this.prop('checked', true);
+					}
+				});
+				
+				targetId = destKey + "_public_group";
+				targetType = "public_group";
+				setItemList(dest.public_group_items);
+				targetId = destKey + "_user";
+				targetType = "user";
+				setItemList(dest.user_items);
+			}
+
+			for (var key in preset.licensee_items) {
+				var licensee_item = preset.licensee_items[key];
+	        	licenseeTable.addRow(licensee_item);
+			}
+			$("#delete_btn").prop("disabled", false);
+		});
+
+		$('input[name="proc_type"]').on("change", function(){
+			var $this = $(this);
+			if ($this.val() == "2") {
+				$("#preset_list_div").show();
+			} else {
+				$("#preset_list_div").hide();
+				initializer();
+			}
+		});
+		var initializer = function() {
+			$("#preset_nm").val("");
+			$("#preset_id").val("");
+			$("#koushin_bi").val("");
+			$("#preset_list").empty();
+			for (var key in destKeys) {
+				var destKey = destKeys[key];
+				$("#" + destKey + "_matter").find('input[name="itemCd"]').each(function() {
+					var $this = $(this);
+					$this.prop('checked', false);
+				});
+				$("#" + destKey + "_public_group").empty();
+				$("#" + destKey + "_user").empty();
+			}
+			var rows = licenseeTable.getRows();
+			for (var key in rows) {
+				var row = rows[key];
+				row.delete();
+			}
+        	$("#preset_list").append($('<option>').val("").text("").prop('selected', true));
+			showIndicator();
+	        var result = jsspRpcKeiyakuDetail.retrievePresetList();
+			hideIndicator();
+	        if (result.countRow > 0) {
+	        	for (var key in result.data) {
+		        	$("#preset_list").append($('<option>').val(result.data[key].preset_id).text(result.data[key].preset_nm).prop('selected', false));
+	        	}
+	        }
+			$("#delete_btn").prop("disabled", true);
+		}
+		initializer();
+    });
+
+    $(window).on('load', function() {
+		document.getElementById('body').style.display = 'block';
+    });
+	</script>
+</body>
+

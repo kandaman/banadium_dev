@@ -1,0 +1,282 @@
+<!-------   新企画申請 -------------------------------------------------------------------->
+<script>
+
+	// 行追加
+	function newItemtbl_addRow(copyId,insertId){
+		var cnt =$('#' + insertId).find('.id_rowno').length;
+		if (cnt > ADD_ROW_MAX){
+			// 処理中断
+			alert(ADD_ROW_MAX + "件を越えて追加できません");
+			return false;
+		}
+		// 行の追加
+		elementCopy(copyId,insertId)
+	}
+	// 行コピー
+	function newItemtbl_copyRow(obj){
+		var insertId = $(obj).closest("table").attr('id');
+		var cnt =$('#' + insertId).find('.id_rowno').length;
+		if (cnt > ADD_ROW_MAX){
+			// 処理中断
+			alert(ADD_ROW_MAX + "件を越えて追加できません");
+			return false;
+		}
+		// 行の追加
+		copyLine(obj)
+	}
+
+	// 行番号振り直し
+	function newItemtbl_rowno(obj) {
+		$(obj).find('.id_rowno').each(function(i, elem) {
+			$(elem).text(i);
+		});
+	}
+
+	// 初期処理
+	function newItemContentInit(formClear) {
+		// 申請書と事業部
+		var sheetType = '<imart type="string" value=$form.item_sheetType />';
+		var division = '<imart type="string" value=$form.item_division />';
+		// 新商品企画以外なら一行ずつ追加して終了
+		if (sheetType != TYPE_APPLY_SINKIKAKU) {
+			$('#btn_newItemAdd_cs').click();
+			$('#btn_newItemAdd_ne').click();
+			$('#btn_newItemAdd_ot').click();
+			return;
+		}
+
+		// 申請情報を取得
+		var dataObj = [];
+		var contentData = formClear ? '':'<imart type="string" value=$form.item_contentDataJSON escapeJs="true" />';
+		if (contentData != "")
+			dataObj = ImJson.parseJSON(contentData); // jsonで配列に戻す
+		// 一行もない場合空行作成
+		if (dataObj.length == 0) {
+			$('#btn_newItemAdd_cs').click();
+			$('#btn_newItemAdd_ne').click();
+			$('#btn_newItemAdd_ot').click();
+			return;
+		}
+		// 事業部により表示項目分岐
+		switch (division) {
+		case CD_DIV_NE: // NE,BXD,BNO
+		case CD_DIV_BXD:
+		case CD_DIV_BNO:
+			// 申請書データを設定
+			setContentDataToLine(dataObj, 'newItemtbody_ne', 'newItemtbl_ne');
+			$('#btn_newItemAdd_cs').click();
+			$('#btn_newItemAdd_ot').click();
+			break;
+		case CD_DIV_CS: //CS
+			// 申請書データを設定
+			setContentDataToLine(dataObj, 'newItemtbody_cs', 'newItemtbl_cs');
+			$('#btn_newItemAdd_ne').click();
+			$('#btn_newItemAdd_ot').click();
+			break;
+		default: //その他
+			setContentDataToLine(dataObj, 'newItemtbody_ot', 'newItemtbl_ot');
+			$('#btn_newItemAdd_ne').click();
+			$('#btn_newItemAdd_cs').click();
+			break;
+		}
+
+		// カンマ区切り
+		$('.id_price').blur();
+		$('.id_dlPrice').blur();
+		$('.id_suryo').blur();
+
+		// スラッシュ区切り
+		$('.imCalendar').blur();
+	}
+
+	$(function() {
+		// TODO カレンダー
+		//$(".imw_Calendar").imuiCalendar();
+		//$("#sale-date").imuiCalendar({"altField":"#sale-date","nextText":"来月","format":"yyyy\/MM\/dd","url":"calendar\/tag\/caljson","calendarId":"JPN_CAL"});
+
+		// イベント設定
+		// 地域変更時
+		$('#newItemContent .id_area_cd')
+				.on(
+						'change',
+						function(event) {
+							var tbody = $(this).closest('tbody');
+
+							if ($(this).val() == CD_KUNI_JPN) {
+								//　日本なら通貨を日本に
+								$(tbody).find('.id_currency').val(CD_TUKA_JPN)
+										.change();
+								//日本以外をdisbleにして固定
+								$(tbody).find('.id_currency').find('option').each(function(i, elem) {
+										if (!$(elem).prop('selected'))$(elem).prop('disabled', true);
+								})
+							} else {
+								//通貨の選択項目disbleを解除
+								$(tbody).find('.id_currency').find('option')
+										.prop('disabled', false);
+								if ($(this).val() != "") {
+								}
+							}
+
+							if ($(this).val() == CD_KUNI_JPN || $(this).val() == "") {
+								// 背景色をデフォルトに
+								$(tbody).css('background-color', '');
+							}else{
+								// 日本以外なら背景色を変える
+								$(tbody).css('background-color', '#fffef0');
+							}
+
+						})
+
+		// 通貨変更時
+		$('#newItemContent .id_currency').on('change', function(event) {
+			var tbody = $(this).closest('tbody');
+
+			// その他ならテキストボックス表示
+			if ($(this).val() == CD_TUKA_OTHER) {
+				$(tbody).find('.id_otherCurrency').show();
+				$(tbody).find('.id_otherCurrency').addClass('required');
+			} else {
+				$(tbody).find('.id_otherCurrency').hide();
+				$(tbody).find('.id_otherCurrency').removeClass('required');
+			}
+
+			// 日本／海外で活性非活性を変更
+			// 日本の場合価格帯を選択
+			/*if ($(this).val()=="1"){
+				$(tbody).find('.id_price_select').hide();
+			}else{
+				$(tbody).find('.id_price_select').show();
+			}*/
+		})
+
+		// プラットフォーム変更時
+		$('#newItemContent .id_platform').on('change', function(event) {
+			var tbody = $(this).closest('tbody');
+			// その他ならテキストボックス表示
+			if ($(this).val() == CD_PLATFROM_OTHER) {
+				$(tbody).find('.id_otherPlatform').show();
+				$(tbody).find('.id_otherPlatform').addClass('required');
+			} else {
+				$(tbody).find('.id_otherPlatform').hide();
+				$(tbody).find('.id_otherPlatform').removeClass('required');
+			}
+		});
+
+		// ダウンロード有無変更時
+		$('#newItemContent .id_dl_flg').on('change', function(event) {
+			var tbody = $(this).closest('tbody');
+			// ありならテキストボックス表示
+			if ($(this).val() == CD_DLC_ON) {
+				$(tbody).find('.id_dlPrice').show();
+				$(tbody).find('.id_dlPrice').addClass('required');
+			} else {
+				$(tbody).find('.id_dlPrice').hide();
+				$(tbody).find('.id_dlPrice').removeClass('required');
+			}
+		});
+
+		// 価格帯変更時
+		$('#newItemContent .id_price_type').on('change', function(event) {
+			var tbody = $(this).closest('tbody');
+			if ($(this).val() == CD_PRICE_OTHER) {
+				$(tbody).find('.id_price').show();
+				$(tbody).find('.id_price').addClass('required');
+			} else {
+				$(tbody).find('.id_price').hide();
+				$(tbody).find('.id_price').removeClass('required');
+			}
+		});
+
+		// 初期表示時
+		newItemContentInit();
+
+	});
+</script>
+
+
+<!-- 行の幅ずれるため固定 -->
+<style type="text/css">
+
+/*
+.sticky_table th:nth-of-type(1),.sticky_table td:nth-of-type(1) {width:50px}
+.sticky_table th:nth-of-type(2),.sticky_table td:nth-of-type(2) {width:380px}
+.sticky_table th:nth-of-type(3),.sticky_table td:nth-of-type(3) {width:150px}
+.sticky_table th:nth-of-type(4),.sticky_table td:nth-of-type(4) {width:230px}
+.sticky_table th:nth-of-type(5),.sticky_table td:nth-of-type(5) {width:190px}
+.sticky_table th:nth-of-type(6),.sticky_table td:nth-of-type(6) {width:130px}
+.sticky_table th:nth-of-type(7),.sticky_table td:nth-of-type(7) {width:130px}
+.sticky_table th:nth-of-type(8),.sticky_table td:nth-of-type(8) {width:130px}
+.sticky_table th:nth-of-type(9),.sticky_table td:nth-of-type(9) {width:130px}
+.sticky_table th:nth-of-type(10),.sticky_table td:nth-of-type(10) {width:130px}
+.sticky_table th:nth-of-type(11),.sticky_table td:nth-of-type(11) {width:130px}
+.sticky_table td:nth-of-type(12){width:100px}
+*/
+
+/*
+.sticky_table th:nth-of-type(1),.sticky_table td:nth-of-type(1) {width:2%}
+.sticky_table th:nth-of-type(2),.sticky_table td:nth-of-type(2) {width:21%}
+.sticky_table th:nth-of-type(3),.sticky_table td:nth-of-type(3) {width:8%}
+.sticky_table th:nth-of-type(4),.sticky_table td:nth-of-type(4) {width:12%}
+.sticky_table th:nth-of-type(5),.sticky_table td:nth-of-type(5) {width:10%}
+.sticky_table th:nth-of-type(6),.sticky_table td:nth-of-type(6) {width:7%}
+.sticky_table th:nth-of-type(7),.sticky_table td:nth-of-type(7) {width:7%}
+.sticky_table th:nth-of-type(8),.sticky_table td:nth-of-type(8) {width:7%}
+.sticky_table th:nth-of-type(9),.sticky_table td:nth-of-type(9) {width:7%}
+.sticky_table th:nth-of-type(10),.sticky_table td:nth-of-type(10) {width:7%}
+.sticky_table th:nth-of-type(11),.sticky_table td:nth-of-type(11) {width:8%}
+.sticky_table td:nth-of-type(12){width:100px}
+*/
+</style>
+
+
+
+<div id="newItemContent" style="margin-left: 10px; margin-right: 10px">
+
+	<!-- ジャンル-->
+	<div id="itemGenre">
+		<div class="form-group">
+			<label for="TitleName">■ジャンル <img
+				src="cactus_csjs/images/bikkuri.png"></label><small><p>※ジャンルの情報を記入してください。</p></small>
+			<imart type="imuiTextbox" class="form-control count-down-length" name="item_genre"
+				value=$form.item_genre maxlength="50"
+				oninput="CountDownLength( '#itemGenre_len' , value , 50 );"
+				style="width: 600px" />
+			<p id="itemGenre_len">残50文字</p>
+		</div>
+	</div>
+	<!-- @end ジャンル -->
+
+	<!-- ダウンロードコンテンツ有無 -->
+	<div id="radio_DownloadContents">
+		<div class="form-group">
+			<label>■ダウンロードコンテンツ有無 <img
+				src="cactus_csjs/images/bikkuri.png"></label><small><p>※未定の場合も可能性がある場合はありを選択してください。</p>
+				<p>※ダウンロードコンテンツの内容については別途申請が必要です。</p></small>
+			<div>
+				<imart type="imuiRadio" name="item_dlc" label="あり" value="1"
+					checked=$form.item_dlc_1 />
+
+				&nbsp;&nbsp;&nbsp;&nbsp;
+
+				<imart type="imuiRadio" name="item_dlc" label="なし" value="0"
+					checked=$form.item_dlc_0 />
+			</div>
+		</div>
+	</div>
+	<!-- @end ダウンロードコンテンツ有無 -->
+	<!-- テーブル追加 -->
+	<div class="form-group">
+		<label>■新商品企画詳細 <img src="cactus_csjs/images/bikkuri.png"></label>
+	</div>
+	<div id="newItemContent_cs">
+			<IMART type="include" page="cactus/contents/screen/page3_1_cs" form=$form></IMART>
+	</div>
+    <div id="newItemContent_ne">
+			<IMART type="include" page="cactus/contents/screen/page3_1_ne" form=$form></IMART>
+	</div>
+    <div id="newItemContent_ot">
+			<IMART type="include" page="cactus/contents/screen/page3_1_ot" form=$form></IMART>
+	</div>
+</div>
+<!-- end 新企画申請----------------------------------------------------------------------------------------------------------------->

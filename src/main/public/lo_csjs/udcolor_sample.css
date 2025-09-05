@@ -1,0 +1,171 @@
+@charset "utf-8";
+/* UD配色 コーポレートカラー（メイン）：オレンジ系、アクセントカラー（サブ）：ブルー系、サブ２：グリーン系 */
+
+.bg_orange {
+	background-color: #f6aa00;
+}
+
+.brdr_orange {
+	border: 1px solid #f6aa00;
+}
+
+.bg_ltorange {
+	background-color: #ffca80;
+}
+
+.brdr_ltorange {
+	border: 1px solid #ffca80;
+}
+
+.bg_blue {
+	background-color: #005aff;
+}
+
+.brdr_blue {
+	border: 1px solid #005aff;
+}
+
+.bg_sky {
+	background-color: #4dc4ff;
+}
+
+.brdr_sky {
+	border: 1px solid #4dc4ff;
+}
+
+.bg_ltblue {
+	background-color: #bfe4ff;
+}
+
+.brdr_ltblue {
+	border: 1px solid #bfe4ff;
+}
+
+.bg_green {
+	background-color: #03af7a;
+}
+
+.brdr_green {
+	border: 1px solid #03af7a;
+}
+
+.bg_ltgreen {
+	background-color: #77d9a8;
+}
+
+.brdr_ltgreen {
+	border: 1px solid #77d9a8;
+}
+
+.bg_brown {
+	background-color: #804000;
+}
+
+.bg_yellow {
+	background-color: #ffff00;
+}
+
+/* 赤＝red だと、モノトーンにしたとき黒ベタになる→判別しづらいので、調整 */
+.bg_red {
+	background-color: #ff4b00;
+}
+
+.brdr_red {
+	border: 1px solid #ff4b00;
+}
+
+/* テキストカラー：メイン or ライトカラーが背景色の時はダーク、サブ or ダークカラーが背景色の時はブライトを使用 */
+.txt_dark {
+	color: #3f3f3f;
+}
+
+.txt_bright {
+	color: #f3f3f3;
+}
+
+/* テキストカラー代替色：ダーク、ブライトがしっくりこないけどメリハリは欲しい場合に */
+.txt_brown {
+	color: #804000;
+}
+
+.txt_yellow {
+	color: #ffff00;
+}
+
+/* メイン、サブカラーをテキストに使用する場合は以下のクラスにて */
+.txt_orange {
+	color: #f6aa00;
+}
+
+.txt_ltorange {
+	color: #ffca80;
+}
+
+.txt_blue {
+	color: #005aff;
+}
+
+.txt_sky {
+	color: #4dc4ff;
+}
+
+.txt_ltblue {
+	color: #bfe4ff;
+}
+
+.txt_green {
+	color: #03af7a;
+}
+
+.txt_ltgreen {
+	color: #77d9a8;
+}
+
+.txt_red {
+	color: #ff4b00;
+}
+
+/* グレーの濃淡は2段階。テキストカラーはダークとブライトの階調をつなぐものとして用意しています */
+.txt_dkgray {
+	color: #84919e;
+}
+
+.bg_dkgray {
+	background-color: #84919e;
+}
+
+.brdr_dkgray {
+	border: 1px solid #84919e;
+}
+
+.txt_ltgray {
+	color: #c8c8cb;
+}
+
+.bg_ltgray {
+	background-color: #c8c8cb;
+}
+
+.brdr_ltgray {
+	border: 1px solid #c8c8cb;
+}
+
+.brdrL_ltgray {
+	border-left: 1px solid #c8c8cb;
+}
+
+.brdrR_ltgray {
+	border-right: 1px solid #c8c8cb;
+}
+
+.brdrT_ltgray {
+	border-top: 1px solid #c8c8cb;
+}
+
+.brdrB_ltgray {
+	border-bottom: 1px solid #c8c8cb;
+}
+
+.bg_whitesmoke {
+	background-color: #f5f5f5;
+}

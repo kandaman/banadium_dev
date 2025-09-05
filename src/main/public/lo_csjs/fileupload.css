@@ -1,0 +1,58 @@
+.fileupload-area {
+	display : block;
+	width : 100%;
+	padding : 16px;
+	margin : 5px 0;
+	background : #fafbfd;
+	border-radius : 6px;
+	line-height : normal;
+}
+.filesSelect {
+	display : flex;
+	border: 2px dotted #B2B2B2;
+	border-radius: 10px;
+	padding: 2px;
+	background: #EEEEEE;
+	height: 40px;
+	vertical-align: middle;
+}
+
+.fileupload-input-caption {
+	margin : auto auto auto 10px;
+}
+.filesUploadLabel {
+	cursor: pointer;
+	border-radius: 7px;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+	padding: 1px 40px 1px 40px !important;
+	border: 1px solid #DDDDDD;
+	font-size: 16px;
+	box-sizing: border-box;
+	background: linear-gradient(135deg,#3a8ffe 0,#9658fe 100%);;
+	color: #FFFFFF;
+	margin: auto 10px auto auto;
+}
+
+.afterFileSelect {
+	display: block;
+	margin-left: 10px;
+	margin-top: 5px;
+}
+
+.afterFileSelect dl {
+	margin-bottom : 0px;
+}
+
+.afterFileSelect dl dt {
+	display: inline-block;
+	min-height: 30px;
+	max-width: 640px;
+	vertical-align: middle;
+	word-wrap:break-word;
+}
+
+.afterFileSelect dl dd {
+	display: inline-block;
+	padding-top: 2px;
+}
+

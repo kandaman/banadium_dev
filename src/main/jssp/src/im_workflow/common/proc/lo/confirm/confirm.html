@@ -1,0 +1,327 @@
+<imart type="head">
+<title>
+    <imart type="string" value=oCaption.title escapeXml="false" escapeJs="false" />
+</title>
+
+<imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag>
+<imart type="jsspRpc" name="jsActionConfirmAsync" page="im_workflow/common/proc/exec/async/confirm_async_jssp" />
+</imart>
+<imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag negative>
+<imart type="jsspRpc" name="jsActionConfirm" page="im_workflow/common/proc/exec/confirm_jssp" />
+</imart>
+<imart type="imwCommonJs" />
+<imart type="include" page="im_workflow/common/parts/window_popup/imw_window_popup" detailFlag="0" flowFlag="1" historyFlag="1" />
+<script type="text/javascript" src="csjs/im_json.js"></script>
+<script type="text/javascript" src="csjs/im_window.js"></script>
+<script type="text/javascript" src="workflow/csjs/workflow_proc.js"></script>
+<link rel="stylesheet" type="text/css" href="im_workflow/css/im_workflow.css" />
+<script type="text/javascript">
+var executingFlag = false;
+var reqParamObj;
+var procParamObj;
+var validateMessages;
+var workflowParams;
+var separator = '<imart type="string" value=separator />';
+
+function initParseJSON() {
+    reqParamObj     = ImJson.parseJSON(document.form4JSON.reqParamObj.value);
+    procParamObj    = ImJson.parseJSON(document.form4JSON.procParamObj.value);
+    validateMessages= ImJson.parseJSON(document.form4JSON.validateMessages.value);
+    workflowParams  = ImJson.parseJSON(document.form4JSON.workflowParams.value);
+}
+
+function closeWindow() {
+    if(executingFlag) {
+        return;
+    }
+
+    setInputValue();
+    workflowParams[document.procForm.imwPageType.value] = procParamObj;
+    parent.closeImwProcScreen(ImJson.toJSONString(workflowParams));
+}
+
+function callProc() {
+    if(executingFlag) {
+        return;
+    }
+
+    setInputValue();
+
+    var result = inputCheck();
+    if(!result.resultFlag) {
+        imwShowErrorMessage('imui-container',escapeHTML(result.messageList.join("\n"),true));
+        backToTop();
+        return;
+    }
+
+    var oReqParam = {
+            "confirmParams"     : procParamObj,
+            "userParams"        : parent.userParams,
+            "imwSystemMatterId" : reqParamObj.imwSystemMatterId,
+            "imwNodeId"         : reqParamObj.imwNodeId,
+            "matterNumber"      : document.procForm.matterNumber.value,
+            "matterName"        : document.procForm.matterName.value
+    };
+
+    executingFlag = true;
+
+    try {
+        <imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag>
+        var res = jsActionConfirmAsync.confirmAsync(oReqParam);
+        </imart>
+        <imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag negative>
+        var res = jsActionConfirm.confirm(oReqParam);
+        </imart>
+        if (!res.resultFlag) {
+            imwShowErrorMessage('imui-container',res.errorMessage);
+            backToTop();
+            executingFlag = false;
+            return;
+        }
+    } catch (ex) {
+    	imwShowErrorMessage('imui-container',ex.message);
+        executingFlag = false;
+        return;
+    }
+
+    var data = {
+        systemMatterId : oReqParam.imwSystemMatterId,
+        userDataId     : ""
+    };
+    parent.goNext(data);
+}
+
+function setInputValue() {
+    var doc = document.procForm;
+    procParamObj.authOrgz  = doc.authOrgz.value;
+    if(!isBlank(procParamObj.authOrgz)) {
+        var tmpOrgzInfo = procParamObj.authOrgz.split(separator);
+        procParamObj.authCompanyCode = tmpOrgzInfo[0];
+        procParamObj.authOrgzSetCode = tmpOrgzInfo[1];
+        procParamObj.authOrgzCode    = tmpOrgzInfo[2];
+    }
+    procParamObj.confirmComment = doc.confirmComment.value;
+}
+
+function inputCheck() {
+    var objResult = { "resultFlag"  : true,
+                      "messageList": new Array() };
+    var doc = document.procForm;
+    checkRequire(objResult.messageList, procParamObj, "authOrgz");
+    checkLength(objResult.messageList, procParamObj, "confirmComment");
+
+    if (objResult.messageList.length > 0) {
+        objResult.resultFlag = false;
+    }
+    return objResult;
+}
+
+function displayControl(target, displayTarget) {
+	
+	if ($(target).css("display") != "none") {
+		$(displayTarget).removeClass("im-ui-icon-common-16-collapse");
+		$(displayTarget).addClass("im-ui-icon-common-16-expand");
+		$(target).slideUp();
+	} else {
+		$(displayTarget).removeClass("im-ui-icon-common-16-expand");
+		$(displayTarget).addClass("im-ui-icon-common-16-collapse");
+		$(target).slideDown();
+	}
+}
+function displayControlForBack(target, displayTarget) {
+	
+	if ($(target).css("display") != "none") {
+		$(displayTarget).removeClass("im-ui-icon-common-16-collapse");
+		$(displayTarget).addClass("im-ui-icon-common-16-expand");
+		$(target).hide();
+	} else {
+		$(displayTarget).removeClass("im-ui-icon-common-16-expand");
+		$(displayTarget).addClass("im-ui-icon-common-16-collapse");
+		$(target).show();
+	}
+}
+$(function(){
+	$(document).ready(function(){
+		initParseJSON();
+		setListTableEvent();
+		setVisibility('allBlock','visible');
+		return false;
+	});
+	$("#flow").click(function(){
+		openPopupWindowFlow(flowForm);
+		return false;
+    });
+	$("#history").click(function(){
+		openPopupWindowHistory(historyForm);
+		return false;
+    });
+	$("#close").click(function(){
+		closeWindow();
+		return false;
+    });
+	$("#confirm").click(function(){
+	    $.imuiFormUtil.confirm($("#confirmDialog").val(), '<imart type="string" value=oCaption.confirmProcTitle/>', function() {callProc()});
+		return false;
+    });
+	$("#confirmCommentDisplay").click(function(){
+		displayControl($("#confirmComment"), $("#confirmCommentDisplay"))
+		return false;
+    });
+	if ($("#confirmComment").val() != "") {
+		displayControlForBack($("#confirmComment"), $("#confirmCommentDisplay"));
+	}
+	$("#confirmHistoryDisplay").click(function(){
+		displayControl($("#confirmHistory"), $("#confirmHistoryDisplay"))
+		return false;
+    });
+});
+</script>
+</imart>
+
+<body  style="min-width:0px;">
+	<div id="imui-container" style="min-width:0px; min-height:0px;">
+		<div class="imui-title">
+			<h1 style="min-width:0px;"><imart type="string" value=oCaption.title escapeXml="false" escapeJs="false" /></h1>
+		</div>
+		<div class="imui-toolbar-wrap">
+		 	<div class="imui-toolbar-inner" style="min-width:0px;">
+				<ul class="imui-list-toolbar" >
+		      <li>
+		        <imart type="tag" tagname="a" href="javascript: void(0);" id="flow" class="imui-toolbar-icon" title=oCaption.flow >
+		          <span class="im-ui-icon-common-16-preview mr-5"></span><imart type="string" value=oCaption.flow />
+		        </imart>
+		      </li>
+		      <li>
+		        <imart type="tag" tagname="a" href="javascript: void(0);" id="history" class="imui-toolbar-icon" title=oCaption.history >
+		          <span class="im-workflow-icon-matter-history mr-5"></span><imart type="string" value=oCaption.history />
+		        </imart>
+		      </li>
+				</ul>
+				<ul class="imui-list-toolbar-utility">
+		      <li>
+		        <imart type="tag" tagname="a" href="javascript: void(0);" id="close" class="imui-toolbar-icon" title=oCaption.close >
+		          <span class="im-ui-icon-common-16-close"></span>
+		        </imart>
+		      </li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="allBlock" style="visibility: hidden;">
+		<div class="imui-form-container-wide">
+		<form name="procForm" onsubmit="return false;">
+			<imart type="hidden"
+				imwGroupId=oRequest.imwGroupId
+					imwUserCode=oRequest.imwUserCode
+						imwSystemMatterId=oRequest.imwSystemMatterId
+							imwNodeId=oRequest.imwNodeId
+								imwPageType=oRequest.imwPageType
+									imwCallType=oRequest.imwCallType
+									matterNumber=oDisplayInfo.matterNumber
+									matterName=oDisplayInfo.matterName />
+			<table class="imui-form">
+				<tbody>
+					<tr>
+						<th class="wd-150px"><label><imart type="string" value=oCaption.matterNumber /></label></th>
+						<td><label><imart type="string" value=oDisplayInfo.matterNumber  escapeXml="false" escapeJs="false" /></label></td>
+					</tr>
+					<tr>
+						<th><label><imart type="string" value=oCaption.matterName /></label></th>
+						<td><label><imart type="string" value=oDisplayInfo.matterName  escapeXml="false" escapeJs="false" /></label></td>
+					</tr>
+					<tr>
+						<th><label><imart type="string" value=oCaption.applyUser /></label></th>
+						<td><label><imart type="string" value=oDisplayInfo.applyAuthUserName  escapeXml="false" escapeJs="false" /></label></td>
+					</tr>
+					<tr>
+						<th><label><imart type="string" value=oCaption.applyBaseDate /></label></th>
+						<td><label><imart type="string" value=oDisplayInfo.applyBaseDate  escapeXml="false" escapeJs="false" /></label></td>
+					</tr>
+					<tr>
+						<th><label><imart type="string" value=oCaption.applyDate /></label></th>
+						<td><label><imart type="string" value=oDisplayInfo.applyDate  escapeXml="false" escapeJs="false" /></label></td>
+					</tr>
+					<tr>
+						<th><label class="imui-required"><imart type="string" value=oCaption.authOrgz /></label></th>
+						<td><imart type="imuiSelect" name="authOrgz" list=oNotEscapeDispInfo.dispAuthOrgzInfos /></td>
+					</tr>
+					<tr>
+			            <th class="cf">
+			            	<label class="float-L imui-form-th-icon-16">
+			            	    <span id="confirmCommentDisplay" class="im-ui-icon-common-16-expand"></span>
+			            	    <imart type="string" value=oCaption.confirmComment />
+			            	</label>
+			            </th>
+						<td>
+							<textarea id="confirmComment" name="confirmComment" style="display:none;width:436px;height:65px;"><imart type="string" value=oProcParams.confirmComment /></textarea>
+						</td>
+					</tr>
+					<imart type="condition" validity=oDisplayInfo.dispConfirmHistoryFlag>
+					<tr>
+			            <th class="cf">
+			            	<label class="float-L imui-form-th-icon-16">
+			            	    <span id="confirmHistoryDisplay" class="im-ui-icon-common-16-expand"></span>
+			            	    <imart type="string" value=oCaption.confirmHistory />
+			            	</label>
+			            </th>
+						<td>
+							<div id="confirmHistory" style="display:none;">
+									<table class="imui-table-box">
+										<tbody>
+											<tr>
+												<th><imart type="string" value=oCaption.confirmDate /></th>
+												<th><imart type="string" value=oCaption.confirmUser /></th>
+												<th><imart type="string" value=oCaption.authOrgz /></th>
+												<th><imart type="string" value=oCaption.confirmComment /></th>
+											</tr>
+											<imart type="repeat" list=oDisplayInfo.dispConfirmHistoryInfos item="confirmHistory">
+											<tr>
+												<td>
+													<imart type="string" value=confirmHistory.confirmDate /><br>
+												</td>
+												<td>
+													<imart type="string" value=confirmHistory.userName /><br>
+												</td>
+												<td>
+													<imart type="string" value=confirmHistory.orgzName /><br>
+												</td>
+												<td>
+													<imart type="string" value=confirmHistory.confirmComment /><br>
+												</td>
+											</tr>
+											</imart>
+										</tbody>
+									</table>
+							</div>
+						</td>
+					</tr>
+					</imart>
+				</tbody>
+			</table>
+		</form>
+		</div>
+
+	 	<div class="imui-operation-parts">
+			<imart type="imuiButton" value=oNotEscapeDispInfo.confirmName id="confirm" name="confirm" class="imui-large-button" escapeXml="true" escapeJs="false" />
+		</div>
+		</div>
+
+		<form name="form4JSON">
+			<imart type="hidden"
+				reqParamObj=oRequestJSON 
+					procParamObj=oProcParamsJSON
+						validateMessages=oValidationJSON
+							workflowParams=oWorkflowParamsJSON />
+		</form>
+		
+		<form method="POST" name="flowForm" target="IMW_FLOW" action="im_workflow/common/unit/flow/flow">
+		    <imart type="hidden" imwSystemMatterId=oRequest.imwSystemMatterId />
+		</form>
+		
+		<form method="POST" name="historyForm" target="IMW_HISTORY" action="im_workflow/common/unit/history/history">
+		    <imart type="hidden" imwSystemMatterId=oRequest.imwSystemMatterId />
+		</form>
+		
+		<input type="hidden" id="confirmDialog" name="confirmDialog" value="<imart type="string" value=dialog.confirmDialogMsg escapeXml="true" escapeJs="false" />">
+	</div>
+</body>

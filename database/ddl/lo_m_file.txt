@@ -1,0 +1,17 @@
+create table public.lo_m_file (
+  file_id character varying(20) not null
+  , category character varying(10)
+  ,file_nm character varying(200) not null
+  , naiyo character varying(200)
+  , koukai_hani character varying(1)
+  , file_path character varying(300)
+  , file_version character varying(100)
+  , keisai_bi date
+  , sort_no integer
+  , sakujo_flg character(1)
+  , torokusha character varying(100)
+  , toroku_bi timestamp(6) without time zone
+  , koshinsha character varying(100)
+  , koshin_bi timestamp(6) without time zone
+  , primary key (file_id)
+);

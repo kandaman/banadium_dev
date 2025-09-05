@@ -1,0 +1,25 @@
+<div class="col-12 mt-2 mb-2">
+	<div class="row">
+		<div class="col-12 col-lg-1">
+			<h4 class="indent">経路</h4>
+		</div>									
+	</div>
+</div>
+<div class="col-12 mt-2 mb-2">							
+	<div class="row node-list">
+		<imart type="repeat" list=$nodeInfolist item="item" index="idx">
+			<imart type="condition" validity=item.disabled negative>
+			<div class="node-name t-header bg_ltorange brdr_ltgray lo-center">
+				<imart type="string" value=item.node_name escapeJs="false" escapeXml="true" />
+			</div>
+			</imart>			
+		</imart>
+	</div>
+	<div class="row node-list">
+		<imart type="repeat" list=$nodeUserslist item="item" index="idx">
+			<div class="node-tanto pt-2 pb-2<imart type="condition" validity=item.execFlg> back-color</imart>">
+			<imart type="string" value=item.userName escapeJs="false" escapeXml="true" />
+			</div>
+		</imart>				
+	</div>
+</div>

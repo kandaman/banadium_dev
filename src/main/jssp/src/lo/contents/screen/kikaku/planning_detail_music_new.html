@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="lo_csjs/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/popper.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.bundle.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	
+	<title><imart type="message" id="LO.TITLE.KIKAKU.PLANNING_DETAIL_MUSIC" escapeXml="true" /></title>
+</head>
+
+<style>
+	.left-justified {
+		padding-left: 0px !important;
+	}
+	.right-justified {
+		padding-right: 0px !important;
+	}
+	.margin-bottom {
+		margin-bottom: 0px !important;
+	}
+	
+	@media print {
+		.no_print {
+			display: none;
+		}
+	}
+</style>
+
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+
+	<!-- 戻る用 -->
+	<form id="sendFrom" method="post"
+		action="lo/contents/screen/kikaku/planning_detail_new">
+		<imart type="hidden" kikaku_id=$gakkyoku_data.kikaku_id />
+	</form>
+
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col text-break">
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none"> <i
+					class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+				<!-- contents custom -->
+				<div class="page-information row local-nav my-4">
+					<div class="col-12 col-lg-3">
+						<h1><imart type="message" id="LO.TITLE.KIKAKU.PLANNING_DETAIL_MUSIC" escapeXml="true" /> #<imart type="string" value=$gakkyoku_data.kikaku_edaban /></h1>
+						<button type="button" id="btn_back" class="brdr_orange txt_orange mt-2" onclick="history.back();">
+							<i class="fas fa-caret-left "></i><span>戻る</span>
+						</button>
+					</div>
+				</div>
+				<article class="col-12 text-break">
+					<section class="show">
+						<div class="mt-2">
+							<div class="row">
+								<div class="col-9">
+									<h2>基本情報</h2>
+								</div>
+								<div class="col-3 d-flex align-items-end">
+									<div class="text-right" style="width: 100%;">
+										<span class="area_hide"><i class="far fa-caret-square-up" aria-hidden="true"></i>エリア非表示</span>
+										<span class="area_show" style="display: none;"><i class="far fa-caret-square-down" aria-hidden="true"></i>エリア表示</span>
+									</div>
+								</div>							
+							</div>
+						</div>
+						<section class="show">
+							<table class="table table_border_radius margin-bottom" width="100%">
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">シングル/アルバム名</th>
+									<td colspan="11" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.gakkyoku_nm escapeJs="false" escapeXml="true" /></td>
+								</tr>
+							</table>
+							<table class="table table_border_radius margin-bottom" width="100%">
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">シングル or アルバム</th>
+									<td colspan="11" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.single_albam_nm escapeJs="false" escapeXml="true" /></td>
+								</tr>
+							</table>
+							<div class="row">
+								<div class="col-12 col-lg-6 right-justified">
+									<table class="table table_border_radius margin-bottom" width="100%">
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">販売形態</th>
+											<td colspan="3" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.hanbai_keitai escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">CD価格</th>
+											<td colspan="3" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.kakaku_cd />円</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-12 col-lg-6 left-justified">
+									<table class="table table_border_radius margin-bottom" width="100%">
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">デジタル配信詳細</th>
+											<td colspan="3" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.digital_haishin escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">デジタル配信価格</th>
+											<td colspan="3" class="brdr_ltgray text-right">
+												<imart type="decision" value=$gakkyoku_data.kakaku_digital_flg case="1">
+													<imart type="number" format="###,###" value=$gakkyoku_data.kakaku_digital />円
+												</imart>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 col-lg-4 right-justified">
+									<table class="table table_border_radius" width="100%">
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">初回出荷数見込み</th>
+											<td colspan="3" class="brdr_ltgray cellwide text-right"><imart type="number" format="###,###" value=$gakkyoku_data.shokaisyukka_mikomi />枚</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-12 col-lg-4 right-justified left-justified">
+									<table class="table table_border_radius" width="100%">
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">目標販売数</th>
+											<td colspan="3" class="brdr_ltgray cellwide text-right"><imart type="number" format="###,###" value=$gakkyoku_data.mokuhyo_hambai_su />枚</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-12 col-lg-4 left-justified">
+									<table class="table table_border_radius" width="100%">
+										<tr class="brdr_ltgray">
+											<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">目標配信数</th>
+											<td colspan="3" class="brdr_ltgray cellwide text-right"><imart type="number" format="###,###" value=$gakkyoku_data.mokuhyou_haishin_su />DL</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<table class="table table_border_radius">
+								<tr>
+									<th class="bg_ltorange text-center txt_dark brdr_ltgray cellwide">地域</th>
+									<td colspan="11" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.chiiki_nm escapeJs="false" escapeXml="true" /></td>
+								</tr>
+							</table>
+							<table class="table table_border_radius">
+								<imart type="decision" value=$gakkyoku_data.chiiki case="1">
+								<tr>
+									<th rowspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark align-middle cellwide">初回出荷数(内訳)</th>
+									<td colspan="2" class="brdr_ltgray text-right">
+										<imart type="number" format="###,###" value=$gakkyoku_data.hanbaiyoteikosu_nihon />個
+									</td>
+									<td colspan="9" width="75%" style="border-top:0"></td>
+								</tr>
+								</imart>
+								<imart type="decision" value=$gakkyoku_data.chiiki case="2">
+								<tr>
+									<th rowspan="2" class="bg_ltorange brdr_ltgray text-center txt_dark align-middle cellwide">初回出荷数(内訳)</th>
+									<th colspan="2" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">日本</th>
+									<th colspan="2" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">中国本土</th>
+									<th colspan="2" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">アジア(中国本土除く)</th>
+									<th colspan="2" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">北米・中南米</th>
+									<th colspan="2" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">ヨーロッパ</th>
+								</tr>
+								<tr>
+									<td colspan="2" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.hanbaiyoteikosu_nihon />個</td>
+									<td colspan="2" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.hanbaiyoteikosu_chugoku />個</td>
+									<td colspan="2" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.hanbaiyoteikosu_asia />個</td>
+									<td colspan="2" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.hanbaiyoteikosu_chunanbei />個</td>
+									<td colspan="2" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.hanbaiyoteikosu_europe />個</td>
+								</tr>
+								<tr>
+									<th class="bg_ltorange text-center txt_dark brdr_ltgray cellwide">販売国詳細</th>
+									<td colspan="11" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.hanbaikoku_shosai nl2br="true" escapeJs="false" escapeXml="true" /></td>
+								</tr>
+								</imart>
+							</table>
+							<table class="table table_border_radius margin-bottom" width="100%">
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">発売時期</th>
+									<td colspan="5" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.hanbai_jiki escapeJs="false" escapeXml="true" /></td>
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">情報初出時期</th>
+									<td colspan="5" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.jyouhou_syosyutu_jiki escapeJs="false" escapeXml="true" /></td>
+								</tr>
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">売り場</th>
+									<td colspan="5" class="brdr_ltgray"><imart type="string" value=$uriba escapeJs="false" escapeXml="true" /></td>
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">売り方</th>
+									<td colspan="5" class="brdr_ltgray"><imart type="string" value=$urikata escapeJs="false" escapeXml="true" /></td>
+								</tr>
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">主な販路</th>
+									<td colspan="11" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.hanro nl2br="true" escapeJs="false" escapeXml="true" /></td>
+								</tr>
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">ジャケットビジュアル</th>
+									<td colspan="3" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.jaketto_visual_nm escapeJs="false" escapeXml="true" /></td>
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">リリースイベント</th>
+									<td colspan="3" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.release_event_nm escapeJs="false" escapeXml="true" /></td>
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">アソビストアでの取り扱い希望</th>
+									<td colspan="3" class="brdr_ltgray cellwide"><imart type="string" value=$gakkyoku_data.asobistore_nm escapeJs="false" escapeXml="true" /></td>
+								</tr>
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">宣伝販促計画</th>
+									<td colspan="11" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.syuroku_naiyo nl2br="true" escapeJs="false" escapeXml="true" /></td>
+								</tr>
+							</table>
+						</section>
+					</section>
+					<!-- 共通項目 -->
+					<section class="show">
+						<div class="mt-2">
+							<div class="row">
+								<div class="col-9">
+									<h2>コンセプト・仕様</h2>
+								</div>
+								<div class="col-3 d-flex align-items-end">
+									<div class="text-right" style="width: 100%;">
+										<span class="area_hide"><i class="far fa-caret-square-up" aria-hidden="true"></i>エリア非表示</span>
+										<span class="area_show" style="display: none;"><i class="far fa-caret-square-down" aria-hidden="true"></i>エリア表示</span>
+									</div>
+								</div>							
+							</div>
+						</div>
+						<section class="show">
+							<table class="table table_border_radius margin-bottom" width="100%">
+								<tr>
+									<th class="bg_ltorange text-center txt_dark brdr_ltgray align-middle cellwide">楽曲説明</th>
+									<td colspan="11" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.gakkyoku_setsumei nl2br="true" escapeJs="false" escapeXml="true" /></td>
+								</tr>
+							</table>
+							<div class="row">
+								<div class="col-12 col-lg-6 right-justified">
+									<table class="table table_border_radius margin-bottom" width="100%">
+										<tr class="brdr_ltgray">
+											<th class="bg_ltorange text-center txt_dark brdr_ltgray cellwide align-middle wbk">曲数</th>
+											<td class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.kyokusu />曲</td>
+											<th class="bg_ltorange text-center txt_dark brdr_ltgray cellwide align-middle wbk">ドラマパート</th>
+											<td class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.dramapart_nm escapeJs="false" escapeXml="true" /></td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-12 col-lg-6 left-justified">
+									<table class="table table_border_radius margin-bottom" width="100%">
+										<tr class="brdr_ltgray">
+											<th class="bg_ltorange text-center txt_dark brdr_ltgray cellwide align-middle wbk">封入特典</th>
+											<td class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.hunyu_tokuten_nm escapeJs="false" escapeXml="true" /></td>
+											<th class="bg_ltorange text-center txt_dark brdr_ltgray cellwide align-middle wbk">店舗特典</th>
+											<td class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.tenpo_tokuten_nm escapeJs="false" escapeXml="true" /></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<table class="table table_border_radius margin-bottom" width="100%">
+								<tr>
+									<th class="bg_ltorange text-center txt_dark brdr_ltgray align-middle cellwide">特典内容</th>
+									<td colspan="11" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.tokutei_naiyo nl2br="true" escapeJs="false" escapeXml="true" /></td>
+								</tr>	
+							</table>
+							<div class="row">
+								<div class="col-6 right-justified">
+									<table class="table table_border_radius" width="100%" height="100%">
+										<imart type="repeat" list=$fileList item="item" index="idx">
+											<tr class="brdr_ltgray">
+												<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide align-middle">完成イメージ</th>
+												<td class="brdr_ltgray">
+													<div class="thumbnail imgFile">
+														<a href='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />&fileName=<imart type="string" value=item.file_name escapeXml="true"/>' download>
+															<img class="img-responsive" src='lo/contents/screen/pub_file_dl?filePath=<imart type="string" value=item.file_path />' onerror="changeImgToName(this,'<imart type="string" value=item.file_name escapeXml="true"/>')" />
+														</a>
+													</div>
+												</td>
+											</tr>
+										</imart>
+									</table>
+								</div>
+								<!--
+								<div class="col-6 left-justified">
+									<table class="table table_border_radius" width="100%" height="100%">
+										<imart type="repeat" list=$fileList item="item" index="idx">
+											<tr class="brdr_ltgray">
+												<th colspan="1" class="bg_ltorange text-center txt_dark brdr_ltgray cellwide wbk align-middle">コメント</th>
+												<td class="brdr_ltgray">
+													<imart type="imuiTextArea" class="form-control imui-text-readonly" name="comment"　id="comment"　value=item.comment style="background-color: transparent;" maxlength="100000" rows="12" readonly="true" />
+												</td>
+											</tr>
+										</imart>
+									</table>
+								</div>
+								-->
+							</div>
+						</section>
+					</section>
+					<section class="show">
+						<div class="mt-2">
+							<div class="row">
+								<div class="col-9">
+									<h2>備考</h2>
+								</div>
+								<div class="col-3 d-flex align-items-end">
+									<div class="text-right" style="width: 100%;">
+										<span class="area_hide"><i class="far fa-caret-square-up" aria-hidden="true"></i>エリア非表示</span>
+										<span class="area_show" style="display: none;"><i class="far fa-caret-square-down" aria-hidden="true"></i>エリア表示</span>
+									</div>
+								</div>							
+							</div>
+						</div>
+						<section class="show">
+							<table class="table table_border_radius">
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange text-center txt_dark brdr_ltgray cellwide wbk align-middle">備考</th>
+									<td class="brdr_ltgray">
+										<imart type="imuiTextArea" class="form-control imui-text-readonly" name="bikou"　id="bikou"　value=$gakkyoku_data.bikou style="background-color: transparent;" maxlength="100000" rows="4" readonly="true" />
+									</td>
+								</tr>
+							</table>
+						</section>
+					</section>
+					<!-- ライツ部用 -->
+					<div class="no_print">
+					<section class="show licensee-hide">
+						<div class="mt-2">
+							<div class="row">
+								<div class="col-9">
+									<h2>ライセンスプロダクション入力欄</h2>
+								</div>
+								<div class="col-3 d-flex align-items-end">
+								</div>							
+							</div>
+						</div>
+						<section class="show">
+							<table class="table table_border_radius margin-bottom">
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">キャラクター使用料見込み</th>
+									<td colspan="5" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.character_shiyoryo_mikomi />円</td>
+								</tr>
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange text-center txt_dark brdr_ltgray cellwide wbk align-middle">理由・条件</th>
+									<td colspan="5" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.riyu_joken nl2br="true" escapeJs="false" escapeXml="true" /></td>
+								</tr>
+								<tr class="brdr_ltgray">
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">承認</th>
+									<td colspan="3" class="brdr_ltgray"><imart type="string" value=$gakkyoku_data.ok_ng_nm /></td>
+									<th colspan="1" class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">ロイヤリティ金額</th>
+									<td colspan="1" class="brdr_ltgray text-right"><imart type="number" format="###,###" value=$gakkyoku_data.royalty_kingaku />円</td>
+								</tr>
+							</table>
+						</section>
+					</section>
+					</div>
+					<div class="col-12 row mt-4 mb-2">
+						<div class="flex_btn">
+							<button type="button" id="btn_print" class="bg_orange txt_dark"><i class="fas fa-print fa-2x"></i><span>印刷画面表示</span></button>
+						</div>
+					</div>
+					<div class="mt-3">
+						<button type="button" class="brdr_orange txt_orange p-3 mb-2" onclick="moveToPageTop(100);">
+							▲ページ先頭へ戻る
+						</button>
+					</div>
+				</article>
+					<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>	
+</body>
+	
+	
+<script type="text/javascript">
+
+	//初期表示
+	function initDisp() {
+		// ライセンスプロダクションでない場合
+		<IMART type="condition" validity=$production_flg negative>
+			$('.licensee-hide').hide(); // ライセンスプロダクション用の項目を非表示
+		</IMART>
+	}
+
+    $(function () {
+    	
+    	// 初期表示
+		initDisp();
+
+		// 印刷ボタン
+		$('#btn_print').click(function(){
+			
+			var sidebarVisible = $("#sidebar").is(':visible');
+			if (sidebarVisible) {
+				$("#close-sidebar").trigger("click");
+			}
+			// 印刷ダイアログ実行
+			window.print();
+			if (sidebarVisible) {
+				$("#show-sidebar").trigger("click");
+			}
+	    });
+    });
+    $(window).on("load", function() {
+		document.getElementById('body').style.display = 'block';
+	});
+    $(document).on("click", ".area_hide", function(){
+    	var $this = $(this);
+    	var $containerSection = $this.closest("section");
+    	var $changeSection = $containerSection.find("section");
+    	$changeSection.removeClass("show");
+    	
+    	var $containerDiv = $this.closest("div");
+    	$containerDiv.find(".area_hide").hide();
+    	$containerDiv.find(".area_show").show();
+    	
+    });
+    $(document).on("click", ".area_show", function(){
+    	var $this = $(this);
+    	var $containerSection = $this.closest("section");
+    	var $changeSection = $containerSection.find("section");
+    	$changeSection.addClass("show");
+    	
+    	var $containerDiv = $this.closest("div");
+    	$containerDiv.find(".area_show").hide();
+    	$containerDiv.find(".area_hide").show();
+    });
+	</script>
+	
+</html>
+	

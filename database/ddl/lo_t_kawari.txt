@@ -1,0 +1,56 @@
+--drop table public.lo_t_kawari;
+create table public.lo_t_kawari (
+  bunsho_id character varying(20) not null
+  , bunsho_cls character varying(20) not null
+  , bunsho_nm character varying(200)
+  , kawari_status character varying(100)
+  , gokuhi_flg character varying(1)
+  , kikaku_shubetsu_cd smallint
+  , kyodaku_cls character(1)
+  , keiyaku_cls character(1)
+  , ip_cd character varying(128)
+  , ip_nm character varying(1024)
+  , title_cd character varying(128)
+  , title_nm character varying(1000)
+  , kaisha_id character varying(100)
+  , kaisha_nm character varying(255)
+  , kaigai_hansha_cd character varying(20)
+  , shinsei_bi date
+  , royalty_kingaku_genchi numeric(30, 6)
+  , currency_cd smallint
+  , kawase_rate numeric(30, 6)
+  , haibun_rate numeric(30, 6)
+  , royalty_kingaku numeric(30, 6)
+  , royalty_kingaku_biko text
+  , hatsubai_jiki date
+  , saiteihosho_su_shinseisu numeric(30, 6)
+  , saiteihosho_ryo_kyodakuryo numeric(30, 6)
+  , sozai_hi numeric(30, 6)
+  , kyodaku_kikan_from character varying(20)
+  , kyodaku_kikan_to character varying(20)
+  , hatsubai_bi date
+  , naiyo text
+  , biko text
+  , kakunin_bi date
+  , shohyo_chosa_kekka character(1)
+  , shohyo_chosa_comment text
+  , nyuryoku_sha_id character varying(100)
+  , nyuryoku_sha_nm character varying(255)
+  , kian_sha_id character varying(100)
+  , kian_sha_nm character varying(255)
+  , sairiyou_bunsho_id character varying(20)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (bunsho_id)
+);
+
+--2021.12.**
+---kyodaku_kikan_from,kyodaku_kikan_to date→varchar(20)に変更
+--2021.12.14
+---nyuryoku_sha_id,nyuryoku_sha_nm, kian_sha_id,kian_sha_nm追加
+---nyuryoku_sha,tantou_sha削除
+--2021.12.22
+---kawase_rate numeric(9, 6) → numeric(30, 6)に変更

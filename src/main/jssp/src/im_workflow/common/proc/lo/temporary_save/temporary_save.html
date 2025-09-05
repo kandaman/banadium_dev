@@ -1,0 +1,242 @@
+<imart type="head">
+<title>
+    <imart type="string" value=oCaption.title escapeXml="false" escapeJs="false" />
+</title>
+
+<imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag>
+<imart type="jsspRpc" name="jsActionTempSaveAsync" page="im_workflow/common/proc/exec/async/temporary_save_async_jssp" />
+</imart>
+<imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag negative>
+<imart type="jsspRpc" name="jsActionTempSave" page="im_workflow/common/proc/exec/temporary_save_jssp" />
+</imart>
+<imart type="imwCommonJs" />
+<imart type="include" page="im_workflow/common/parts/window_popup/imw_window_popup" detailFlag="0" flowFlag="1" historyFlag="0" />
+<script type="text/javascript" src="csjs/im_json.js"></script>
+<script type="text/javascript" src="csjs/im_window.js"></script>
+<link rel="stylesheet" type="text/css" href="im_workflow/css/im_workflow.css" />
+<script type="text/javascript">
+var executingFlag = false;
+var reqParamObj;
+var tempSaveParamObj;
+var displayInfoObj;
+var validateMessages;
+var workflowParams;
+
+function closeWindow() {
+    if(executingFlag) {
+        return;
+    }
+    setInputValue();
+    workflowParams[document.procForm.imwPageType.value] = tempSaveParamObj;
+    parent.closeImwProcScreen(ImJson.toJSONString(workflowParams));
+}
+
+
+function callProc() {
+    if(executingFlag) {
+        return;
+    }
+
+    var result = inputCheck();
+    if(!result.resultFlag) {
+    	imwShowErrorMessage('imui-container',result.messageList.join("\n"));
+        backToTop();
+        return;
+    }
+
+    var oReqParam = {
+            "tempSaveParams": tempSaveParamObj,
+            "userParams"    : parent.userParams,
+            "imwUserDataId"    : reqParamObj.imwUserDataId
+    };
+
+    executingFlag = true;
+
+    try {
+        <imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag>
+        var res = jsActionTempSaveAsync.temporarySaveAsync(oReqParam);
+        </imart>
+        <imart type="condition" validity=oDisplayInfo.standardExecJsspAsyncFlag negative>
+        var res = jsActionTempSave.temporarySave(oReqParam);
+        </imart>
+        if (!res.resultFlag) {
+            imwShowErrorMessage('imui-container',res.errorMessage);
+            backToTop();
+            executingFlag = false;
+            return;
+        }
+    } catch (ex) {
+    	imwShowErrorMessage('imui-container',ex.message);
+        executingFlag = false;
+        return;
+    }
+
+    var data = {
+        systemMatterId : "",
+        userDataId     : oReqParam.imwUserDataId
+    };
+    parent.goNext(data);
+}
+
+function inputCheck() {
+    var objResult = { "resultFlag"  : true,
+                      "messageList": new Array() };
+    setInputValue();
+
+    checkRequire(objResult.messageList, tempSaveParamObj, "matterName");
+    checkLength(objResult.messageList, tempSaveParamObj, "matterName");
+    checkLength(objResult.messageList, tempSaveParamObj, "processComment");
+
+    if (objResult.messageList.length > 0) {
+        objResult.resultFlag = false;
+    }
+
+    return objResult;
+}
+
+function setInputValue() {
+    var doc = document.procForm;
+    tempSaveParamObj.matterName     = doc.matterName.value;
+    tempSaveParamObj.processComment = doc.processComment.value;
+}
+
+function displayControl(target, displayTarget) {
+	
+	if ($(target).css("display") != "none") {
+		$(displayTarget).removeClass("im-ui-icon-common-16-collapse");
+		$(displayTarget).addClass("im-ui-icon-common-16-expand");
+		$(target).slideUp();
+	} else {
+		$(displayTarget).removeClass("im-ui-icon-common-16-expand");
+		$(displayTarget).addClass("im-ui-icon-common-16-collapse");
+		$(target).slideDown();
+	}
+}
+function displayControlForBack(target, displayTarget) {
+	
+	if ($(target).css("display") != "none") {
+		$(displayTarget).removeClass("im-ui-icon-common-16-collapse");
+		$(displayTarget).addClass("im-ui-icon-common-16-expand");
+		$(target).hide();
+	} else {
+		$(displayTarget).removeClass("im-ui-icon-common-16-expand");
+		$(displayTarget).addClass("im-ui-icon-common-16-collapse");
+		$(target).show();
+	}
+}
+$(function(){
+	$(document).ready(function(){
+	    reqParamObj     = ImJson.parseJSON(document.form4JSON.reqParamObj.value);
+	    tempSaveParamObj= ImJson.parseJSON(document.form4JSON.tempSaveParamObj.value);
+	    displayInfoObj  = ImJson.parseJSON(document.form4JSON.displayInfoObj.value);
+	    validateMessages= ImJson.parseJSON(document.form4JSON.validateMessages.value);
+	    workflowParams  = ImJson.parseJSON(document.form4JSON.workflowParams.value);
+	});
+
+	$("#flow").click(function(){
+		openPopupWindowFlow(flowForm);
+		return false;
+    });
+	$("#close").click(function(){
+		closeWindow();
+		return false;
+    });
+	$("#tempSave").click(function(){
+		$.imuiFormUtil.confirm('<imart type="string" value=oDialog.tempSaveDialogMsg/>', '<imart type="string" value=oCaption.confirmProcTitle/>', function() {callProc()});
+		return false;
+    });
+	$("#processCommentDisplay").click(function(){
+		displayControl($("#processComment"), $("#processCommentDisplay"))
+		return false;
+    });
+	if ($("#processComment").val() != "") {
+		displayControlForBack($("#processComment"), $("#processCommentDisplay"));
+	}
+});
+</script>
+</imart>
+
+<body style="min-width:0px">
+	<div id="imui-container" style="min-width:0px; min-height:0px;">
+		<div class="imui-title">
+			<h1 style="min-width:0px;"><imart type="string" value=oCaption.title escapeXml="false" escapeJs="false" /></h1>
+		</div>
+
+		<div class="imui-toolbar-wrap">
+		 	<div class="imui-toolbar-inner"  style="min-width:0px;">
+				<ul class="imui-list-toolbar" >
+		      <li>
+		        <imart type="tag" tagname="a" href="javascript: void(0);" id="flow" class="imui-toolbar-icon" title=oCaption.flow >
+		          <span class="im-ui-icon-common-16-preview mr-5"></span><imart type="string" value=oCaption.flow />
+		        </imart>
+		      </li>
+				</ul>
+				<ul class="imui-list-toolbar-utility">
+		      <li>
+		        <imart type="tag" tagname="a" href="javascript: void(0);" id="close" class="imui-toolbar-icon" title=oCaption.close >
+		          <span class="im-ui-icon-common-16-close"></span>
+		        </imart>
+		      </li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="imui-form-container-wide">
+		<form name="procForm" onsubmit="return false;">
+			<imart type="hidden"
+				imwGroupId=oRequest.imwGroupId
+					imwUserCode=oRequest.imwUserCode
+						imwAuthUserCode=oRequest.imwAuthUserCode
+							imwUserDataId=oRequest.imwUserDataId
+								imwNodeId=oRequest.imwNodeId
+									imwApplyBaseDate=oRequest.imwApplyBaseDate
+										imwFlowId=oRequest.imwFlowId
+											imwPageType=oRequest.imwPageType
+												imwCallType=oRequest.imwCallType />
+			<table  class="imui-form">
+				<tbody>
+					<tr>
+						<th class="wd-150px"><label class="imui-required"><imart type="string" value=oCaption.matterName /></label></th>
+						<td><imart type="imuiTextbox" value=oNotEscapeDispInfo.matterName id="matterName" name="matterName" style="width:330px"/></td>
+					</tr>
+					<tr>
+						<th><label><imart type="string" value=oCaption.applyUser /></label></th>
+						<td><label><imart type="string" value=oDisplayInfo.applyAuthUserName /></label></td>
+					</tr>
+					<tr>
+						<th><label><imart type="string" value=oCaption.applyBaseDate /></th>
+						<td><label><imart type="string" value=oDisplayInfo.applyBaseDate /></label></td>
+					</tr>
+					<tr>
+			            <th class="cf">
+			            	<label class="float-L imui-form-th-icon-16">
+			            	    <span id="processCommentDisplay" class="im-ui-icon-common-16-expand"></span>
+			            	    <imart type="string" value=oCaption.comment />
+			            	</label>
+			            </th>
+						<td>
+							<textarea id="processComment" name="processComment" style="display:none;width:436px;height:65px;"><imart type="string" value=oTempSaveParams.processComment /></textarea>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+
+	 	<div class="imui-operation-parts">
+			<imart type="imuiButton" value=oDisplayInfo.tempSaveButtonCaption id="tempSave" name="tempSave" class="imui-large-button" escapeXml="true" escapeJs="false" />
+		</div>
+		</div>
+
+		<form name="form4JSON">
+			<imart type="hidden" id="reqParamObj" reqParamObj=oRequestJSON />
+			<imart type="hidden" id="tempSaveParamObj" tempSaveParamObj=oTempSaveParamsJSON />
+			<imart type="hidden" id="displayInfoObj" displayInfoObj=oDisplayInfoJSON />
+			<imart type="hidden" id="validateMessages" validateMessages=oValidationJSON />
+			<imart type="hidden" workflowParams=oWorkflowParamsJSON />
+		</form>
+
+		<form method="POST" name="flowForm" target="IMW_FLOW" action="im_workflow/common/unit/flow/flow">
+			<imart type="hidden" imwFlowId=oRequest.imwFlowId imwApplyBaseDate=oRequest.imwApplyBaseDate />
+		</form>
+	</div>
+</body>

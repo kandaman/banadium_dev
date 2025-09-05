@@ -1,0 +1,104 @@
+
+<imart type="head">
+
+<IMART type="jsspRpc" name="jsAction" page="cactus/contents/screen/detail"></IMART>
+
+  <title>
+    新企画-詳細
+  </title>
+  <imart type="workflowOpenPageCsjs" />
+  <script type="text/javascript">
+  $(function(){
+    $('#close').click(function(){
+        //parent.goTest();
+      window.close();
+      return false;
+    });
+    
+
+    // 引き戻し
+    $("#pullback").click(function(){
+    	
+	    $.imuiFormUtil.confirm('<imart type="string" value=dialog.pullbackDialogMsg/>', '<imart type="string" value=oCaption.pullBackTitle/>', function() {onClickPullback()});
+		//onClickPullback();
+		return false;
+    });
+  });
+  
+  
+  function onClickPullback() {
+	    //var doc = document.mainForm;
+	    ///var oArrayKey = {"nodeId":1, "authUserCode":1, "nodeType":1, "toList":1, "ccList":1, "bccList":1};
+	    //var oReqParam = getFormParameters(doc, oArrayKey);
+		//var a = $('input[name="pullback_param"]').val()
+		//alert(a);
+		
+	    var oReqParam = ImJson.parseJSON($('input[name="pullback_param"]').val()); 
+	   // var oReqParam =  ""; 
+	    
+	    try {
+	        var res = jsAction.actionPullback(oReqParam);
+	        if (res.resultFlag) {
+	            //parent.parent.onClickRefresh();
+	            window.close();
+	        } else {
+	        	imwShowErrorMessage('imui-container',res.resultStatus.message);
+	        }
+	    } catch (ex) {
+	        return imwShowErrorMessage('imui-container',ex.message);
+	    }
+	}
+  </script>
+  
+  <!-- stylesheet -->
+  <link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">  
+  <link rel="stylesheet" href="cactus_csjs/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="cactus_csjs/bootstrap-datetimepicker.min.css">
+
+  <link rel="stylesheet" href="cactus_csjs/sksg.css">
+  <link rel="stylesheet" href="cactus_csjs/step_bar.css"> 
+<!-- @end mycontents --> 
+  
+  
+</imart>
+
+<!-- 入力情報確認子画面 -->
+<div id="applyConfirm">
+    <IMART type="include" page="im_workflow/common/proc/custom/applyConfirm" data=oUserParams procParam=oProcParams ></IMART>
+</div>
+
+<!-- ボタン -->
+<!-- <IMART type="condition" validity=$from.pullback_btn_flg >
+	<div class="form-group">
+		<div class="button" id="submit_buttons">
+			<button type="button" escapejs="false" id="pullback" name="pullback" escapexml="true" class="btn btn-page">取戻し</button>
+		</div>
+	</div>
+	<IMART type="hidden" pullback_param=$from.pullback_param　escapeXml="true" escapeJs="true" />
+</IMART> 
+ -->
+	<div class="form-group">
+		<div class="button" id="submit_buttons">
+			<button type="button" escapejs="false" id="close" name="back_button" escapexml="true" class="btn btn-modoru" style="">戻る</button>
+		</div>
+	</div>
+
+<imart type="workflowOpenPage"
+    name="workflowOpenPageForm"
+    id="workflowOpenPageForm"
+    method="POST"
+    target="_top"
+    imwUserDataId=$data.imwUserDataId
+    imwSystemMatterId=$data.imwSystemMatterId
+    imwAuthUserCode=$data.imwAuthUserCode
+    imwApplyBaseDate=$data.imwApplyBaseDate
+    imwNodeId=$data.imwNodeId
+    imwFlowId=$data.imwFlowId
+    imwCallOriginalParams=$data.imwCallOriginalParams
+    imwNextScriptPath=$data.imwCallOriginalPagePath>
+
+
+</imart>

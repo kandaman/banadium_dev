@@ -1,0 +1,104 @@
+/*html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}*/
+
+#pr div,#pr h2,#pr label,#pr section,#pr span,#pr textarea{
+    font-size:18px;
+}
+
+.route-item{
+	width: calc(20% - 8px);
+	margin-right: 8px;
+	font-size: 18px;
+}
+.route-item .route-item-control{
+	font-size: inherit;
+	font-weight: normal;
+	min-height: 30px;
+	padding: 5px 0px 0px 1px;
+}
+.route-item h4::before{
+	border-left: none;
+}
+.route-item h4{
+	font-size: inherit;
+	font-weight: normal;
+	text-align: center;
+	border: 1px solid #84919e;
+	background-color: #ffca80;
+	margin: 0;
+    padding: 1px 0;
+}
+.route-item ul{
+	font-size: inherit;
+	font-weight: normal;
+	border: 1px solid #84919e;
+	padding: 0;
+	min-height: 30px;
+}
+.route-item ul li{
+	margin: 0;
+    padding: 2px 6px;
+}
+
+#sendMailUsersForm h3::before{
+    display: inline-block;
+    width: 4px;
+    height: 1.5rem;
+    margin-right: .5rem;
+    margin-bottom: -.225rem;
+    content: '';
+    border-left: solid 4px #ff5c00;
+}
+#sendMailUsersForm h3{
+	font-size: 16px;
+	text-align: left;
+	margin-left: 0.5rem;
+}
+#sendMailUsersForm h3 .comment{
+	font-size: 14px;
+	color: #ff6666;
+	margin-left: 16px;
+}
+#sendMailUsersForm h3 .comment2{
+	font-size: 14px;
+	margin-left: 16px;
+}
+h2 .notice{
+	font-size: 16px;
+    margin-left: 16px;
+}
+
+.route-table td{
+	border;
+	font-weight: normal;
+	border: 1px solid #84919e;
+	padding: 2px 6px;
+	min-height: 30px;
+}
+
+.route-table th{
+	border;
+	font-weight: normal;
+	border: 1px solid #84919e;
+	padding: 2px 6px;
+	min-height: 30px;
+	background-color: #ffca80;
+}

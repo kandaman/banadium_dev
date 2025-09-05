@@ -1,0 +1,416 @@
+<style type="text/css">
+<!--
+#kikaku_select_table td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+--> 
+</style>
+	<!-- IMART -->
+	<imart type="jsspRpc" name="jsspRpcKikakuSearch" page="lo/contents/screen/common/kikaku_search" callback="searchResultKikaku" onErrorCallback="searchErrorKikaku"></IMART>
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<section class="show">
+							<div class="mt-2 mb-2">
+								<h2>企画選択</h2>
+							</div>
+							<div class="col-12 form-area mt-2 mb-2">
+								<div class="col-12 row"><h4 class="indent">検索条件</h4></div>
+								<form role="form" id="kikakuSearchForm">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">企画番号</div>
+										<div class="col-4 left-justified">
+											<div class="input-group">
+												<input id="kikaku_search_kikaku_id" maxlength="20" type="text" class="form-control kikaku_search_clear_target">
+											</div>
+										</div>
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">企画ステータス</div>
+										<div class="col-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiSelect" class="custom-select kikaku_search_clear_target" id="kikaku_search_kikaku_status" list=$form.kikaku_status_list />
+											</div>
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<!-- ユーザの権限で表示項目を変える -->
+										<imart type="condition" validity=$licensee_flg> <!-- プロダクションでない場合（ライセンシーの場合） -->
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">タイトル名</div>
+											<div class="col-4 left-justified">
+												<div class="input-group">
+													<input id="kikaku_search_title_nm" maxlength="1000" type="text" class="form-control kikaku_search_clear_target">
+												</div>
+											</div>
+										</imart>
+										<imart type="condition" validity=$licensee_flg negative> <!-- プロダクションの場合-->
+											<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">ライセンシー名</div>
+											<div class="col-4 left-justified">
+												<div class="input-group">
+													<input id="kikaku_search_kaisha_mei" maxlength="255" type="text" class="form-control kikaku_search_clear_target">
+												</div>
+											</div>
+										</imart>
+									</div>
+                                    <imart type="imuiTextbox" id="kikaku_search_restraint_values" name="kikaku_search_restraint_values" class="form-control" value=$form.restraint_values hidden="true" escapeXml="true"/>
+								</form>
+							</div>
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="kikaku_search_search"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+											<button type="button" class="brdr_dkgray txt_dark" id="kikaku_search_clear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 border-bottom mt-2 mb-2">
+								<table id="kikaku_select_table" class="table bnadium-table" style="width: 100%;">
+									<colgroup>
+										<col style="width:35px; max-width:35px;">
+										<col style="width:115px; max-width:115px;">
+										<col style="width:130px; max-width:130px;">
+										<col style="width:150px;">
+										<col style="width:275px;">
+										<col style="width:300px;">
+										<col style="width:225px;">
+										<col style="width:140px;">
+										<col style="width:140px;">
+									</colgroup>
+									<thead>
+										<tr class="brdr_ltgray" role="row">
+											<th></th>
+											<th>企画<br>ステータス</th>
+											<th>企画番号</th>
+											<th>IP</th>
+											<th>タイトル</th>
+											<th>企画名</th>
+											<th>会社名</th>
+											<th>ライセンシー<br>担当者</th>
+											<th>BNE担当者</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="kikaku_search_select" disabled><i class="fas fa-search fa-2x"></i><span>選択</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+
+						</section>
+					</div>
+				</div>
+			</div>
+<script type="text/javascript">
+$(function () {
+
+	function escapeStr(value) {
+	  return value.replace(/&/g, "&amp;")
+	    .replace(/"/g, "&quot;")
+	    .replace(/'/g, "&#039;")
+	    .replace(/</g, "&lt;")
+	    .replace(/>/g, "&gt;")
+	    .replace(/\n/g, "<br>");
+	}
+	
+	var changeSelectBtnDisabled = function () {
+		if($("[name=row_check_kikaku]:checked").val()) {
+			$("#kikaku_search_select").prop('disabled', false);
+		} else {
+			$("#kikaku_search_select").prop('disabled', true);
+		}
+	}
+	
+	// ENTERで検索
+	var enterPressFlg = false;
+	$('form#kikakuSearchForm input').keyup(function() {
+		if(event.keyCode == 13 && !enterPressFlg) {
+			enterPressFlg = true;
+			$('#kikaku_search_search').click();
+		}
+	});
+
+	var kikakuSelectDataTable = null;
+	var checkedDataIndex = null;
+	$("#kikaku_search_search").click(function() {
+
+		// 表のクリア
+	    if (kikakuSelectDataTable == null ) {
+			kikakuSelectDataTable = $('#kikaku_select_table').DataTable({
+				data: [],
+				// 件数切替機能 無効
+				lengthChange: false,
+				// 検索機能 無効
+				searching: false,
+				// ソート機能 無効
+				ordering: false,
+				// 初期ソート 無効
+				order: [],
+				// 情報表示 無効
+				info: false,
+				// ページング機能 無効
+				paging: true,
+				// １ページあたりの表示件数
+	               pageLength: 10,
+	               pagingType: "full_numbers",
+	               // 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+			    scrollX: false,
+	               dom: "<tr><'row'<'col-4'i><'col-4 text-center'p><'col-4'>>",
+	       		"language": {
+	       			"processing":   "処理中...",
+	       			"lengthMenu":   "_MENU_ 件表示",
+	       			"zeroRecords":  "データはありません。",
+	       			"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+	       			"infoEmpty":    " 0 件中 0 から 0 まで表示",
+	       			"infoFiltered": "（全 _MAX_ 件より抽出）",
+	       			"infoPostFix":  "",
+	       			"search":       "検索:",
+	       			"url":          "",
+	       			"paginate": {
+	       				"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+	       				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+	       				"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+	       				"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+	       			}
+	       		},
+	               columns: [
+					{data: "kikaku_search_chk",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center align-middle");
+					    },
+						render:function(data, type, row, meta) {
+							var html = '';
+							html += '<div class="input-group lo-center align-middle">';
+							<imart type="condition" validity=$radio_mode negative>
+							html += '<input type="checkbox" class="m-0" name="row_check_kikaku" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							<imart type="condition" validity=$radio_mode>
+							html += '<input type="radio" name="row_check_kikaku" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							html += '</div>';
+							return html;
+						}
+					},
+					{data: "kikaku_status_nm",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center align-middle");
+					    },
+						render:function(data, type, row, meta) {
+							if (data == null) {
+								return "";
+							}
+							return '<span class="'+row.kikaku_status_style+'">'+data+'</span>';
+						}
+					},
+					{data: "kikaku_id",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+						render:function(data, type, row, meta) {
+							return '<a href="lo/contents/screen/kikaku/planning_detail_new?new_window_flg=1&kikaku_id=' + data + '" target="_blank">' + data + '</a>';
+						}
+					},
+					{data: "ip_nm",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+					    render:function(data, type, row, meta) {
+							return data;
+						}
+					},
+					{data: "title_nm",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+					    render:function(data, type, row, meta) {
+							return data;
+						}
+					},
+					{data: "kikaku_nm",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+					    render:function(data, type, row, meta) {
+							return textRenderer(data);
+						}
+					},
+					{data: "kaisha_nm",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+					    render:function(data, type, row, meta) {
+							return data;
+						}
+					},
+					{data: "tantou_sha",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+					    render:function(data, type, row, meta) {
+							return data;
+						}
+					},
+					{data: "bne_tantou_sha",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    },
+					    render:function(data, type, row, meta) {
+							return data;
+						}
+					},
+				],
+				createdRow: function(row, data, dataIndex) {
+					$(row).attr('data-dataindex', dataIndex);
+				}
+			});
+	    } else {
+	    	kikakuSelectDataTable.rows().remove();
+	    }
+
+		// 検索条件取得
+		var whereParam = {
+			"kikaku_id":$.trim($("#kikaku_search_kikaku_id").val())
+			, "kikaku_status": $.trim($("#kikaku_search_kikaku_status").val()) == "" ? [] : $.trim($("#kikaku_search_kikaku_status").val()).split(",")
+			, "title_nm":$.trim($("#kikaku_search_title_nm").val())
+			, "kaisha_mei":$.trim($("#kikaku_search_kaisha_mei").val())
+			, "restraint_values" : $.trim($("#kikaku_search_restraint_values").val()) == "" ? null : $.trim($("#kikaku_search_restraint_values").val())
+		};
+		
+		// 検索
+		jsspRpcKikakuSearch.searchKikakuList(whereParam);
+		// インジケータ表示
+		showIndicator();
+		
+		/*
+		var ret;
+		try {
+			ret = jsspRpcKikakuSearch.searchKikakuList(whereParam);
+	    } catch (ex) {
+	    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+	        return;
+	    }
+	    enterPressFlg = false;
+	    
+        var dataSet = [];
+        if (ret.countRow > 0) {
+            // data配列を順に処理
+            $.each(ret.data,function(index, elem) {
+                dataSet.push({
+                    kikaku_search_chk: false
+                    , kikaku_status_nm: elem.kikaku_status_name
+                    , kikaku_status_style: elem.kikaku_status_style
+                    , kikaku_id: elem.kikaku_id
+                    , ip_cd: elem.ip_cd
+                    , ip_nm: elem.ip_nm
+                    , title_cd: elem.title_cd
+                    , title_nm: elem.title_nm
+                    , kikaku_nm: elem.kikaku_nm
+                    , kaisha_nm: elem.kaisha_nm
+                    , tantou_sha: elem.tantou_sha
+                    , bne_tantou_sha: elem.bne_tantou_sha
+                });
+        	});
+        }
+	    kikakuSelectDataTable.rows.add(dataSet).draw();
+	    $("#kikaku_search_select").prop('disabled', true);
+	    checkedDataIndex = null;
+	    */
+	});
+	
+	// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+	window.searchResultKikaku = function(ret) {
+		
+        var dataSet = [];
+        if (ret.countRow > 0) {
+            // data配列を順に処理
+            $.each(ret.data,function(index, elem) {
+            	elem.kikaku_search_chk = false;
+	            elem.kikaku_status_nm = elem.kikaku_status_name;
+                dataSet.push(elem);
+        	});
+        }
+	    kikakuSelectDataTable.rows.add(dataSet).draw();
+	    $("#kikaku_search_select").prop('disabled', true);
+	    checkedDataIndex = null;
+
+		// インジケータ非表示
+        hideIndicator();
+        enterPressFlg = false;
+    }
+	// 検索エラー後コールバック
+	window.searchErrorKikaku = function(res) {
+        hideIndicator();
+        enterPressFlg = false;
+		try {
+			imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+			return;
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		}
+    }
+	
+	
+	<imart type="condition" validity=$radio_mode>
+	var radioMode = true;
+	</imart>
+	<imart type="condition" validity=$radio_mode negative>
+	var radioMode = false;
+	</imart>
+	
+	$(document).on("change", '#kikaku_select_table [name="row_check_kikaku"]', function(){
+		var $this = $(this);
+		var $tr = $this.closest("tr");
+		var dataIndex = Number($tr.attr('data-dataindex'));
+		if (radioMode && checkedDataIndex != null) {
+			kikakuSelectDataTable.data()[checkedDataIndex].kikaku_search_chk = false;
+		}
+		var kikakuData = kikakuSelectDataTable.data()[dataIndex];
+		kikakuData.kikaku_search_chk = $this.prop('checked');
+		checkedDataIndex = dataIndex;
+		changeSelectBtnDisabled();
+	});
+
+	$("#kikaku_search_select").click(function() {
+		
+		var selectedKikakuDatas = [];
+		if (kikakuSelectDataTable != null) {
+			selectedKikakuDatas = kikakuSelectDataTable.rows(function(index, data, node) {
+		        return data.kikaku_search_chk;
+		    }).data().toArray();
+		}
+
+		initializePopup();
+		var $popup = $(this).closest(".popup");
+		$popup.trigger("selectedKikakuDatas", [selectedKikakuDatas]);
+	});
+
+	$("#kikaku_search_clear").click(function() {
+		$(".kikaku_search_clear_target").val("");
+		
+	});
+		
+	var initializePopup = function() {
+
+		$("#kikaku_search_clear").click();
+		if (kikakuSelectDataTable != null) {
+			kikakuSelectDataTable.rows().remove().draw();
+		}
+		$("#kikaku_search_select").prop('disabled', true);
+	};
+
+	$(document).on("initializePopup", function(){
+		initializePopup();
+	});
+});
+</script>

@@ -1,0 +1,17 @@
+create table public.lo_m_jocho (
+  shinsei_sha character varying(255) not null
+  , wf_shubetsu character(1) not null
+  , shonin_keiro_id character varying(20)
+  , ichiji_shonin character varying(255)
+  , niji_shonin character varying(256)
+  , sanji_shonin character varying(257)
+  , yoji_shonin character varying(258)
+  , goji_shonin character varying(259)
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (shinsei_sha, wf_shubetsu)
+);
+--2022.3.31 shonin_keiro_id追加

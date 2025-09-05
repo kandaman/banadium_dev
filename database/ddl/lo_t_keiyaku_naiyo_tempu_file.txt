@@ -1,0 +1,13 @@
+create table lo_t_keiyaku_naiyo_tempu_file (
+keiyaku_naiyo_id varchar(20) NOT NULL
+,task_id  character varying(20) not null 
+,file_no smallint
+,file_name varchar(512)
+,file_path varchar(512)
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+,primary key (keiyaku_naiyo_id, task_id, file_no)
+);

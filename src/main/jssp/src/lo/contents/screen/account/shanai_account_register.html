@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!--link rel="stylesheet" href="lo_csjs/cform.css" -->
+	
+	<!-- IMART -->
+	<imart type="jsspRpc" name="jsspRpcAccountRegister" page="lo/contents/screen/account/shanai_account_register"></imart>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<!-- link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap-multiselect.min.css">
+	
+	<script type="text/javascript" src="lo_csjs/popper.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<imart type="imACMSearchDialog" />
+<imart type="condition" validity=$shanaiShuseiFlg negative>
+	<imart type="workflowOpenPageCsjs" />
+	<script type="text/javascript" src="workflow/csjs/greybox_lo.js"></script>
+</imart>
+
+<style type="text/css">
+#btn_title_search {
+    margin: 3px 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+#btn_title_search span {
+    font-size: 14px;
+}
+
+#btn_kaisha_search {
+    margin: 3px 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+#btn_kaisha_search span {
+    font-size: 14px;
+}
+<!--
+#kikaku_table td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+.margin-all {
+	margin: 28px !important;
+}
+.margin-left {
+	margin-left: 16px !important;
+}
+
+textarea.biko {
+	width: 100%;
+}
+
+.left-justified {
+	padding-left: 0px !important;
+}
+.right-justified {
+	padding-right: 0px !important;
+}
+
+#shinsei_table{
+	table-layout: fixed;
+}
+
+textarea{
+	margin-right: 0;
+}
+-->
+.line-height {
+		line-height: 100px;
+	}
+.padding-top {
+		padding-top: 0.7rem !important;
+	}
+	.full_width {
+		 width: 100% !important;
+	}
+
+.node-name{
+	min-height:35px;
+}
+.node-list{
+	display: flex;
+	align-items: stretch;
+}
+
+.node-list .node-name{
+	border:1px solid #cccccc;
+	width:10%;
+	text-align:center;
+}
+	
+.node-item{	
+	width:10%;
+	height:100%;
+}
+
+.tsuchi-item .node-name{
+	border:1px solid #cccccc;
+	width:100%;
+	padding:5px;
+	background-color: #ffca80 !important;
+	text-align:center;	
+}
+
+.node-tanto{
+	border:1px solid #cccccc;
+	width:10%;
+	padding:5px;	
+	text-align:left;
+	min-height:35px;
+}
+
+.tsuchi-item .node-name{
+	border:1px solid #cccccc;
+	width:100%;
+	padding:5px;
+	background-color: #ffca80 !important;
+	text-align:center;	
+}
+
+.tsuchi-item{	
+	width:10%;
+	margin-right:20px;
+}
+
+.tsuchi-item ul{	
+	border:1px solid #cccccc;
+	width:100%;
+	padding:5px;	
+	text-align:left;
+	min-height:30px;
+}
+
+.tsuchi-item ul li {
+    margin: 0 0 5px 0;
+    padding: 2px 6px;
+}
+
+div {
+  	word-break: break-word;
+	white-space: normal;
+}
+
+.ul_ip_tanto{
+	padding-top:10px;
+}
+
+.ul_ip_tanto li{
+	padding:3px;
+}
+
+.ul_tanto_kakari li{
+	padding:3px;
+}
+
+p.notice{
+	margin-left:1em;
+	text-indent:-1em;
+	margin-bottom: 0.1em !important;
+}
+
+.responsive-table-wrapper{
+	/* multiselectが動かないのでoverflow-x:autoを上書き */
+	overflow-x:visible;
+}
+
+</style>
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+
+    <script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js" type="text/javascript"></script>
+	<script type="text/javascript" src="lo_csjs/form-change-trigger.js"></script>
+	<script type="text/javascript" src="lo_csjs/decimal.js"></script>
+
+	<title>アカウント申請（社内ユーザ用）</title>
+</imart>
+<body id="body" style="display: none">
+	<!-- フローID-->
+	<imart type="hidden" imwFlowId=$wf_data.imwFlowId escapeJs="false" escapeXml="true"/>
+	<!-- header -->
+	<div class="container-fluid">
+		<imart type="include" page="lo/contents/screen/header"></imart>
+	</div>
+	<!-- header -->
+	<div class="container">
+		<div class="row">
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<imart type="include" page="lo/contents/screen/sidemenu"></imart>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<!-- main contents -->
+			<div class="main col">
+
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display:none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<div class="page-information row my-4">
+					<div class="col-12">						
+						<h1>アカウント申請（社内ユーザ用）</h1>						
+						<button type="button" onclick="history.back();return false;" class="brdr_orange txt_orange mt-2">
+							<i class="fas fa-caret-left "></i><span>戻る</span>
+						</button>
+					</div>
+					<div class="col-12 col-lg-7 mt-3">
+						<!-- <imart type="message" id="KY02I015" escapeJs="true"></imart>-->
+					</div>
+				</div>
+				<imart type="imuiTextbox" id="bunsho_cls" name="bunsho_cls" value=$bunshoCls hidden="true" />
+				<article>
+					<section class="show">
+						<div class="container">
+							<div class="row">
+								<div class="col-12">																
+									<div class="col-12 row mt-2 mb-2">
+										<imart type="condition" validity=$shinsei_data.registration_flg negative> <!-- 新規登録ではない場合 -->
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">申請番号</div>
+											<div class="col-8 col-lg-2 brdr_ltgray text-center t-header">
+												<imart type="string" id="shinsei_id" name="shinsei_id" value=$shinsei_data.shinsei_id readonly="true" />
+												<imart type="imuiTextbox" id="shinsei_id" name="shinsei_id" value=$shinsei_data.shinsei_id hidden="true" />
+												<imart type="imuiTextbox" id="koushin_bi" name="koushin_bi" value=$shinsei_data.koushin_bi hidden="true" escapeXml="true"/>
+											</div>
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">ステータス</div>
+											<div class="col-8 col-lg-2 brdr_ltgray text-center t-header">												
+												<span class='kawari-status pr<imart type="string" value=$shinsei_data.shinsei_status />'>					
+													<imart type="string" value=$shinsei_data.shinsei_status_name />
+												</span>												
+											</div>
+										</imart>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">申請日</div>
+										<div class="col-8 col-lg-2 t-header text-padding back-color">
+											<IMART type="string" class="form-control" name="shinsei_bi" id="shinsei_bi" value=$shinsei_data.shinsei_bi></IMART>
+											<IMART type="input" style="hidden" name="shinsei_bi" id="shinsei_bi" value=$shinsei_data.shinsei_bi></IMART>
+										</div>										
+									</div>									
+								</div>								
+							</div>											
+						<div class="col-12 mt-2 mb-2">
+							<div class="row">
+								<div class="col-12 col-lg-3">
+									<h4 class="indent">アカウント登録者</h4>
+								</div>								
+							</div>
+							<div style="line-height: 25px;">
+								<p class="col-12 notice">※メールアドレスの変更を行う場合は、アカウントの再発行が必要になりますので、新規で登録申請をお願いします。<br>
+								また、旧アカウントを停止する必要がありますので、進行中の申請書がないことをご確認ください。</p>	
+								<p class="col-12 notice">※利用グループが「IP担当者」の場合、「承認経路」、「所属IP担当グループ」は必須です。</p>
+								<p class="col-12 notice">※ユーザを「完了通知先」として登録する場合は、「完了通知先」を選択してください。</p>				
+								
+							</div>	
+							<div class="row responsive-table-wrapper">
+								<table id="shinsei_table" class="table table_border_radius bnadium-table" title="アカウント登録者">
+									<thead>
+										<tr role="row">
+											<th class="col_50"><input type="checkbox" name="checkall" id="checkall_user"></th>
+											<th class="col_50">#</th>
+											<th class="col_75"><label>申請区分</label></th>
+											<th class="col_150"><label>ユーザコード</label></th>
+											<th class="col_150"><label>姓 名</label><span class="mark-req"> *</span></th>
+											<th class="col_100"><label>姓 名（フリガナ）</label><span class="mark-req"> *</span></th>
+											<th class="col_150"><label>メールアドレス</label></th>
+											<th class="col_100"><label>利用グループ</label><span class="mark-req"> *</span></th>
+											<th class="col_150"><label>承認経路</label> <span id="shonin_keiro_icon"  style="cursor:pointer;" class="im-smart-icon-common-24-question"></span></th>	
+											<th class="col_150"><label>所属IP担当グループ</label></th>
+											<th class="col_100"><label>完了通知先　<span id="tanto_kakari_info_icon" style="cursor:pointer;" class="im-smart-icon-common-24-question"></span></label></th>																			
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-12 form-group text-right mb-2">
+								<button type="button" id="shinsei_row_add_btn" class="bg_orange txt_dark mb-2"><i class="fas fa-check-circle"></i><span>追加</span></button>
+								<!-- 
+								<button type="button" id="shinsei_row_copy_btn" class="bg_orange txt_dark mb-2"><i class="fas fa-copy"></i><span>複製</span></button>
+								-->
+								<button type="button" id="shinsei_row_del_btn" class="brdr_orange txt_orange mb-2"><i class="fas fa-trash-alt"></i><span>削除</span></button>
+							</div>
+						</div>
+						<div style="height:20px;"></div>						
+						
+						<div class="col-12 mt-2 mb-2">
+							<div class="row">
+								<div class="col-12 col-lg-3">
+									<h4 class="indent">その他</h4>
+								</div>								
+							</div>							
+						
+							<div class="form-group row">
+								<div class="col-2 mb-2 t-header bg_ltorange brdr_ltgray text-center radio_height">備考</div>
+								<div class="col-10 mb-2 left-justified right-justified">
+									<div class="input-group">
+										<imart type="imuiTextArea" id="biko" name="biko" class="form-control biko resetTarget" rows="6" maxlength="10000" placeholder="詳細を記載してください" value=$shinsei_data.biko />
+									</div>
+								</div>								
+							</div>
+						</div>
+							
+						<imart type="condition" validity=$kawari_data.registration_flg negative> <!-- 新規登録ではない場合 -->
+						<div class="col-12 mt-2 mb-2">
+							<div class="row">
+								<div class="col-12 col-lg-1">
+									<h4 class="indent">経路</h4>
+								</div>									
+							</div>
+						</div>
+						<div class="col-12 mt-2 mb-2">							
+							<div class="row node-list">
+									<div class="node-name t-header bg_ltorange brdr_ltgray lo-center">入力者</div>
+									<div class="node-name t-header bg_ltorange brdr_ltgray lo-center">BNE担当者</div>
+									<div class="node-name t-header bg_ltorange brdr_ltgray lo-center">承認者</div>
+									<div class="node-name t-header bg_ltorange brdr_ltgray lo-center">システム担当者</div>									
+									<div class="node-name t-header bg_ltorange brdr_ltgray lo-center">完了確認者</div>
+							</div>
+							<div class="row node-list">
+									<div class="node-tanto pt-2 pb-2"><imart type="string" value=$nodeUserslist.apply.userName escapeJs="false" escapeXml="true" /></div>
+									<div class="node-tanto pt-2 pb-2"><imart type="string" value=$nodeUserslist.bne_tanto.userName escapeJs="false" escapeXml="true" /></div>
+									<div class="node-tanto pt-2 pb-2"><imart type="string" value=$nodeUserslist.appr_1.userName escapeJs="false" escapeXml="true" /></div>
+									<div class="node-tanto pt-2 pb-2"><imart type="string" value=$nodeUserslist.sys_tanto.userName escapeJs="false" escapeXml="true" /></div>
+									<div class="node-tanto pt-2 pb-2"><imart type="string" value=$nodeUserslist.last_confirm.userName escapeJs="false" escapeXml="true" /></div>
+							</div>
+						</div>
+						<div class="row mt-2 mb-2">
+						<div class="col-12">
+							<h4>通知先</h4>
+							<div class="col-8 row">
+								<div class="node-name col-2 t-header bg_ltorange brdr_ltgray lo-center">起案時通知先</div>
+								<div class="node-name col-2 t-header bg_ltorange brdr_ltgray lo-center">完了通知先</div>								
+							</div>
+							<div class="col-8 row">
+								<div class="node-name col-2 brdr_ltgray pt-1 pb-1">
+									<ul class="mb-0">
+									<imart type="repeat" list=$mailDefUsers.mail_1 item="item" index="idx">
+										<li class="pt-1"><imart type="string" value=item.user_name escapeJs="false" escapeXml="true" /></li>
+									</imart>
+									</ul>
+								</div>
+								<div class="node-name col-2 brdr_ltgray pt-1 pb-1">
+									<ul class="mb-0">
+									<imart type="repeat" list=$mailDefUsers.mail_3 item="item" index="idx">
+										<li class="pt-1"><imart type="string" value=item.user_name escapeJs="false" escapeXml="true" /></li>
+									</imart>
+									</ul>
+								</div>								
+							</div>
+						</div>
+						</div>
+						</imart>
+						
+						<div id="commentArea" class="row not-print-area">
+							<div class="col-12">
+								<h4>コメント</h4>								
+								<imart type="include" page="lo/contents/screen/common/comment" ticketId=$shinsei_data.shinsei_id tempFileNoDisp=true ></imart>
+							</div>
+						</div>
+
+						<!-- エラー表示エリア -->
+						<div class="row">
+							<div id="error-messages" class="col-12 mt-4 mb-2">
+							</div>
+						</div>
+						
+						<div class="ml-4">
+							<button type="button" class="brdr_orange txt_orange p-3 mb-2" onclick="moveToPageTop(100);">
+								▲ページ先頭へ戻る
+							</button>
+						</div>
+
+						<div class="row">
+							<div class="col-12">
+								<div class="col-12 mt-2 mb-2">
+									<div class="form-group row mb-2">
+										<div class="flex_btn">
+											<imart type="condition" validity=$shanaiShuseiFlg negative>
+												<imart type="condition" validity=$shinsei_data.registration_flg negative>
+												<button type="button" class="brdr_orange txt_orange mb-2" id="delete_btn" name="delete_btn">
+													<i class="fas fa-trash-alt"></i><span>削除</span>
+												</button>
+												</imart>
+												<button type="button" id="temp_save_btn" class="bg_orange txt_dark mb-2">
+													<i class="fas fa-check-circle fa-2x"></i><span>一時保存</span>
+												</button>
+											</imart>												
+											<button type="button" id="save_btn" class="bg_orange txt_dark mb-2">
+												<i class="fas fa-check-circle fa-2x"></i><span>登録</span>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</section>
+				</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+			<!-- main contents -->
+			
+			<div id="select-template" style="display: none;">
+				<imart type="imuiSelect" class="custom-select" name="shinsei_cls" list=$form.shinsei_cls_list />
+				<imart type="imuiSelect" class="custom-select" name="shinsei_cls_2" list=$form.shinsei_cls_list2 />
+				<imart type="imuiSelect" class="custom-select" name="shinsei_cls_add" list=$form.shinsei_cls_list_add />
+				<imart type="imuiSelect" class="custom-select" name="shonin_keiro" list=$form.shonin_keiro_list />
+				<imart type="imuiSelect" class="custom-select multiple" name="riyo_group_tmp" list=$form.riyo_group_list />
+				<imart type="imuiSelect" class="custom-select" name="tanto_kakari" list=$form.tanto_kakari_list />				
+			</div>
+			<div id="imuiCalendar-template" style="display: none;">
+				<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#replaceTemplateId" showMonthAfterYear="true"　onSelect="onSelectCalender" onClose="onSelectCalender" />
+			</div>
+			<div class="popup" id="js-popup2">
+				<div class="popup-inner2">
+					<div class="close-btn" id="js-close-btn2"><i class="fas fa-times"></i></div><br>
+					<imart type="include" page="lo/contents/screen/common/title_search" mode="radio"></imart>
+				</div>
+				<div class="black-background" id="js-black-bg2"></div>
+			</div>
+			<div class="popup" id="js-popup3">
+				<div class="popup-inner2">
+					<div class="close-btn" id="js-close-btn3">
+						<i class="fas fa-times"></i>
+					</div>
+					<br>					
+					<imart type="include" page="lo/contents/screen/common/kaisha_search" mode="radio"></imart>
+					
+				</div>
+				<div class="black-background" id="js-black-bg3"></div>
+			</div>
+			<div class="popup" id="js-popup4">
+				<div class="popup-inner2" style="width:50%;">
+					<div class="close-btn" id="js-close-btn4">
+						<i class="fas fa-times"></i>
+					</div>
+					<br>
+					<imart type="include" page="lo/contents/screen/common/tanto_kakari_search" mode="radio"></imart>
+				</div>
+				<div class="black-background" id="js-black-bg4"></div>
+			</div>		
+			
+		</div>
+	</div>	
+
+	<script type="text/javascript">
+		// 代わり承認ステータス取得
+		var shinsei_status = '<imart type="string" value=$shinsei_data.shinsei_status />';	
+		
+		// 詳細上限取得
+		var shinsei_max =500;
+		
+		/**
+		 * open関数
+		 * ユーザ検索画面を呼び出し選択ユーザを追加する
+		 */
+		var targetid;
+		var shinsei_cls;
+		function openSearchUser(id) {
+			targetid = id;//呼び出し元取得
+			
+			shinsei_cls = $("#"+targetid).closest("tr").find("[name=shinsei_cls]").val();
+			$("#"+targetid).closest("tr").find("[name=shinsei_cls]").val("1");
+			
+		    var parameter = {
+		        tabs : [
+		            {
+		                id    : "jp.co.intra_mart.master.app.search.tabs.user.tree_public_group",
+		                title : "ユーザ検索"
+		            }
+		        ],
+		        prop : {
+		            'jp.co.intra_mart.master.app.search.tabs.user.list_user' : ['user_cd', 'user_name'],
+		        },
+		        "criteria" : {
+		            "public_group_set" : {
+		                "public_group_set_cd" : "license_out",
+		                "public_group" : {
+		                    "public_group_cd" : "lo_bne_group",
+		                    "compare" : "le"
+		                }
+		            }
+		        },        
+		        callback_function           : 'setUser',
+		        basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+		        wnd_title                   : "ユーザ検索",
+		        message                     : "ユーザ検索",
+		        wnd_close                   : true,
+		        type                        : 'single',
+		        deleted_data                : false,
+		        target_locale               : 'ja',
+		        additional_disp             : true,
+		        additional_user_search_name : true,
+		        additional_dept             : true
+		    };
+		    
+		    // 検索画面を開く
+		    imACMSearchDialog.open(parameter);
+		}
+		/**
+		 * ユーザ追加（singl）(callback関数)
+		 */
+		function setUser(object){
+			var objId = '#'+targetid;
+			
+			//既存ユーザ削除
+			$(objId).empty();
+			
+			// 選択したユーザを追加
+			for (var i = 0; i < object.length; i++) {
+				var usernm = object[i].data.user_name;
+				var usercd = object[i].data.user_cd;
+
+				$("input"+objId).val(usernm);
+				$("span"+objId).text(usernm);				
+				
+				$(objId).closest("tr").find("[name=user_cd]").val(usercd);				
+
+				var userObj = setUserInfo(usercd);
+				$(objId).closest("tr").find("[name='user_kana']").val(userObj.user_kana);
+				$(objId).closest("tr").find("[name='mail_address']").val(userObj.mail_address);
+				$(objId).closest("tr").find("[name='mail_address']").prop("disabled",true);
+
+				$(objId).closest("tr").find("[name='shonin_keiro']").val(userObj.shonin_keiro_id);
+				
+				var riyoGroupListStr = userObj.riyo_group;
+				
+				$(objId).closest("tr").find("[name='riyo_group'] option").prop("selected",false);
+				
+				$(objId).closest("tr").find("[name='riyo_group']").next().children('.multiselect-container').children('.multiselect-reset').children('div').children('a').trigger('click');
+				$(objId).closest("tr").find("[name='riyo_group']").multiselect('select', riyoGroupListStr, true);			
+				$(objId).closest("tr").find("[name='riyo_group']").change();
+				$(objId).closest("tr").find("[name='user_nm']").focus();
+				// 利用グループの配列が、IP担当者を含む場合
+				if(userObj.riyo_group.indexOf("1") > -1){//IP担当者の場合、追加で取得
+					targetid = $(objId).closest("tr").find(".ul_ip_tanto").attr("id");					
+					$("#"+targetid).text("");
+					//IP担当者テーブル					
+					var pubGrpList = getUserPubGrpList(usercd);
+					
+					setPublicGroupList2(pubGrpList);
+					
+					// 完了通知先グループ取得
+					targetid = $(objId).closest("tr").find(".ul_tanto_kakari").attr("id");
+					$("#"+targetid).text("");
+					var tantoKakariList = getUserTantoKakariList(usercd);
+					
+					setTantoKakariList(tantoKakariList);
+				}else{//IP担当者以外の場合、追加項目を非活性
+					
+				}
+				
+				$("#"+targetid).closest("tr").find("[name=shinsei_cls]").val(shinsei_cls);
+				
+			}
+			// 非活性制御前にデータを変数へ格納するため、changeを発動させる
+			$(objId).closest("tr").find("[name='user_cd'],[name='user_nm'],[name='user_kana'],[name='mail_address'],[name='shonin_keiro'],.ul_ip_tanto,.ul_tanto_kakari").change();
+
+			// 非表示・非活性の制御
+			setFormat(shinsei_cls ,objId);
+			// 非表示・非活性の制御後、入力チェック
+			validateAndShowMessage();
+		}
+		
+		function setFormat(shinsei_cls ,objId){
+			if(shinsei_cls =="2"){
+				$(objId).closest("tr").find("[name=user_cd],[name=user_nm],[name='user_kana'],[name='mail_address'],[name='shonin_keiro'],[name='tanto_kakari'],.ul_ip_tanto,.ul_tanto_kakari").change();
+				$(objId).closest("tr").find("[name='mail_address']").prop("disabled",true);
+			}else if(shinsei_cls =="3"){
+			
+				$(objId).closest("tr").find("[name=user_nm],[name='user_kana'],[name='mail_address'],[name='riyo_group'],[name='shonin_keiro'],[name='tanto_kakari'],.ul_ip_tanto,.ul_tanto_kakari").prop("disabled",true);
+				$(objId).closest("tr").find(".ip-tanto-control").hide();
+				$(objId).closest("tr").find(".tanto-kakari-control").hide();
+				$(objId).closest("tr").find(".ul_ip_tanto .group_item,.ul_tanto_kakari .group_item").prop("disabled",true);
+			}	
+		}
+		
+		// ユーザ検索複数(通知設定用)
+		function openSearchPublicGroupMult(id) {
+			targetid = id;//呼び出し元取得
+		    var parameter = {
+		        tabs : [
+		            {
+		                id    : "jp.co.intra_mart.master.app.search.tabs.public_group.tree",
+		                title : "パブリックグループ検索"
+		            }
+		        ],
+		        prop : {
+		            'jp.co.intra_mart.master.app.search.tabs.public_group.tree' : ['public_group_cd', 'public_group_name'],
+		        },
+		        "criteria" : {
+		            "public_group_set" : {
+		                "public_group_set_cd" : "license_out",
+		                "public_group" : {
+		                    "public_group_cd" : "lo_approva_group_0",
+		                    "compare" : "le"
+		                }
+		            }
+		        },        
+		        callback_function           : 'setPublicGroupList',
+		        basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+		        wnd_title                   : "パブリックグループ検索",
+		        message                     : "パブリックグループ検索",
+		        wnd_close                   : true,
+		        type                        : 'multiple',
+		        deleted_data                : false,
+		        target_locale               : 'ja',
+		        additional_disp             : true,
+		        additional_user_search_name : true,
+		        additional_dept             : true
+		    };
+		    // 検索画面を開く
+		    imACMSearchDialog.open(parameter);
+		}
+
+		/**
+		 * ユーザ追加(複数)(callback関数)
+		 */
+		function setPublicGroupList2(object){
+
+			var objId = '#'+targetid;
+			//既存ユーザ取得
+			var users=[];
+			$(objId).find('input:checkbox[name="publicGroupCd"]').each(function() {
+				users.push($(this).val());
+			});
+			// 一件もなければ指定なしを消す
+			if(users.length == 0 && object.length > 0){
+				$(objId).empty();
+			}
+			// 選択したユーザを追加
+			for (var i = 0; i < object.length; i++) {
+				var pubnm = object[i].public_group_name;
+				var pubcd = object[i].public_group_cd;
+				if (users.indexOf(pubcd) == -1){ //まだ設定されていいないユーザのみ追加
+					$(objId).append(publicGroupTagWithCheckBox(pubcd, pubnm));
+				}
+			}
+		}
+		
+		/**
+		 * ユーザ追加(複数)(callback関数)
+		 */
+		function setTantoKakariList(object){
+
+			var objId = '#'+targetid;
+			//既存ユーザ取得
+			var users=[];
+			$(objId).find('input:checkbox[name="tantoKakariCd"]').each(function() {
+				users.push($(this).val());
+			});
+			// 一件もなければ指定なしを消す
+			if(users.length == 0 && object.length > 0){
+				$(objId).empty();
+			}
+			// 選択したユーザを追加
+			for (var i = 0; i < object.length; i++) {
+				var pubnm = object[i].public_group_name;
+				var pubcd = object[i].public_group_cd;
+				if (users.indexOf(pubcd) == -1){ //まだ設定されていいないユーザのみ追加
+					$(objId).append(tantoKakariTagWithCheckBox(pubcd, pubnm));
+				}
+			}
+		}
+		
+		/**
+		 * ユーザ追加(複数)(callback関数)
+		 */
+		function setPublicGroupList(object){
+
+			var objId = '#'+targetid;
+			//既存ユーザ取得
+			var users=[];
+			$(objId).find('input:checkbox[name="publicGroupCd"]').each(function() {
+				users.push($(this).val());
+			});
+			// 一件もなければ指定なしを消す
+			if(users.length == 0 && object.length > 0){
+				$(objId).empty();
+			}
+			// 選択したユーザを追加
+			for (var i = 0; i < object.length; i++) {
+				var pubnm = object[i].data.public_group_name;
+				var pubcd = object[i].data.public_group_cd;
+				if (users.indexOf(pubcd) == -1){ //まだ設定されていいないユーザのみ追加
+					$(objId).append(publicGroupTagWithCheckBox(pubcd, pubnm));
+				}
+			}
+			
+			validateAndShowMessage();
+		}
+		
+		function publicGroupTagWithCheckBox(pubCd, pubNm){
+			return	'<li><label><input type="checkbox" class="group_item" name="publicGroupCd" value="'+pubCd+'"/>'+pubNm+'</label></li>';	
+		}		
+		
+		
+		function tantoKakariTagWithCheckBox(cd, nm){
+			return	'<li><label><input type="checkbox" class="group_item" name="tanto_kakari_cd" value="'+cd+'"/>'+nm+'</label></li>';	
+		}
+
+		
+		
+		// パブリックグループ削除
+		function delUser(delid){
+			var objId = '#'+delid;
+			
+			// 削除対象ユーザ取得
+			var delobj = $(objId).find('input:checkbox[name="publicGroupCd"]:checked');
+			
+			// 一件も選択されてない
+			if(delobj.length == 0){
+				imuiAlert('削除対象が選択されていません。', '警告');
+				return false;
+			}
+			
+			// 削除
+			imuiConfirm('選択したグループを削除します。よろしいですか？', '確認', function() {
+				delobj.each(function() {
+					$(this).parent().remove();
+				});
+				
+			});
+			
+			validateAndShowMessage();
+		}
+
+		
+		function openSearchDepartment(id) {
+			targetid = id;//呼び出し元取得
+		    var parameter = {
+		        tabs : [
+		            {
+		                id    : "jp.co.intra_mart.master.app.search.tabs.department.tree",
+		                title : "部門検索"
+		            }
+		        ],
+		        prop : {
+		            'jp.co.intra_mart.master.app.search.tabs.department.tree' : ['department_cd', 'department_name'],
+		        },
+		        "criteria" : {
+		        	"department_set" : {
+		                "company_cd" : "3001",
+		                "department_set_cd" : "3001",
+		                "department" : {
+		                    "department_cd" : "3001",
+		                    "compare" : "le"
+		                }
+		            }
+		        },        
+		        callback_function           : 'setDepartment',
+		        basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+		        wnd_title                   : "部門検索",
+		        message                     : "部門検索",
+		        wnd_close                   : true,
+		        type                        : 'single',
+		        deleted_data                : false,
+		        target_locale               : 'ja',
+		        additional_disp             : true,
+		        additional_user_search_name : true,
+		        additional_dept             : true
+		    };
+		    
+		    // 検索画面を開く
+		    imACMSearchDialog.open(parameter);
+		}
+		/**
+		 * ユーザ追加（singl）(callback関数)
+		 */
+		function setDepartment(object){
+			var objId = '#'+targetid;
+			
+			//既存ユーザ削除
+			//$(objId).empty();
+			
+			// 選択したユーザを追加
+			for (var i = 0; i < object.length; i++) {
+				var deptnm = object[i].data.department_name;
+				var deptcd = object[i].data.department_cd;
+
+				$(objId+" [name=busho_nm]").val(deptnm);
+				$(objId+" [name=busho_cd]").val(deptcd);
+				
+			}
+		}
+		
+		function deptTag(deptCd, deptNm){
+			return	'<input type="hidden" name="bumon_code" value="'+deptCd+'"/>'+deptNm;
+			//return	deptNm;	
+		}
+		function deptTagWithCheckBox(userCd, userNm){
+			return	'<li><input type="checkbox" name="userCd" value="'+userCd+'"/>'+userNm+'</li>';	
+		}
+		
+		// パブリックグループ削除
+		function delTantoKakari(delid){
+			var objId = '#'+delid;
+			
+			// 削除対象ユーザ取得
+			var delobj = $(objId).find('input:checkbox[name="tanto_kakari_cd"]:checked');
+			
+			// 一件も選択されてない
+			if(delobj.length == 0){
+				imuiAlert('削除対象が選択されていません。', '警告');
+				return false;
+			}
+			
+			// 削除
+			imuiConfirm('選択したグループを削除します。よろしいですか？', '確認', function() {
+				delobj.each(function() {
+					$(this).parent().remove();
+				});
+				
+			});
+			
+			validateAndShowMessage();
+		}
+
+
+		var validationErrorMessages = <imart type="string" value=$validationErrorMessages />;
+		function validate() {			
+			var validationRules = [				
+				{type: "single", dataCategory: "basic",
+					items: [
+						{selectorType: "name", name: "shinsei_bi", validations:[{type: "required", messageId: "KS02E003"}]},
+						{selectorType: "name", name: "shinsei_bi", validations:[{type: "calender", messageId: "KS02E024"}]}					
+
+				 	]
+				},
+				{type: "grid", dataCategory: "goods",  rowSelector: "#shinsei_table tbody tr",
+					items: [					        
+						{selectorType: "name", name: "user_nm", validations:[{type: "required_table", messageId: "ER02E001"}]},
+						{selectorType: "name", name: "user_kana", validations:[{type: "required_table", messageId: "ER02E001"}]},
+						{selectorType: "name", name: "mail_address", validations:[{type: "required_table", messageId: "ER02E001"}]},
+						{selectorType: "name", name: "mail_address", validations:[{type: "duplicate", messageId: "AS02E001"}]},
+						{selectorType: "name", name: "riyo_group", validations:[{type: "required_table", messageId: "ER02E001"}]},
+						{selectorType: "name", name: "riyo_group", validations:[{type: "riyo_group", messageId: "AS02E003"}]},
+						{selectorType: "name", name: "shonin_keiro", validations:[{type: "shonin_keiro", messageId: "ER02E001"}]},
+						{selectorType: "name", name: "ip_tanto_dummy", validations:[{type: "ip_tanto", messageId: "ER02E001"}]},
+				 	]
+				},				
+			];
+			
+			
+			
+			var natNgList = chkInputNatOnly();
+			var numNgList = chkInputNumOnly();
+			var spaceNgList = chkInputSpace();
+			
+			var validateItem = function(itemName, $item, validations, index) {
+				var result = [];
+				if ($item.is(':disabled')) {
+					return result;
+				}
+				
+				var errorMessage ="";
+				for (var validationIndex in validations) {
+					errorMessage =""
+
+					var validation = validations[validationIndex];
+					var messageId = null;
+					
+					if (validation.type == "required") {
+						if ($item.is(":radio") || $item.is(":checkbox")) {
+							var checked = false;
+							$item.each(function(index, element) {
+								var $element = $(element);
+								if ($element.is(":checked")) {
+									checked = true;
+									return false;
+								}
+							});
+							if (checked == false) {
+								messageId = validation.messageId;
+							}
+						} else {
+							if ($item.length == 0 || $item.val() == '') {
+								messageId = validation.messageId;
+							}
+						}
+					}
+					if (validation.type == "simplex" || validation.type == "unique") {
+						var uniqueArray = [];
+						$item.each(function(index, element) {
+							var $element = $(element);
+							if (uniqueArray.indexOf($element.val()) < 0) {
+								uniqueArray.push($element.val());
+							}
+						});
+						if (validation.type == "unique") {
+							if ($item.length != uniqueArray.length) {
+								messageId = validation.messageId;
+							}
+						}
+						if (validation.type == "simplex") {
+							if (uniqueArray.length > 1) {
+								messageId = validation.messageId;
+							}
+						}
+					}
+					if (validation.type == "nat") {
+						if(natNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+					}
+					if (validation.type == "num") {
+						if(numNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+					}	                
+	                
+	                if (validation.type == "numeric") {
+	                	if(numNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+	                	
+	                	if ($item.val() !="" && $item.val() !=undefined){	                		
+		                	var numbers = String(convertWideToHalf($item.val().replace(/,/g, ''))).split('.');          	 
+		                    var seisu = numbers[0] ? numbers[0].length : 0;
+		                    var shousu = numbers[1] ? numbers[1].length : 0;
+		                    var precision = validation.precision;
+		                    if(seisu > precision[0] || shousu > precision[1]){
+		                    	messageId = validation.messageId;
+		                    }
+	                	}
+	                }
+					if (validation.type == "space") {
+						if(spaceNgList.indexOf($item[0]) >= 0) messageId = validation.messageId;
+					}
+					if (validation.type == "calender") {
+						if (!$item.val() == '' && !$item.val().match(/^(\d+)\/(\d+)\/(\d+)$/)) {
+	                		messageId = validation.messageId;
+	                	}
+	                }
+					
+					if (validation.type == "duplicate") {
+						if($item.val() !=""){
+							try {
+								ret = jsspRpcAccountRegister.mailExistsCheck($item.val());
+								
+								if(ret){
+									messageId = validation.messageId;								
+								}
+						    } catch (ex) {					    	
+						        
+						    }
+						}
+	                }
+					
+					if (validation.type == "required_table") {
+						if ($item.is(":radio") || $item.is(":checkbox")) {
+							var checked = false;
+							$item.each(function(index, element) {
+								var $element = $(element);
+								if ($element.is(":checked")) {
+									checked = true;
+									return false;
+								}
+							});
+							if (checked == false) {
+								messageId = validation.messageId;
+							}
+						} else if($item.prop("tagName") =="SELECT" && $item.prop("multiple")) {
+							if ($item.val() == null) {
+								messageId = validation.messageId;
+							}
+						} else {
+							if ($item.length == 0 || $item.val() == '') {
+								messageId = validation.messageId;
+							}
+						}
+						
+						if (messageId == null) {
+							break;
+						}
+						
+						errorMessage = validationErrorMessages[messageId];
+
+						if($item.length >0){							
+							var idx = $item.closest("td").index();
+							var table_title = $item.closest("table").attr("title");
+							var title = $item.closest("table").find("th").eq(idx).find("label").text();
+							
+							errorMessage = errorMessage.replace("{0}", title);							
+							
+							if (typeof index != "undefined") {
+								errorMessage = "【"+table_title+"】 #"+(index + 1)+" "+errorMessage;
+							}
+							
+							result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});							
+						}
+						
+						break;
+	                }
+					
+					// チェックルール：利用グループ
+					if (validation.type == "riyo_group") {
+						
+						if($item.prop("tagName") =="SELECT" && $item.prop("multiple")) {
+							var riyo_group_val = [];
+							
+							if($item.val() !== null){
+								riyo_group_val = $item.val().toString().split(",");	
+							}
+							
+							if(riyo_group_val.indexOf("1") > -1 && riyo_group_val.indexOf("6") > -1){
+								// IP担当者と代わり承認の組み合わせNG
+								messageId = "AS02E003";
+							}else if(riyo_group_val.indexOf("5") > -1 && riyo_group_val.length >1){
+								// 参照のみとそれ以外の組み合わせNG
+								messageId = "AS02E004";
+							}
+							
+							if (messageId == null) {
+								break;
+							}
+						
+							errorMessage = validationErrorMessages[messageId];
+	
+							if($item.length >0){							
+								var idx = $item.closest("td").index();
+								var table_title = $item.closest("table").attr("title");
+								var title = $item.closest("table").find("th").eq(idx).find("label").text();
+								
+								errorMessage = errorMessage.replace("{0}", title);							
+
+								if (typeof index != "undefined") {
+									errorMessage = "【"+table_title+"】 #"+(index + 1)+" "+errorMessage;
+								}								
+								result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});								
+								
+							}
+							break;
+						}
+
+	                }
+					
+					if (validation.type == "shonin_keiro") {
+						var riyo_group_val = $item.closest("tr").find("[name=riyo_group]").val();	
+
+						if(riyo_group_val =="1"){
+							if ($item.is(":radio") || $item.is(":checkbox")) {
+								var checked = false;
+								$item.each(function(index, element) {
+									var $element = $(element);
+									if ($element.is(":checked")) {
+										checked = true;
+										return false;
+									}
+								});
+								if (checked == false) {
+									messageId = validation.messageId;
+								}
+							} else {
+								if ($item.length == 0 || $item.val() == '') {
+									messageId = validation.messageId;
+								}
+							}
+						
+							if (messageId == null) {
+								break;
+							}
+							
+							errorMessage = validationErrorMessages[messageId];
+	
+							if($item.length >0){							
+								var idx = $item.closest("td").index();
+								var table_title = $item.closest("table").attr("title");
+								var title = $item.closest("table").find("th").eq(idx).find("label").text();
+								
+								errorMessage = errorMessage.replace("{0}", title);							
+								
+								if (typeof index != "undefined") {
+									errorMessage = "【"+table_title+"】 #"+(index + 1)+" "+errorMessage;
+								}
+								
+								result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});							
+							}
+							
+							break;
+						}
+	                }
+					
+					if (validation.type == "ip_tanto") {
+						var riyo_group_val = $item.closest("tr").find("[name=riyo_group]").val();
+						var riyo_group_array = [];
+						
+						if(riyo_group_val !== null){
+							riyo_group_array = $item.closest("tr").find("[name=riyo_group]").val().toString().split(",");
+						}
+						// 利用グループにIP担当が含まれている場合は、担当IP選択必須
+						if(riyo_group_array.indexOf("1") > -1){
+							
+							var ip_tanto_num = $item.closest("td").find("[name=publicGroupCd]").length;
+							
+							if(ip_tanto_num){
+								checked = true;
+								messageId = null;								
+							}else{
+								messageId = validation.messageId;
+							}
+
+							if (messageId == null) {
+								break;
+							}
+							
+							errorMessage = validationErrorMessages[messageId];
+	
+							if($item.length >0){							
+								var idx = $item.closest("td").index();
+								var table_title = $item.closest("table").attr("title");
+								var title = $item.closest("table").find("th").eq(idx).find("label").text();
+								
+								errorMessage = errorMessage.replace("{0}", title);							
+								
+								if (typeof index != "undefined") {
+									errorMessage = "【"+table_title+"】 #"+(index + 1)+" "+errorMessage;
+								}
+								
+								result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});							
+							}
+							
+							break;
+						}
+	                }	
+					
+					if (messageId != null) {					
+						errorMessage = validationErrorMessages[messageId];	
+						
+						if (typeof index != "undefined") {
+							errorMessage = errorMessage.replace("{0}", "#" + (index + 1));
+						}
+						result.push({itemName: itemName, type: validation.type, messageId: messageId, errorMessage:　errorMessage});
+						break;
+					}
+				}
+
+				return result;
+			}
+
+			var validateItems = function($container, items, index) {
+				var allResult = [];
+				for (var itemKey in items) {
+					var validationItem = items[itemKey];
+					var selectorType = validationItem.selectorType;
+					var itemName = validationItem.name;
+					var validations = validationItem.validations;
+					var $item = $container.find(selectorType == 'class' ? '.' + itemName : '[name="' + itemName + '"]');
+					var result = validateItem(itemName, $item, validations, index);
+					allResult = allResult.concat(result);
+				}
+				return allResult;
+			}
+
+			var validateResult = {
+				isError: false,
+				itemResults: []
+			};
+			for (var typeKey in validationRules) {
+				var ruleType = validationRules[typeKey];
+				if (ruleType.type == 'grid') {
+					var $rows = $(ruleType.rowSelector);
+					$rows.each(function(index, element) {						
+						var $row = $(element);
+						var result = validateItems($row, ruleType.items, index);
+						validateResult.itemResults = validateResult.itemResults.concat(result);
+					});
+				} else {
+					var $body = $("body");
+					var result = validateItems($body, ruleType.items);
+					validateResult.itemResults = validateResult.itemResults.concat(result);
+				}
+			}
+			if (validateResult.itemResults.length > 0) {
+				validateResult.isError = true;
+			}
+			return validateResult;
+			
+		}
+		
+		function validateAndShowMessage() {
+			
+			var $errorMessages = $("#error-messages");
+			$errorMessages.empty();
+			var validateResult = validate();
+			if (validateResult.isError == false) {
+				document.getElementById("save_btn").disabled = false;
+				return validateResult;
+			}
+			var showMessages = [];
+			validateResult.itemResults.forEach(function(currentValue, index, array){
+				if (showMessages.indexOf(currentValue.errorMessage) < 0) {
+					showMessages.push(currentValue.errorMessage);
+				}
+			});
+			for (var index in showMessages) {
+				var message = showMessages[index];
+				var messageHtml = '<div class="mark-req">' + message + '</div>';
+				$errorMessages.append(messageHtml);
+			}
+			validateResult.showMessages = showMessages;
+			
+			// ボタン非活性化
+			if (showMessages.length > 0){
+				document.getElementById("save_btn").disabled = true;
+			}
+			
+			return validateResult;
+			
+		}
+		
+		
+		/**
+		 * HTML ID 属性作成関数
+		 */
+		var nodeId = 0;
+		function generateNodeId() {
+			return "generate_node_id_" + String(++nodeId);
+		}
+
+		//セレクトボックステンプレートをコピーする（変更・削除用）
+		function generateShinseiClsOptionHtml(data) {
+			var optionHtml = $('#select-template select[name="shinsei_cls"]').html();
+			return optionHtml.replace('value="' + data + '"', 'value="' + data + '" selected');
+		}
+		//セレクトボックステンプレートをコピーする（追加用）
+		function generateShinseiClsAddOptionHtml(data) {
+			var optionHtml = $('#select-template select[name="shinsei_cls_add"]').html();
+			return optionHtml.replace('value="' + data + '"', 'value="' + data + '" selected');
+		}
+		//セレクトボックステンプレートをコピーする（追加用）
+		function generateShinseiClsOptionHtml2(data) {
+			var optionHtml = $('#select-template select[name="shinsei_cls_2"]').html();
+			return optionHtml.replace('value="' + data + '"', 'value="' + data + '" selected');
+		}
+		//セレクトボックステンプレートをコピーする（追加用）
+		function generateShoninKeiroOptionHtml(data) {
+			var optionHtml = $('#select-template select[name="shonin_keiro"]').html();
+			return optionHtml.replace('value="' + data + '"', 'value="' + data + '" selected');
+		}
+		//セレクトボックステンプレートをコピーする（追加用）
+		function generateRiyoGroupOptionHtml(data) {
+			var optionHtml = $('#select-template select[name="riyo_group_tmp"]').html();
+			// dataには選択済みの値がカンマ区切り文字列で入る
+			var dataList = [];
+			if(data !==""){
+				dataList = data.toString().split(",");
+			}
+			
+			for(var i in dataList){
+				optionHtml = optionHtml.replace('value="' + dataList[i] + '"', 'value="' + dataList[i] + '" selected');
+			}
+			return optionHtml;
+		}	
+		//セレクトボックステンプレートをコピーする（追加用）
+		function generateTantoKakariOptionHtml(data) {
+			var optionHtml = $('#select-template select[name="tanto_kakari"]').html();
+			return optionHtml.replace('value="' + data + '"', 'value="' + data + '" selected');
+		}	
+
+		var clickedElm = null;
+		
+		$(window).on('load', function() {
+			document.getElementById('body').style.display = 'block';
+			$(".imui-calendar").next("img").hide();
+			
+			$("#example_length").hide();
+			$(".bg_ltorange").css('width','');
+			$(".planList").css('max-height', '100%');
+			$(".planList thead, .planList tbody").css('display', 'table-row-group');
+		});
+
+		/**
+		 * 数値カンマ付与関数
+		 */
+		function addComma(num) {
+		    var s = String(num).split('.');
+		    var ret = String(s[0]).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+		    if (s.length > 1 && s[1].length > 0) {
+		        ret += '.' + s[1];
+		    }
+		    return ret;
+		}
+
+		/**
+		 * カンマ除去関数
+		 */
+		function removeComma(val) {
+			if (typeof val != "undefined") {
+				return val.split(',').join('');
+			} else {
+				return "0";
+			}
+		}
+		
+//-------------------------------------------------------------------------------------------------------
+		// 項目定義
+		var ret;
+		var shinsei_id;
+		var whereParam;
+
+		const emptyShinseiData = {
+			shinsei_check: false
+			, shinsei_edaban: ""
+			, shinsei_cls: ""
+			, user_cd: ""
+			, user_nm: ""
+			, user_kana: ""				
+			, shonin_keiro: ""
+			, mail_address: ""
+			, riyo_group: ""
+			, ip_tanto: ""
+			, tanto_kakari: ""
+			, data_cls: ""
+		};
+		
+//-------------------------------------------------------------------------------------------------------
+		// 項目初期値
+		function initItem() {
+
+			if (shinsei_status == "1") {
+				$('#delete_btn').show();
+			} else if (shinsei_status == "3") {
+				$("#annotation_biko").show();
+				$('#ichizi_bikou').hide();
+				$('#syuusei_bikou').show();
+				$('#biko').addClass('require');
+				$('#delete_btn').show();
+			}				
+			
+			whereParam = {"shinsei_id":shinsei_id};
+			
+		}
+		
+
+		$(function () {
+			
+			$("body").css("zoom","80%");
+			
+			shinsei_id = $.trim($("[name='shinsei_id']").val());
+			
+			// 項目初期値
+			initItem();
+			
+			$("#tanto_kakari_info_icon").click(function(){
+				//location.href="lo/contents/screen/info/index";
+				var url = "lo/contents/screen/info/index?t=1";
+				window.open(url,"","width=800,height=600,resizable=yes,scrollbars=yes,top=10,left=1000");
+			});
+			
+			
+			$('#shonin_keiro_icon').click(function(){
+				var url = "lo/contents/screen/info/index?t=2";
+				window.open(url,"","width=800,height=400,resizable=yes,scrollbars=yes,top=10,left=1000");
+			 });
+
+			
+			$(document).on("change","[name=riyo_group]",function(){				
+				
+				if($(this).closest("table").attr("id") =="shinsei_table"){
+					var riyoGroup = $(this).val();
+					
+					var riyoGroupList = [];
+					if(riyoGroup !== null){
+						var riyoGroupList = riyoGroup.toString().split(",");					
+					}
+					
+					if(riyoGroupList.indexOf("1") > -1){//IP担当
+						$(this).closest("tr").find("[name='shonin_keiro']").prop("disabled",false);
+						$(this).closest("tr").find("[name='shonin_keiro'] option").prop("disabled",false);
+						$(this).closest("tr").find("[name='shonin_keiro']").show();
+						$(this).closest("tr").find(".ul_ip_tanto").show();						
+						$(this).closest("tr").find(".ip-tanto-control").show();
+						
+					}else{
+						$(this).closest("tr").find("[name='shonin_keiro']").prop("disabled",true);
+						$(this).closest("tr").find("[name='shonin_keiro']").hide();
+						$(this).closest("tr").find(".ul_ip_tanto").hide();						
+						$(this).closest("tr").find(".ip-tanto-control").hide();						
+					}
+					
+				}
+			});
+			
+			$(document).on("change","#shinsei_table input",function(){
+				
+			});
+
+			$(document).on("click","td",function(){
+
+				
+				//alert($(this).closest("table").find("th").eq($(this).index()).text());
+			});
+			
+			//TODO:
+			kawari_detail_max = 500;
+			
+			//リストテーブル初期化
+			setAccountUserList();
+			$("[name=riyo_group]").change();
+			
+			$("#shinsei_table [name=shinsei_cls]").each(function(){
+				setFormat($(this).val(),"#"+$(this).attr("id"));
+			});
+
+			// カレンダーアイコンをクリック
+			$(document).on("click", ".fa-calendar", function(){
+				$(this).closest(".input-group").find("img").click();
+			});
+
+			$(document).on("focus", ".text-number" ,function() {
+				var $this = $(this);
+				$this.val(removeComma($this.val()));
+			}).on("blur", ".text-number" ,function() {
+				var $this = $(this);
+				$this.val(addComma($this.val()));
+			});		
+			
+			$(".text-number").each(function(index, elem) {
+				var $elem = $(elem);
+				$elem.val(addComma($elem.val()));
+			});			
+			
+			// 辞退ボタン
+	    	$('#btn_jitai').click(function(){
+	    		// 処理用ページを変更する
+	            var nodeSetting = {};
+	    		nodeSetting.procPage = "im_workflow/common/proc/lo/reapply/reapply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+	    		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+	    		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+	    		$('#item_proc_status').val("discontinue");// 処理ステータス：辞退(仮)
+	    		$('#item_proc_name').val($(this).text());
+	    		
+	    		$('#item_status_cd').val("7"); // ステータスコードを設定
+	    		// 処理者設定
+	    		workflowOpenPage('3');
+	    		return false;
+	        });				
+			
+			// ライセンシー検索
+			$("#btn_kaisha_search").click(function(e, data){
+				$('#js-popup3').addClass('is-show');
+			});
+			$("#js-popup3").on("selectedkaishaDatas", function(e, selectedkaishaDatas) {
+				$('#js-popup3').removeClass('is-show');
+				if (selectedkaishaDatas.length > 0) {					
+					$("#kaisha_id").val(selectedkaishaDatas[0].kaisha_cd);
+					$("#kaisha_nm").val(selectedkaishaDatas[0].kaisha_nm);
+				}
+				
+				$("#kaisha_id").trigger("change")
+		    });
+			
+			// タイトル検索
+			$("#btn_title_search").click(function(e, data){
+				$('#js-popup2').addClass('is-show');
+			});
+			$("#js-popup2").on("selectedTitleDatas", function(e, selectedTitleDatas) {
+				$('#js-popup2').removeClass('is-show');
+				if (selectedTitleDatas.length > 0) {
+					var selectedTitleData = selectedTitleDatas[0];
+					$("#shinsei_title_cd").val(selectedTitleData.title_cd);
+					$("#shinsei_title_nm").val(selectedTitleData.title_nm);
+					$("#shinsei_title_nm").trigger("change");
+				}
+		    });
+			
+			// 完了通知先
+			$(document).on("click",".link_tanto_kakari_add",function(e, data){
+				targetid = $(this).attr("id");
+				$('#js-popup4').addClass('is-show');
+				$("#sub_tanto_kakari_search_start").trigger("click");
+			});
+			// 完了通知先検索
+			$("#js-popup4").on("selectedTantoKakariDatas", function(e, selectedTantoKakariDatas) {
+				$('#js-popup4').removeClass('is-show');
+
+				var orgTantoKakari =[];
+				$("#"+targetid).closest("td").find("ul").find("[type=checkbox]").each(function(){
+					orgTantoKakari.push($(this).val());
+				});
+				
+				if (selectedTantoKakariDatas.length > 0) {
+										
+					for(var k in selectedTantoKakariDatas){
+						var tanto = selectedTantoKakariDatas[k];
+						if(orgTantoKakari.indexOf(tanto.tanto_kakari_cd) < 0){
+							$("#"+targetid).closest("td").find("ul").append(tantoKakariTagWithCheckBox(tanto.tanto_kakari_cd,tanto.tanto_kakari));
+						}
+					}
+			
+				}
+				
+				//$("#kaisha_nm").trigger("change")
+		    });
+			
+			$("#kaisha_id").change(function(e, data){
+				//アカウントユーザ一覧
+				//setKaishaData();
+				setAccountUserList();
+			});		
+
+		
+		// 「全選択」する
+		$('[name=checkall]').on('click', function() {
+			if(this.checked){
+				$(this).closest("table").find("input[name='shinsei_check']:not(:checked)").trigger('click');
+			}else{
+				$(this).closest("table").find("input[name='shinsei_check']:checked").trigger('click');
+			}
+		});	
+		
+			
+
+		$("#temp_save_btn").click(function() {
+			clickedElm = $(this);
+			clickedElm.prop('disabled',true);
+			
+			var ret = saveShinseiData(false);
+
+			if(ret){
+			    alert('<imart type="message" id="KY02I001" escapeJs="true"></imart>');
+			    location.href='./lo/contents/screen/user/myProcess_list';
+			}
+		});
+
+
+		//入力者権限
+		$("#save_btn").click(function() {
+			
+			
+			var validateResult = validateAndShowMessage();
+			if (validateResult.isError) {
+				alert(validateResult.showMessages[0]);
+				return;
+			}			
+
+			clickedElm = $(this);
+			clickedElm.prop('disabled',true);
+
+			//lo_tテーブルに登録し、文書番号を採番する
+			var ret = saveShinseiData(true);
+			//var ret = true;
+			
+			if(ret){
+			 	// URLにパラメータを付与
+			    let crntUrl = window.location.pathname;
+				let crntParamIdx = crntUrl.indexOf('?');
+				if(crntParamIdx > 0) crntUrl = crntUrl.substring(0,crntParamIdx);
+				window.history.replaceState(null,null,crntUrl + '?shinsei_id=' + ret.shinsei_id);
+				// 詳細画面に遷移
+			    location.href='./lo/contents/screen/account/shanai_account_detail?shinsei_id=' + ret.shinsei_id;
+			}			
+		});
+		
+		$("#delete_btn").click(function() {
+			if(window.confirm('<imart type="message" id="KY02C001" escapeJs="true"></imart>')){
+				var result = deleteShinseiData();
+				if(result){
+				    alert(result.altmsg);
+				    location.href='./lo/contents/screen/account/account_list';
+				}
+			}
+		});
+		
+		<imart type="condition" validity=$viewCtrl.validation>		
+			validateAndShowMessage();
+			
+			$(document).on("change", "input:not([name='shohin_check']),select,textarea", function(){
+				validateAndShowMessage();
+			});			
+		</imart>
+		
+		//申請ユーザテーブル
+		$("#shinsei_row_del_btn").click(function(){
+			shinseiDataTable.rows(function(index, data, node) {
+		        return data.shinsei_check;
+		    }).remove();
+			
+			var flag_num = 0;
+			var altmsg = '<imart type="message" id="AS02E002" escapeJs="true"></imart>';
+			$("#shinsei_table tbody tr").each(function(index, element){
+				var $elements = $(element);
+				if ($elements.find('[name="shinsei_check"]').prop('checked')) {
+					flag_num = flag_num + 1;
+				}
+			});
+			if (flag_num != 0) {
+				
+				// データ取得のため、非活性解除			
+				$("#shinsei_table input,#shinsei_table select").prop("disabled",false);
+				var backupDatas = shinseiDataTable.rows().data().toArray();
+				console.log(backupDatas);
+				shinseiDataTable.rows().remove();
+				shinseiDataTable.rows.add(backupDatas).draw();
+				// 利用グループchangeで表示制御発動
+				$("[name=riyo_group]").change();
+				
+				// 全行を再度multiselectへ
+				riyoGrpMultiselect('#shinsei_table [name=riyo_group]');
+				
+				
+				
+				// 申請種別による制御発動（解除した非活性を元に戻す
+				$("#shinsei_table [name=shinsei_cls]").each(function(){
+					setFormat($(this).val(),"#"+$(this).attr("id"));
+				});
+				// 制御完了後、入力チェック
+				<imart type="condition" validity=$viewCtrl.validation>
+				validateAndShowMessage();
+				</imart>
+				
+			} else {
+				alert(altmsg);
+			}
+			
+		});
+
+		$("#shinsei_row_add_btn").click(function(){
+			if ($("#shinsei_table tbody tr").length < shinsei_max) {
+				var copyDatas = [];
+				
+				var copyData = mergeDeeply({}, emptyShinseiData);
+				copyDatas.push(copyData);
+				shinseiDataTable.rows.add(copyDatas).draw();
+				
+				// 利用グループのchangeイベント発火でIP担当者、完了通知先列を制御
+				$("#shinsei_table [name=riyo_group]").change();
+				
+				// 全行を再度multiselectへ
+				riyoGrpMultiselect('#shinsei_table [name=riyo_group]');
+				
+				$("#shinsei_table [name=shinsei_cls]").each(function(){
+					setFormat($(this).val(),"#"+$(this).attr("id"));
+				});
+				
+				
+
+				<imart type="condition" validity=$viewCtrl.validation>
+				validateAndShowMessage();
+				</imart>
+			}else {
+				alert('<imart type="message" id="KS02E096" args=$kawariDetailMax escapeJs="true" />');
+			}
+			
+		});
+		
+		$(document).on("click", "[name=ip_tanto_add]", function(){		
+			if($(this).prop("checked")){
+				var tr = $(this).closest("tr");
+				var srcData ={};
+				srcData.tanto_id = tr.find("[name=user_cd]").val();
+				srcData.user_nm = tr.find("[name=user_nm]").val();				
+				
+				if ($("#ip_tanto_table tbody tr").length < shinsei_max) {
+					var copyDatas = [];
+					var copyData = mergeDeeply(emptyKeiyakushoData,srcData);
+					
+					copyData.shinsei_cls ="1";// 追加
+
+					copyDatas.push(copyData);
+					keiyakushoDataTable.rows.add(copyDatas).draw();
+					<imart type="condition" validity=$viewCtrl.validation>
+					validateAndShowMessage();
+					</imart>
+				}else {
+					alert('<imart type="message" id="KS02E096" args=$kawariDetailMax escapeJs="true" />');
+				}
+			}else{//チェックボックスが外された場合
+			
+				//ユーザID取得
+				var tr = $(this).closest("tr");
+				var tanto_id = tr.find("[name=user_cd]").val();
+			
+				var exec_flg = false;
+				keiyakushoDataTable.rows(function(index, data, node) {
+					exec_flg = true;
+					return tanto_id == data.tanto_id;
+			    }).remove();
+
+				if (exec_flg) {
+					var backupDatas = keiyakushoDataTable.rows().data().toArray();
+					keiyakushoDataTable.rows().remove();
+					keiyakushoDataTable.rows.add(backupDatas).draw();
+				}
+			}
+		});
+		
+		//データテーブル変更時、値を変数に格納
+		$(document).on("change", ".shinsei_data", function(){
+
+			var $this = $(this);
+			var $tr = $this.closest("tr");
+			var dataIndex = Number($tr.attr('data-dataindex'));
+			var kyodakuData ={};
+			if($(this).hasClass("shinsei_data")){
+				kyodakuData = shinseiDataTable.data()[dataIndex];
+			}
+			var value = null;
+			var tagName = $this.get(0).tagName;
+			if (tagName == "SELECT") {
+				value = $this.val();
+				kyodakuData[$this.attr('name')] = value;
+			} else if(tagName.toLowerCase() == "ul"){	
+				value = [];
+				$(this).find(".group_item").each(function(){
+					value.push({group_cd:$(this).val(),group_nm:$(this).parent().text()});							
+				});
+				
+				if ($this.hasClass('ul_ip_tanto')) {
+					kyodakuData["ip_tanto"] = value;
+				}else if($this.hasClass('ul_tanto_kakari')) {
+					kyodakuData["tanto_kakari"] = value;					
+				}				
+			} else {
+				var type = $this.attr('type').toLowerCase();
+				if (tagName == "INPUT" && (type === 'checkbox' || type === 'radio')) {
+					value = $this.prop('checked');
+				} else {
+					if ($this.val() != '') {
+						value = $this.val();
+						if ($this.hasClass('text-number')) {
+							value = Number(removeComma(value));
+						}
+					}
+				}
+				kyodakuData[$this.attr('name')] = value;
+			}
+			
+			console.log(kyodakuData);
+		});
+		
+		// 追加ユーザのメールアドレスをユーザIDに反映させる
+		$(document).on("change", ".add_email", function(){
+			if($(this).closest("tr").find("[name=shinsei_cls]").val() == "1"){
+				$(this).closest("tr").find("[name=user_cd]").val($(this).val());
+			}
+		});
+		
+		// 申請区分変更
+		$(document).on("change", "[name=shinsei_cls]", function(){
+			var row_id = $(this).closest("tr").find(".shinsei_edaban").text();
+			
+			/*
+			if($(this).val()=="2" || $(this).val()=="3"){				
+				//変更・削除の場合は、ユーザ選択ダイアログをオープン
+				openSearchUser("user_nm_"+row_id);
+			}
+			*/
+			
+			if($(this).val()=="1"){
+				$(this).closest("tr").find("[name=user_nm],[name=user_kana],[name=shonin_keiro],[name=mail_address],[name=riyo_group]").prop("disabled",false);
+
+				$(this).closest("tr").find("[name=ip_tanto_add]").prop("disabled",true);
+				// 追加時はすべて空白に戻す
+				$(this).closest("tr").find("[name=user_nm],[name=user_kana],[name=shonin_keiro],[name=mail_address]").val("");
+				$(this).closest("tr").find("[name=riyo_group] option").prop("selected",false);
+
+				$(this).closest("tr").find("[name='riyo_group']").next().children('.multiselect-container').children('.multiselect-reset').children('div').children('a').trigger('click');  
+				$(this).closest("tr").find(".ul_ip_tanto").text("");
+				$(this).closest("tr").find(".ul_tanto_kakari").text("");
+				
+				$(this).closest("tr").find("[name=user_nm]").focus();
+				
+				$(this).closest("tr").find(".btn-user-search").hide();
+			}else{
+				$(this).closest("tr").find(".btn-user-search").show();
+			}
+		});
+		
+		// ユーザ検索ボタンクリック
+		$(document).on("click", ".btn-user-search", function(){
+			var row_id = $(this).closest("tr").find(".shinsei_edaban").text();
+			
+			openSearchUser("user_nm_"+row_id);
+			
+		});		
+		
+		// 全行を再度multiselectへ
+		riyoGrpMultiselect('#shinsei_table [name=riyo_group]');
+		
+	});//jQuery init	
+
+
+		// 押したボタン毎にステータスコードを設定
+		function setStatusCd(btn_id){
+			var setCd ="1";
+			/*
+			switch (btn_id){
+			  case 'btn_teisyutu':
+			  case 'btn_re_teisyutu':
+				    setCd = "2"; // 受付待ち
+			    	break;
+			  case 'btn_syusei_irai':
+				    setCd = "3"; // 修正依頼
+					break;
+			  case 'btn_juri':
+				  	setCd = "4"; // 審査中
+					break;
+			  case 'btn_sasimodosi':
+				    setCd = "5"; // 差戻
+					break;
+			  case 'btn_shonin':
+				    setCd = "6"; // 承認
+					break;
+			  case 'btn_delete':
+				    setCd = "7"; // 削除
+					break;
+			  case 'btn_kanryo':
+				    setCd = "9"; // 完了
+					break;
+			  default:
+			}
+			*/
+			// ステータスコードを設定
+			$('#item_status_cd').val(setCd);		
+		}
+		
+		function saveShinseiData(shinseiFlg) {
+			var shinsei_list = [];
+			var ip_tanto_list = [];
+			
+			var shinseiEdaban = 0;
+			
+			$("#shinsei_table tbody tr").each(function(index, element) {
+				var $element = $(element);
+				if($element.find("[name=shinsei_cls]:not(:disabled)").length){
+					shinseiEdaban++;
+					var shinsei = {
+						shinsei_edaban: $.trim($element.find(".shinsei_edaban").text()) == '' ? null : $.trim($element.find(".shinsei_edaban").text())
+						, shinsei_cls: $.trim($element.find("[name=shinsei_cls]").val()) == '' ? null : $.trim($element.find("[name=shinsei_cls]").val())
+						, user_cd: $.trim($element.find("[name=user_cd]").val()) == '' ? null : $.trim($element.find("[name=user_cd]").val())
+						, user_nm: $.trim($element.find("[name=user_nm]").val()) == '' ? null : $.trim($element.find("[name=user_nm]").val())
+						, user_kana: $.trim($element.find("[name=user_kana]").val()) == '' ? null : $.trim($element.find("[name=user_kana]").val())
+						, riyo_group: $.trim($element.find("[name=riyo_group]").val()) == '' ? null : $.trim($element.find("[name=riyo_group]").val())					
+						, mail_address: $.trim($element.find("[name=mail_address]").val()) == '' ? null : $.trim($element.find("[name=mail_address]").val())
+					};
+					
+					var ipTantoFlg = false;
+
+					if(shinsei.riyo_group.split(",").indexOf("1") > -1){
+						ipTantoFlg = true;
+						shinsei.shonin_keiro = $.trim($element.find("[name=shonin_keiro]").val()) == '' ? null : $.trim($element.find("[name=shonin_keiro]").val())
+					
+					}
+					
+					shinsei_list.push(shinsei);
+					
+					var group_list =[];
+					if(ipTantoFlg){
+						$element.find("ul.ul_ip_tanto li [name=publicGroupCd]").each(function(){
+							group_list.push($(this).val());						
+						});
+					}
+					
+					var tanto_kakari_list =[];
+					$element.find("ul.ul_tanto_kakari li [name=tanto_kakari_cd]").each(function(){
+						tanto_kakari_list.push($(this).val());
+					});
+					
+					var shinsei = {
+							shinsei_edaban: $.trim($element.find(".shinsei_edaban").text()) == '' ? null : $.trim($element.find(".shinsei_edaban").text())
+							,shinsei_cls: $.trim($element.find("[name=shinsei_cls]").val()) == '' ? null : $.trim($element.find("[name=shinsei_cls]").val())
+							, user_cd: $.trim($element.find("[name=user_cd]").val()) == '' ? null : $.trim($element.find("[name=user_cd]").val())
+							, group_list: group_list
+							, tanto_kakari_list: tanto_kakari_list
+						};
+					ip_tanto_list.push(shinsei);
+				}
+			});			
+			
+			var params = {
+				shinsei_data: {
+					shinsei_id : $.trim($("[name='shinsei_id']").val()) == '' ? null : $.trim($("[name='shinsei_id']").val())				    
+					, shinsei_bi : $.trim($("[name='shinsei_bi']").val()) == '' ? null : $.trim($("[name='shinsei_bi']").val())
+					, kaisha_id : $.trim($("#kaisha_id").val()) == '' ? null : $("#kaisha_id").val()
+					, kaisha_nm : $.trim($("#kaisha_nm").val()) == '' ? null : $("#kaisha_nm").val()					
+					, biko : $.trim($("#biko").val()) == '' ? null : $("#biko").val()
+					, koushin_bi : $.trim($("[name='koushin_bi']").val()) == '' ? null : $.trim($("[name='koushin_bi']").val())
+					//, natsuin_change_flg : $.trim($("[name='natsuin_sha_chg_flg']:checked").val()) == '' ? null : $.trim($("[name='natsuin_sha_chg_flg']:checked").val())
+					, shinsei_title_cd : $.trim($("#shinsei_title_cd").val()) == '' ? null : $("#shinsei_title_cd").val()
+					,flow_id : $.trim($("[name=imwFlowId]").val()) == '' ? null : $("[name=imwFlowId]").val()
+				}
+				//,natsuin_data:{}
+				<imart type="condition" validity=$shanaiShuseiFlg>
+				, shinsei_status : '<imart type="string" value=$shinsei_data.shinsei_status />'
+				</imart>
+				<imart type="condition" validity=$shanaiShuseiFlg negative>
+				, shinsei_status : '1'//一時保存
+				</imart>				
+				, shinsei_list : shinsei_list
+				, ip_tanto_list : ip_tanto_list				
+				
+			}
+			
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+
+			var ret;
+			try {
+				ret = jsspRpcAccountRegister.updateAccount(params, shinseiFlg);
+		    } catch (ex) {
+		    	
+		    	clickedElm.prop('disabled',false);
+				clickedElm = null;
+		    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		        return;
+		        
+		    }
+		    if(ret.error) {		    	
+		    	clickedElm.prop('disabled',false);
+				clickedElm = null;
+		    	imuiShowErrorMessage(ret.message, [], true, 5000, true);
+		    	return;
+		    	
+		    }
+			
+			return ret;
+		}
+		
+		function deleteShinseiData() {
+
+			var param = {
+				shinsei_id : $.trim($("[name='shinsei_id']").val()) == '' ? null : $.trim($("[name='shinsei_id']").val())
+				, koushin_bi : $.trim($("[name='koushin_bi']").val()) == '' ? null : $.trim($("[name='koushin_bi']").val())
+			};
+			
+		    // 入力監視を解除
+		    terminateFormChangeTrigger();
+			
+			var ret;
+			try {
+				ret = jsspRpcAccountRegister.deleteShinsei(param);
+		    } catch (ex) {
+		    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		        return;
+		    }
+		    if(ret.error) {
+		    	imuiShowErrorMessage(ret.message, [], true, 5000, true);
+		    	return;
+		    }
+		    return ret;
+		}		
+		
+		//ret2 = jsspRpcAccountRegister.retrieveAccountUserList($("#kaisha_id").val());
+		
+		// ユーザ情報設定
+		function setUserInfo(userCd) {	
+			var ret1 ={};
+			var ret2 ={};
+			
+			ret2 = jsspRpcAccountRegister.retrieveAccountUserInfo(userCd);
+
+			return  ret2;
+		}
+		
+		// ユーザ情報設定
+		function getUserPubGrpList(userCd) {	
+			var ret1 ={};
+			var ret2 ={};
+			
+			ret2 = jsspRpcAccountRegister.getUserIpGroupList(userCd);
+			
+			return  ret2;			
+		}
+		
+		// ユーザ情報設定
+		function getUserTantoKakariList(userCd) {	
+			var ret1 ={};
+			var ret2 ={};
+			
+			ret2 = jsspRpcAccountRegister.getUserTantoKakariList(userCd);
+			
+			return  ret2;			
+		}
+		
+		
+		// ユーザリスト設定
+		function setAccountUserList() {	
+			var ret1 ={};
+			
+			if($("[name=shinsei_id]").length){
+				// 検索
+				try {
+					//imマスターからアカウント一覧を取得
+					ret1 = jsspRpcAccountRegister.retrieveShinseiUserList($("#shinsei_id").val());
+			    } catch (ex) {
+			    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+			        return;
+			    }
+			}
+						
+			shinseiDataSet = [];
+			if (ret1.countRow > 0) {
+				// data配列を順に処理
+				$.each(ret1.data,function(index, elem) {					
+					shinseiDataSet.push(mergeDeeply(emptyShinseiData, elem, {concatArray: true}));
+				});
+			}else{
+				//初期状態で1行セット
+				shinseiDataSet.push(mergeDeeply(emptyShinseiData,{}));
+			}
+			// 表のクリア
+		    if ($.fn.dataTable.isDataTable('#shinsei_table')) {
+		        $('#shinsei_table').DataTable().clear();
+		        $('#shinsei_table').DataTable().destroy();
+		    }
+			
+			shinseiDataTable = $('#shinsei_table').DataTable({
+				data: shinseiDataSet,
+				// 件数切替機能 無効
+				lengthChange: false,
+				// 検索機能 無効
+				searching: false,
+				// ソート機能 無効
+				ordering: false,
+				// 情報表示 無効
+				info: false,
+				// ページング機能 無効
+				paging: false,
+				// 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+			    scrollX: false,
+			    minHeight: 200,
+			    autoWidth: false,
+			    responsive: false,
+				language: {
+					"processing": "処理中...",
+					"lengthMenu": "_MENU_ 件表示",
+					"zeroRecords": "追加ボタンから追加してください",
+					"info": "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+					"infoEmpty": " 0 件中 0 から 0 まで表示",
+					"infoFiltered": "（全 _MAX_ 件より抽出）",
+					"infoPostFix": "",
+					"search": "検索:",
+					"url": "",
+					"paginate": {
+						"first": "<i class='fas fa-backward' aria-hidden='true'></i>",
+						"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+						"next": "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+						"last": "<i class='fas fa-forward' aria-hidden='true'></i>"
+					}
+				},
+				columns: [
+					{data: "shinsei_check",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center align-middle");
+					    },
+						render:function(data, type, row, meta) {
+							if(row.data_cls !=""){
+								var btn = '<span style="cursor:pointer;"><i class="im-ui-icon-common-16-update"></i></span>';
+								var cancel_btn = '<i class="im-ui-icon-common-16-ng"></i>';
+								
+								if(row.shinsei_cls =="2" || row.shinsei_cls =="3"){									
+									return '<div class="lo-center"><span class="user-edit" style="display:none;">'+btn+'</span><span class="user-edit-cancel">'+cancel_btn+'</span></div>';
+								}else if(row.shinsei_cls =="1" ){									
+										return '<div class="lo-center"><span class="user-edit" style="display:none;">'+btn+'</span><span class="user-edit-cancel">'+cancel_btn+'</span></div>';
+								}else{
+									return '<div class="lo-center"><span class="user-edit">'+btn+'</span><span class="user-edit-cancel" style="display:none;">'+cancel_btn+'</span></div>';
+								}
+							}else{
+								return '<div class="lo-center"><input type="checkbox" class="shinsei_data m-0" name="shinsei_check" ' + (data ? 'checked="checked"' : "") +  '></div>';
+							}
+						}
+					},
+					{data: "shinsei_edaban",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center align-middle");
+					    },
+						render:function(data, type, row, meta) {
+							var num = meta.row + 1;
+							return '<span class="shinsei_edaban">'+num+'</span>';
+						}
+					},
+					{data: "shinsei_cls",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center pl-2 pr-2");
+					    },
+						render:function(data, type, row, meta) {
+							var html = '';
+							var num = meta.row + 1;
+							if(row.data_cls =="imm" ){
+								if(row.shinsei_cls =="2" || row.shinsei_cls =="3" ){
+									html += '<div class="input-group"><select class="form-control form-control-sm shinsei_data" name="shinsei_cls">';
+									html += generateShinseiClsOptionHtml(data);
+									html += '</select></div>';
+								}else{
+									html += '<div class="input-group" style="display:none;"><select class="form-control form-control-sm shinsei_data" name="shinsei_cls" disabled=true>';
+									html += generateShinseiClsOptionHtml(data);
+									html += '</select></div>';
+									
+								}
+							}else{								
+								html += '<div class="input-group"><select class="form-control form-control-sm shinsei_data" name="shinsei_cls" id="shinsei_cls_'+num+'">';
+								html += generateShinseiClsOptionHtml(data);
+								html += '</select></div>';
+							}
+							return html;
+						}
+					},
+					{data: "user_cd",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_150 text-left pl-2 pr-2");
+					    },
+					    visible:false,
+						render:function(data, type, row, meta) {
+							if(data == null) data = '';
+							if(row.data_cls=="imm"){
+								if(row.shinsei_cls =="2" || row.shinsei_cls =="3" ){
+									var html ='<div class="read-group" style="display:none;">' + data + '</div>';
+									html = html + '<div class="input-group"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="user_cd" value="' + data + '"></div>';
+								}else{
+									var html ='<div class="read-group">' + data + '</div>';
+									html = html + '<div class="input-group" style="display:none;"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="user_cd" value="' + data + '" disabled=true></div>';
+								
+								}
+							}else{
+								var html ='<div class="input-group"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="user_cd" value="' + data + '"></div>';
+							}
+							return html;
+						}
+					},
+					{data: "user_nm",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_150 text-left pl-2 pr-2");
+					    },
+						render:function(data, type, row, meta) {							
+							if(data == null) data = '';
+
+							var num = meta.row + 1;
+							var html ='<div class="input-group"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" id="user_nm_'+num+'" name="user_nm" value="' + data + '">';
+							html = html + '<div class="input-group-append"><button type="button" id="btn_user_search_'+num+'" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x btn-user-search" style="display:none;"></button></div></div>';
+							html = html + '<input type="hidden" name="user_cd" value="'+row.user_cd+'">';
+
+							return html;
+						}
+					},
+					{data: "user_kana",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_150 text-left pl-2 pr-2");
+					    },
+						render:function(data, type, row, meta) {
+							if(data == null) data = '';
+							if(row.data_cls=="imm"){
+								if(row.shinsei_cls =="2" || row.shinsei_cls =="3" ){
+									var html ='<div class="read-group" style="display:none;">' + row.org_user_kana + '</div>';
+									html = html + '<div class="input-group"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="user_kana" value="' + data + '"></div>';
+								}else{
+									var html ='<div class="read-group">' + row.org_user_kana + '</div>';
+									html = html + '<div class="input-group" style="display:none;"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="user_kana" value="' + data + '" disabled=true></div>';
+								
+									
+								}
+							}else{
+								var html ='<div class="input-group"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="user_kana" value="' + data + '"></div>';
+							}
+							return html;							
+						}
+					},
+					{data: "mail_address",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_150 pl-2 pr-2");
+					    },
+					    render:function(data, type, row, meta) {
+							if(data == null) data = '';
+							if(row.data_cls=="imm"){
+								if(row.shinsei_cls =="2" || row.shinsei_cls =="3" ){
+									var html ='<div class="read-group" style="display:none;">' + row.org_mail_address + '</div>';
+									html = html + '<div class="input-group"><input class="form-control form-control-sm shinsei_data require " type="text" maxlength="200" name="mail_address" value="' + data + '"></div>';
+								}else{
+									var html ='<div class="read-group">' + row.org_mail_address + '</div>';
+									html = html + '<div class="input-group" style="display:none;"><input class="form-control form-control-sm shinsei_data require" type="text" maxlength="200" name="mail_address" value="' + data + '" disabled=true></div>';
+								
+								}
+							}else{
+								var html ='<div class="input-group"><input class="form-control form-control-sm shinsei_data require add_email" type="text" maxlength="200" name="mail_address" value="' + data + '"></div>';
+							}
+							return html;							
+						}
+					},
+					{data: "riyo_group",
+						createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+						      $(cell).addClass("brdr_ltgray col_150 text-left pl-2 pr-2");
+						    },
+							render:function(data, type, row, meta) {
+								if(data == null) data = '';
+								var html ="";
+								html += '<div class="input-group"><select class="form-control form-control-sm shinsei_data multiple" name="riyo_group" multiple="multiple">';
+								html += generateRiyoGroupOptionHtml(data);
+								html += '</select></div>';
+
+								return html;							
+							}
+					},
+					{data: "shonin_keiro",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_150 text-left pl-2 pr-2");
+					    },
+						render:function(data, type, row, meta) {
+							if(data == null) data = '';
+
+							var html ="";
+							html += '<div class="input-group"><select style="display:none;" class="form-control form-control-sm shinsei_data" name="shonin_keiro">';
+							html += generateShoninKeiroOptionHtml(data);
+							html += '</select></div>';
+
+							return html;							
+						}
+					},					
+					{data: "ip_tanto",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_150 text-left pl-2 pr-2");
+					    },
+						render:function(data, type, row, meta) {
+							if(data == null) data = '';
+							var num =meta.row+1;
+							var target = "ip_tanto_"+num
+
+							var html='<div class="ip-tanto-control">'+
+									'<a href="javascript:openSearchPublicGroupMult(\''+target+'\')" class="mr-2 link_add" id="add_link_'+num+'" ><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>'+
+									'<a href="javascript:delUser(\''+target+'\');" class="mr-2 link_del"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a><input type="hidden" name="ip_tanto_dummy"></div>';								
+							html +='<ul class="ul_ip_tanto shinsei_data" id="'+target+'">';
+							for(var i in data){
+								html += publicGroupTagWithCheckBox(data[i].group_cd, data[i].group_nm);
+							}
+							html +='</ul>';
+								
+
+							return html;							
+						}
+					},
+					{data: "tanto_kakari",
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray col_100 text-left pl-2 pr-2");
+					    },
+						render:function(data, type, row, meta) {
+							if(data == null) data = '';
+							/*
+							var html ="";
+							html += '<div class="input-group"><select  multiple="multiple" class="form-control form-control-sm shinsei_data multiple" name="tanto_kakari">';
+							html += generateTantoKakariOptionHtml(data);
+							html += '</select></div>';
+							//$('[name=tanto_kakari]').multiselect('select', [], true);
+							*/
+							var num =meta.row+1;
+							var target = "tanto_kakari_"+num
+
+							var html='<div class="tanto-kakari-control">'+
+									'<a href="javascript:void(0);" class="mr-2 link_tanto_kakari_add" id="add_tanto_kakari_'+num+'" ><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>'+
+									'<a href="javascript:delTantoKakari(\''+target+'\');" class="mr-2 link_del"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a><input type="hidden" name="tanto_kakari_dummy"></div>';								
+							
+							html +='<ul class="ul_tanto_kakari shinsei_data" id="'+target+'">';
+							for(var i in data){
+								html += tantoKakariTagWithCheckBox(data[i].group_cd, data[i].group_nm);
+							}
+							html +='</ul>';
+							return html;							
+						}
+					},
+				],
+				createdRow: function(row, data, dataIndex) {
+					$(row).attr('data-dataindex', dataIndex);
+				}
+			});
+			
+		}
+		
+		function riyoGrpMultiselect(selector){
+			// multiselectへ
+			$(selector).multiselect({
+				inheritClass: true,
+				includeResetOption: true,
+				resetText: '選択解除',
+				nonSelectedText: '未選択',
+				buttonText: function(options, select) {
+					if (options.length === 0) {
+						return '未選択';
+					} else if (options.length > 6) {
+						return '複数選択中';
+					} else {
+						var labels = [];
+						options.each(function() {
+							if ($(this).attr('label') !== undefined) {
+								labels.push($(this).attr('label'));
+							} else {
+								labels.push($(this).html());
+							}
+						});
+						return labels.join(', ') + '';
+					}
+				}
+			});
+			
+			$(selector).each(function(){
+				$(this).multiselect('select', $(this).val(), true);
+			});
+		}
+
+		
+	</script>
+</body>

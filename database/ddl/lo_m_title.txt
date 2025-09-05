@@ -1,0 +1,15 @@
+create table lo_m_title (
+  title_cd character varying(128) not null
+  , title_nm character varying(1024) not null
+  , ip_cd character varying(128)
+  , tantou_group_cd character varying(100)
+  , tantou_kakari_cd character varying(2)
+  , kensaku_word character varying(1024)
+  , sort_no integer
+  , sakujo_flg character(1)
+  , torokusha character varying(100)
+  , toroku_bi timestamp(6) without time zone
+  , koshinsha character varying(100)
+  , koshin_bi timestamp(6) without time zone
+  , primary key (title_cd)
+);

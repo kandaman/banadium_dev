@@ -1,0 +1,25 @@
+<script type="text/javascript">
+$(window).on('load', function() {
+	var companyName = '<imart type="message" id="LO.CAP.COMPANYNAME" escapeXml="true" escapeJs="true"/>';
+	var supportAddress = '<imart type="message" id="LO.CAP.EMAILADDRESS.SUPPORT" escapeXml="true" escapeJs="true"/>';
+	var copyright = '<imart type="message" id="LO.CAP.COPYRIGHT" escapeXml="false" escapeJs="true"/>';
+	$("footer:last-child").html(
+		'<div class="bne-copyright row mb-5">'+
+			'<div class="col-auto bg-left flex-grow-1"></div>'+
+			'<div class="col-auto bne-copyright-text">' + copyright + '</div>'+
+			'<div class="col-auto bg-right flex-grow-1"></div>'+
+		'</div>'+
+		'<div class="bne-information row no-gutters">'+			
+			'<div class="col-12 mr-auto row mt-3">'+
+				'<div class="col-12"><a href="https://bandainamcoent.co.jp/info/privacy/">プライバシーポリシー</a></div>'+
+			'</div>'+
+		'</div>'+
+		'<div class="bne-color-band row"></div>'+
+		'<div class="intra-mart row">'+
+			'<div class="footer-text col-auto mr-auto text-left">Copyright &copy; 2010 NTT DATA INTRAMART CORPORATION</div>'+
+			'<div class="footer-text col-auto text-right pr-0">Powered by</div>'+
+			'<div class="col-auto pl-1"><img src="lo_csjs/images/footer-logo-im.png" alt="intra-martロゴ" /></div>'+
+		'</div>'
+	);
+});
+</script>

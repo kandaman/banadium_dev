@@ -1,0 +1,36 @@
+create table public.lo_t_kikaku_eizo (
+  kikaku_id character varying(20) not null
+  , kikaku_edaban smallint not null
+  , eizo_category smallint
+  , shiyou_youto_nm character varying(255)
+  , riyou_ryo numeric(30, 6)
+  , riyou_ryo_bikou character varying(255)
+  , chiiki character(1)
+  , haishin_chiiki character varying(1020)
+  , kaisai_basho character varying(1020)
+  , eizo_kaishi_jiki character varying(20)
+  , eizo_shuryo_jiki character varying(20)
+  , shuryo_bikou character varying(255)
+  , riyo_saki character varying(1020)
+  , syosyutu_jiki character varying(20)
+  , senden_hansoku character varying(1020)
+  , eizo_riyo_kibo character(1)
+  , eizo_shiyoryo_syousai character varying(255)
+  , gakkyoku_riyo_kibo character(1)
+  , gakkyoku_shiyoryo_syousai character varying(255)
+  , kakioroshi_kibo character(1)
+  , kakioroshi_shiyoryo_syousai character varying(255)
+  , voice_riyo_kibo character(1)
+  , voice_shiyoryo_syousai character varying(255)
+  , riyu_joken character varying(4000)
+  , kikaku_setsumei character varying(1020)
+  , bikou text
+  , ok_ng character varying(20)
+  , royalty_kingaku integer
+  , sakujo_flg character varying(20)
+  , touroku_sha character varying(100)
+  , touroku_bi timestamp(6) without time zone
+  , koushin_sha character varying(100)
+  , koushin_bi timestamp(6) without time zone
+  , primary key (kikaku_id, kikaku_edaban)
+);

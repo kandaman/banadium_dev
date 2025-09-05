@@ -1,0 +1,17 @@
+create table public.lo_t_account_seikyusho_sofusaki (
+  shinsei_id character varying(20) not null  
+  , seikyusho_sofusaki_eda character varying(100) not null
+  , kaisha_id character varying(100) not null
+  , shinsei_cls character varying(10) not null
+  , seikyusho_sofusaki_nm character varying(255)
+  , email_address_to character varying(256)
+  , email_address_cc1 character varying(256)
+  , email_address_cc2 character varying(256)
+  , email_address_cc3 character varying(256)
+  , sakujo_flg character varying(20) not null
+  , touroku_sha character varying(100) not null
+  , touroku_bi timestamp(6) without time zone not null
+  , koushin_sha character varying(100) not null
+  , koushin_bi timestamp(6) without time zone not null
+  , primary key (shinsei_id,seikyusho_sofusaki_eda)
+);

@@ -1,0 +1,11 @@
+create table lo_t_comment_tempu_file(
+comment_id  varchar(25)
+,file_name  varchar(512)
+,file_path  varchar(512)
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+,primary key (comment_id, file_path)
+);

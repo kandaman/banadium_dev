@@ -1,0 +1,74 @@
+<imart type="head">
+  <title><imart type="message" id="CAP.Z.IWP.USER.REMINDER.TITLE" escapeXml="true" escapeJs="false" /></title>
+  <script src="ui/libs/jquery-validation-1.9.0/jquery.validate.js"></script>
+  <imart type="imuiValidationRule" rule="user/reminder/validators/send_mail_validator#init" rulesName="rules" messagesName="messages" />
+  <script type="text/javascript">
+    $(function() {
+        function sendMail() {
+            if(imuiValidate('#send-form', rules, messages)) {
+                imuiAjaxSend('#send-form', 'post', 'json');
+                imuiResetForm('#send-form');
+            }
+        }
+        $('#send').click(function() {
+            sendMail();
+        });
+
+        $('#user-cd').keydown(function(e) {
+            if(e.keyCode == 13) {
+                sendMail();
+                return false;
+            }
+        });
+    });
+  </script>
+</imart>
+
+<div id="imui-container">
+  <div class="imui-title">
+    <h1><imart type="message" id="CAP.Z.IWP.USER.REMINDER.HEADER" escapeXml="true" escapeJs="false" /></h1>
+  </div>
+  <div class="imui-toolbar-wrap">
+    <div class="imui-toolbar-inner">
+      <ul class="imui-list-toolbar">
+        <li><a href="login" id="back" class="imui-toolbar-icon" title="<imart type="message" id="CAP.Z.IWP.USER.REMINDER.BACK"' escapeXml="true" escapeJs="false" />"><span class="im-ui-icon-common-16-back"></span></a>
+      </ul>
+    </div>
+  </div>
+
+  <div class="imui-form-container">
+    <div class="imui-box-supplementation mt-20">
+      <span class="im-ui-icon-common-24-information float-L"></span>
+      <p class="imui-pgh-section" style="padding-left:30px;">
+        <imart type="message" id="MSG.I.IWP.USER.REMINDER.ATTENTION" escapeXml="true" escapeJs="false" /><br/>
+        <br/>
+                  メールアドレスを入力し、【送 信】ボタンをクリックしてください。
+        <!-- <imart type="message" id="MSG.I.IWP.USER.REMINDER.INPUT.USER.CD" escapeXml="true" escapeJs="false" />--><br/>
+        <imart type="message" id="MSG.I.IWP.USER.REMINDER.SEND.MAIL.RESETTING" escapeXml="true" escapeJs="false" /><br/>
+        <imart type="message" id="MSG.I.IWP.USER.REMINDER.RESETTING.PASSWORD" escapeXml="true" escapeJs="false" /><br/>
+        <imart type="message" id="MSG.I.IWP.USER.REMINDER.LOGIN.NEW.PASSWORD" escapeXml="true" escapeJs="false" /><br/>
+        <br/>
+        <imart type="message" id="MSG.I.IWP.USER.REMINDER.INFORMATION.ADMINISTRATOR" escapeXml="true" escapeJs="false" />
+      </p>
+    </div>
+    <form id="send-form" action="user/password/reminder/send" method="post" onsubmit="return false;">
+      <table class="imui-form">
+        <tbody>
+          <tr>
+            <th><label class="imui-required">メールアドレス</label></th>
+            <td><input type="text" name="user_cd" id="user-cd" value="" style="width:80%;min-width:300px;" autofocus="autofocus" /></td>
+          </tr>
+          <imart type="condition" validity=$reminder.isTenant>
+            <tr>
+              <th><label><imart type="message" id="CAP.Z.IWP.USER.REMINDER.TENANT.ID" /></label></th>
+              <td><input type="text" name="tenant_id" id="tenant-id" value=""  style="width:80%;min-width:300px;" /></td>
+            </tr>
+          </imart>
+        </tbody>
+      </table>
+      <div class="imui-operation-parts" style="margin-bottom:10px;">
+        <imart type="imuiButton" id="send" class="imui-large-button" value="%CAP.Z.IWP.USER.REMINDER.SEND" />
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+
+
+<!-- 新商品企画申請書・CS事業部時のみ表示 -->
+<div class="form-group">
+	<button type="button" id="btn_newItemAdd_ot"
+		class="btn btn-hensyu pull-right"
+		onclick="newItemtbl_addRow('newItemtbody_ot','newItemtbl_ot');newItemtbl_rowno('#newItemtbl_ot')"
+		style="width: auto; height: auto; font-size: 18px; margin-top: -45px;">行追加</button>
+</div>
+<div class="form-group">
+	<div class="panel">
+		<table class="table table-condensed sticky_table" id="newItemtbl_ot">
+			<thead>
+				<tr>
+                    <th>No</th>
+                    <th>地域</th>
+                    <th>通貨</th>
+                    <th>プラットフォーム</th>
+                    <th>発売予定日<small><p>※8ケタの半角数字</p></small></th>
+                    <th>価格(税抜)<small><p>※半角数字のみ</p></small></th>
+                    <th>目標数量<small><p>※半角数字のみ</p></small></th>
+                    <th colspan="2"></th>
+				</tr>
+			</thead>
+			<tbody id="newItemtbody_ot" hidden>
+				<tr class="table-bordered">
+					<td class="id_rowno">0</td>
+					<td>
+						<div class="id_area"></div> <input type="hidden"
+						class="id_area_name" name="item_area_name" value=""> <input
+						type="hidden" class="id_area_cd" name="item_area_cd" value="">
+						<button type="button" class="btn btn-hensyu btn_setarea"
+							onclick="openAreaRadio(this);" style="width:auto">地域選択</button>
+					</td>
+					<td><imart class="form-control id_currency" type="imuiSelect"
+							name="item_currency" list=$form.list_m_tuka /> <input
+						type="text" class="form-control id_otherCurrency"
+						name="item_otherCurrency" maxlength="40" style="display: none" /></td>
+					<td class="platform">
+						<select class="form-control id_platform" name="item_platform">
+							<option value=""></option>
+							<!--<option>PS4</option>
+						<option>PS3</option>
+						<option>PS Vita</option>
+						<option>Switch</option>
+						<option>3DS</option>
+						<option>XboxONE</option>
+						<option>Steam</option>
+						<option>その他</option>-->
+						</select>
+						<input type="text" class="form-control id_otherPlatform" style="display: none" name="item_otherPlatform" maxlength="40">
+					</td>
+					<td>
+						<div class="form-inline">
+							<input type="text" value=""
+								class="form-control imCalendar id_sale-date"
+								name="item_sale_date" maxlength="10"/>
+						</div>
+					</td>
+					<td><input type="text"
+						class="form-control text-number id_price" name="item_price">
+					</td>
+					<td><input type="text"
+						class="form-control text-number id_suryo" name="item_suryo">
+					</td>
+					<td>
+						<div style="margin-bottom: 3px">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="newItemtbl_copyRow(this);newItemtbl_rowno('#newItemtbl_ot')">コピー</button>
+						</div>
+						<button type="button" class="btn btn-hensyu center-block"
+							onclick="delTbody(this);newItemtbl_rowno('#newItemtbl_ot')">削除</button>
+					</td>
+					<td align="center"><img
+						src="cactus_csjs/images/chevron.png" alt="上へ移動"
+						onclick="upLine(this);newItemtbl_rowno('#newItemtbl_ot')" /><br>
+						<img src="cactus_csjs/images/chevron-expand.png" alt="下へ移動"
+						onclick="downLine(this);newItemtbl_rowno('#newItemtbl_ot')" /></td>
+				</tr>
+				<!-- @end テンプレート行 -->
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- @end新商品企画申請書・CS事業部時のみ表示 -->

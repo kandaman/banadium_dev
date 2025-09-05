@@ -1,0 +1,39 @@
+<script type="text/javascript">
+	$bneFlg = ('<imart type="string" value=$userInfo.bneFlg />' != '1')? false : true;
+	// ログアウト
+	function onLogout() {
+		// TODO:仮でログイン画面へ遷移するように設定
+		location.href ="logout?im_url=login";
+	};
+
+	$(function() {
+		if($bneFlg) {
+			$("#lo-header").addClass("mode-bne");
+			$("nav#sidebar").addClass("mode-bne");
+		}
+	});
+</script>
+
+<header id="lo-header" class="row navbar navbar-light">
+	<h1 class="col-auto mr-auto"><img src="lo_csjs/images/bn-logo-03.png" alt='<imart type="message" id="LO.CAP.SYSTEMNAME" />'/></h1>
+	<div style="border:solid 1px #e4762f;border-radius:10px;background-color:#ffeedd;padding:5px;line-height:1.5;overflow:hidden;min-width:400px;"><imart type="string" value=$msgList.systemMsg  /></div>
+	<div class="col-auto about-banadium">
+		<a href='lo/contents/screen/tmp_file_dl?filePath=<imart type="string" value=$fileList.kihon_rule.file_path escapeXml="true" escapeJs="true" />&fileName=<imart type="string" value=$fileList.kihon_rule.file_nm escapeXml="true" escapeJs="true" />' class="bn-orange"><i class="far fa-question-circle"></i>ライセンス基本ルール</a>          
+        <a href='lo/contents/screen/tmp_file_dl?filePath=<imart type="string" value=$fileList.gaiyo.file_path escapeXml="true" escapeJs="true" />&fileName=<imart type="string" value=$fileList.gaiyo.file_nm escapeXml="true" escapeJs="true" />' class="bn-orange"><i class="far fa-question-circle"></i>操作方法についてはこちら</a>            
+		<imart type="decision" value=$userInfo.lisenceProductionFlg case="1">
+            <a href='lo/contents/screen/tmp_file_dl?filePath=<imart type="string" value=$fileList.manual_shanai.file_path  escapeXml="true" escapeJs="true" />&fileName=<imart type="string" value=$fileList.manual_shanai.file_nm  escapeXml="true" escapeJs="true" />' class="bn-orange"><i class="far fa-question-circle"></i>社内用操作マニュアル</a>            
+		</imart>
+	</div>
+	<div class="login-user col-auto" id="Navber">
+		<div class="group mb-2"><imart type="string" value=$userInfo.loginMode /></div>
+		<div id="menu_user_name">
+			<imart type="string" value=$userInfo.companyName />
+			<imart type="string" value=$userInfo.userName />
+		</div>
+	</div>
+	<div class="col-auto action-button">
+		<form class="form-inline">
+			<button type="button" name="btn-logout" class="btn btn-outline-success btn-sm btn-gray" onclick="onLogout()">ログアウト</button>
+		</form>
+	</div>
+</header>

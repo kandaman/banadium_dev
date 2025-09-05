@@ -1,0 +1,11 @@
+create table public.lo_t_kyodaku_hansokubutu_himozuke (
+id character varying(20) not null
+,kyodaku_id character varying(20)
+,hansokubutu_id character varying(20)
+,sakujo_flg character varying(20)
+,touroku_sha character varying(100)
+,touroku_bi timestamp(6) without time zone
+,koushin_sha character varying(100)
+,koushin_bi timestamp(6) without time zone
+,primary key (id)
+);

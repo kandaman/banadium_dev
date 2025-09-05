@@ -1,0 +1,369 @@
+
+<script>
+	// ファイル行番号振り直し
+	function filetmpList_row() {
+
+		// no振り直し
+		$("#filetmpList").children().each(function(i, elem) {
+			$(elem).find('.no').text(i + 1);
+		});
+
+		// 企画書を未設定に戻す
+		if($("#filetmpList .no").length == 0) {
+			$('[name="proposalList"]').val("");
+		}
+	}
+
+	//新商品紐付時のコールバック処理
+	function setRelationDocData(dataObj) {
+		// 登録済み案申請番号
+		var arryNumber = [];
+
+		// 一覧から空行を削除
+		$('#relationDoclist input[name="item_relation_docData"]').each(
+				function(i, elem) {
+					if ($(elem).val() == "") {
+						$(elem).closest('tr').remove();
+					} else {
+						// 申請番号を取得
+						arryNumber.push($(elem).closest('tr').find(
+								'.apply_number').text())
+					}
+				});
+
+		// 申請書検索画面からの戻り値を取得し一覧を作成
+		$.each(dataObj, function(key, data) {
+			// 申請番号が既に登録されていれば飛ばす
+			if (arryNumber.indexOf(data.number) > -1) {
+				return;
+			}
+			arryNumber.push(data.number);
+		    //最大件数を超えていたら飛ばす
+		　　　if(arryNumber.length > ADD_ROW_MAX){
+				return;
+		　　　}
+
+			//テンプレート行をコピー
+			var coln = $("#relationDoclistTmp").clone(true);
+			//データを反映
+			coln.find('.apply_number').text(data.number);
+			coln.find('.apply_number').attr("onclick", "onClickDetail('"+data.system_matter_id+"','"+data.user_data_id+"','6'); return false;");
+
+			coln.find('.apply_subject').text(data.subject);
+			coln.find('.apply_createDay').text(data.create_date);
+			coln.find('.apply_createUser').text(data.create_username);
+			coln.find('input[name="item_relation_docData"]').val(
+					ImJson.toJSONString(data));
+			coln.show();
+			//末尾に追加
+			coln.appendTo("#relationDoclist");
+		});
+		// 一行もない場合空行作成
+		if (dataObj.length == 0 && arryNumber.length == 0) {
+			var coln = $("#relationDoclistTmp").clone(true);
+			coln.removeAttr('id');
+			coln.show();
+			coln.appendTo("#relationDoclist");
+		}
+		// no振り直し
+		relationDoclist_row();
+
+	    //最大件数を超えていた場合のメッセージ
+		if(arryNumber.length > ADD_ROW_MAX){
+			alert(ADD_ROW_MAX + "件を越えて追加できません");
+		}
+
+	}
+
+	// 関連文書行番号振り直し
+	function relationDoclist_row() {
+		var apply_number = new Array();
+		// no振り直し
+		$("#relationDoclist").children().each(function(i, elem) {
+			$(elem).find('.no').text(i + 1);
+			apply_number[i] = $(elem).find('.apply_number').text();
+		});
+		// hidden属性に紐付け申請番号をセット
+		//$('input[name="item_relation_docNumber"]').val(apply_number);
+	}
+
+	function setTmpFileData(dataObj) {
+		var cnt = 1;
+		$.each(dataObj, function(key, data) {
+			if (cnt == 1) {
+				var elem = $("#filetmpList");
+				elem.find('.tmpfilename').text(data.file_nm);
+				//elem.find('.tmpfilename').attr("onclick", "onClickDownLoad(this)"); //イベント設定
+				elem.find('input[name="item_tmpFile_name"]').val(data.file_nm); //元の名前
+				elem.find('input[name="item_tmpFile_resname"]').val(
+						data.file_path); // 変換された名前セット
+				elem.find('textarea[name="item_tmpFile_comment"]').val(data.biko); // コメント
+				$('[name="proposalList"]').val("1"); //必須チェック用
+			} else {
+				var coln = $("#tmpfileup").clone(true); //２行目以降はコピーして行を増やす
+				coln.find('.tmpfilename').text(data.file_nm);
+				//coln.find('.tmpfilename').attr("onclick", "onClickDownLoad(this)"); //イベント設定
+				coln.find('input[name="item_tmpFile_name"]').val(data.file_nm); // 元の名前セット
+				coln.find('input[name="item_tmpFile_resname"]').val(
+						data.file_path); // 変換された名前セット
+				coln.find('textarea[name="item_tmpFile_comment"]').val(data.biko); // コメント
+				coln.show();
+				coln.appendTo("#filetmpList");
+			}
+			cnt++;
+		});
+
+		// no振り直し
+		$("#filetmpList").children().each(function(i, elem) {
+			$(elem).find('.no').text(i + 1);
+		});
+	}
+
+	// 添付ファイルダウンロード
+	function onClickDownLoad(targetEl) {
+		var obj = $(targetEl).closest("tr");
+		var fileName = obj.find('input[name="item_tmpFile_name"]').val();
+		var filePath = obj.find('input[name="item_tmpFile_resname"]').val();
+		var sinsei_no = '<imart type="string" value=$form.matter_number />';
+		if (typeof sinsei_no === "undefined") {
+			sinsei_no = "";
+		}
+
+		offBeforeUnloadHandler( 100 ); // 一瞬 onbeforeunload をオフる。
+		$('#downloadForm').find('input[name="fileName"]').val(fileName);
+		$('#downloadForm').find('input[name="filePath"]').val(filePath);
+		$('#downloadForm').find('input[name="sinsei_no"]').val(sinsei_no);
+		$('#downloadForm').submit();
+	}
+
+	// 初期表示(一時保存、再作成時)
+	function tmpfileInit() {
+
+		// 関連文書設定
+		var dataObj = [];
+		var relationData = '<imart type="string" value=$form.item_relation_docDataJSON escapeJs="true" />';
+		if (relationData != "" && typeof relationData !== "undefined")
+			dataObj = ImJson.parseJSON(relationData); // jsonで配列に戻す
+		setRelationDocData(dataObj);
+
+		// 添付ファイル
+		//var tmpfileData = '<imart type="string" value=$form.item_tmpfileDataJSON />';
+		var tmpfileData = '<imart type="string" value=$form.item_tmpfileDataJSON escapeJs="true" />';
+		var dataObj2 = [];
+		if (tmpfileData != "" && typeof tmpfileData !== "undefined")
+		var dataObj2 = ImJson.parseJSON(jsonEscape(tmpfileData)); // jsonで配列に戻す
+		//var dataObj2 = ImJson.parseJSON(tmpfileData); // jsonで配列に戻す
+		setTmpFileData(dataObj2);
+	}
+
+	$(function() {
+
+		// ファイルアップロード
+		$('#upfile_button').on('click', function() {
+			// imart:imuiFileUpload がレンダリングした form を探す。
+			var $form = $("#imui-upload");
+			// form配下の input[file].imui-fileupload-input を探す。
+			var $file = $form.find(".imui-fileupload-input");
+			$file.focus();
+			$file.click();
+
+		});
+
+		/*
+		 $("#add-btn").click(function() {
+		 var txtval = $("#up-txt").val();
+		 if (txtval != "") {
+		 // テンプレート行をコピーし末尾に追加
+		 var coln = $("#tmpfileup").clone(true);
+		 coln.find('.tmpfilename').text(txtval);
+
+		 coln.find('input[name="item_tmpFile_name"]').val(txtval);
+
+		 coln.show();
+		 coln.appendTo("#filetmpList");
+		 $("#up-txt").val("");
+
+		 // no振り直し
+		 filetmpList_row();
+		 }
+		 })
+		 // キャンセル
+		 $("#can-btn").click(function() {
+		 $("#up-txt").val("");
+		 });
+		 */
+
+		//初期表示
+		tmpfileInit();
+
+		/*
+		 // 特記事項文字数チェック
+		 $('#addNotices').keydown(function(e){
+
+		 var maxrow= 6;
+		 var maxlen= 35;
+
+		 var str = $(this).val();
+		 // 開業コードで分割
+		 var strArray = str.split(/\r\n|\r|\n/);
+
+		 // 既に6行ある場合改行禁止
+		 if (e.keyCode === 13 && strArray.length >= maxrow){
+		 return false;
+		 }
+
+		 // カーソル位置取得
+		 var pos = $(this).get(0).selectionStart;
+		 var v1=str.substr(0,pos);
+		 var m = v1.match(/\n/g);
+		 //var m = v1.match(/\r\n|\r|\n/);
+		 // 改行をもとに行インデックスを取得
+		 var row=(m?m.length+1:1);
+
+		 // 既に35文字入っている場合は改行以外禁止
+		 if (strArray[row-1].length >= maxlen){
+		 if (!(e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 13)){
+		 return false;
+		 }
+
+		 return true;
+
+		 });
+		 */
+
+	});
+</script>
+
+<!-- 添付資料 -->
+<div class="form-group">
+	<label id="lbl_tmpTypeName_req">■企画書添付</label> <label
+		id="lbl_tmpTypeName_any" hidden>■資料添付 <span
+		class="label label-info">任意</span></label> <small><p>※版権元提案用の企画書を添付してください。</p></small>
+	<small><p>※企画内容の分かる資料を添付してください。</p></small>
+
+
+	<div class="input-group" id="upfile_area">
+		<!--
+		<label class="input-group-btn"> <span class="btn btn-hensyu"
+            id="up_button" style="width: 70px;">資料選択<input type="file" style="display: none"></span>
+		</label>
+		 -->
+		<!-- <label class="input-group-btn"> -->
+		<span class="btn btn-hensyu" id="upfile_button" style="width: auto;">資料選択</span>
+		<!-- </label> -->
+
+		<!--<input type="text" class="form-control" id="up-txt" readonly=""/>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-primary" id="add-btn" onclick="addFile()">追加</button>
+			</span>
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-primary" id="can-btn" onclick="canFile()">キャンセル</button>
+			-->
+	</div>
+</div>
+<!-- @end 添付資料 -->
+
+<!-- 添付資料一覧 -->
+<div class="form-group">
+	<div class="panel table-outer-panel">
+		<table class="table table-condensed table-striped"
+			id="tenputbl">
+			<thead>
+				<tr>
+					<th width="5%">No</th>
+					<th>ファイル名</th>
+					<th>コメント</th>
+					<th width="10%"></th>
+				</tr>
+			</thead>
+			<tbody hidden>
+				<tr id="tmpfileup" hidden="true">
+					<td class="no">1</td>
+					<td><a class="tmpfilename" href="javascript: void(0);"
+						onclick="onClickDownLoad(this)"></a></td>
+					<td><textarea class="form-control tmpfileComment"
+							name="item_tmpFile_comment" maxlength="140"></textarea></td>
+					<td><div onclick="delLine(this),filetmpList_row()">
+							<button type="button" class="btn btn-hensyu center-block">削除</button>
+						</div></td>
+					<input type="hidden" name="item_tmpFile_name" value="" />
+					<input type="hidden" name="item_tmpFile_resname" value="" />
+				</tr>
+			</tbody>
+			<tbody id="filetmpList">
+				<tr>
+					<td class="no">1</td>
+					<td><a class="tmpfilename" href="javascript: void(0);"
+						onclick="onClickDownLoad(this)"></a></td>
+					<td><textarea class="form-control tmpfileComment"
+							name="item_tmpFile_comment" maxlength="140"></textarea></td>
+					<td><div onclick="delLine(this),filetmpList_row()">
+							<button type="button" class="btn btn-hensyu center-block">削除</button>
+						</div></td>
+					<input type="hidden" name="item_tmpFile_name" value="" />
+					<input type="hidden" name="item_tmpFile_resname" value="" />
+				</tr>
+			</tbody>
+			<!-- 企画書設定済か判定 -->
+			<input type="hidden" name="proposalList" class="" value="" />
+
+			<!--<tbody>
+					<tr>
+						<td class="no">1</td>
+						<td><a>【本制作審査会】LWAゲーム化企画20170215.pptx </a></td>
+						<td><textarea class="form-control" rows="3">LWAゲーム化に関する企画書類</textarea></td>
+						<td><div onclick="delLine(this)">
+								<button class="btn center-block">削除</button>
+							</div></td>
+					</tr>
+
+				</tbody>-->
+		</table>
+	</div>
+</div>
+
+<!-- 関連文書紐付 -->
+<div class="form-group" id="relationDoc">
+	<label>■関連文書 <span class="label label-info">任意</span></label>
+	<div>
+		<button class="btn btn-hensyu" type="button"
+			onclick="openSearchApplyDialog(this,setRelationDocData);">検索</button>
+	</div>
+	<small><p>※同一タイトルで過去に申請した案件があれば検索して選択してください。</p></small>
+	<div class="panel table-outer-panel">
+		<table class="table table-condensed table-striped"
+			id="kanrentbl">
+			<thead>
+				<tr>
+					<th width="5%">No</th>
+					<th>申請番号</th>
+					<th>タイトル名</th>
+					<th>起案者</th>
+					<th>起案日時</th>
+					<th width="10%"></th>
+				</tr>
+			</thead>
+			<!-- テンプレート行 非表示-->
+			<tbody>
+				<tr id="relationDoclistTmp" hidden>
+					<td class="no"></td>
+					<td><a class="apply_number" href="javascript: void(0);"></a></td>
+					<td class="apply_subject"></td>
+					<td class="apply_createUser"></td>
+					<td class="apply_createDay"></td>
+					<td>
+						<div class="button btnCharaDel">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="delLine(this);relationDoclist_row()">削除</button>
+						</div>
+					</td>
+					<input type="hidden" name="item_relation_docData" value="" />
+				</tr>
+			</tbody>
+			<!-- データ行-->
+			<tbody id="relationDoclist">
+
+			</tbody>
+		</table>
+	</div>
+</div>

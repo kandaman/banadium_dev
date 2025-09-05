@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!--link rel="stylesheet" href="lo_csjs/cform.css" -->
+	
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<!-- link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+
+<style type="text/css">
+	.contractfileSelect {
+		border: 2px dotted #B2B2B2;
+		border-radius: 10px;
+		padding: 2px;
+		background: #EEEEEE;
+		height: 40px;
+		vertical-align: middle;
+	}
+	
+	.contractfileSelect p {
+		margin-top: 2px;
+		text-align: left;
+		color: #7d7d7d;
+	}
+	
+	.contractFileUploadLabel {
+		cursor: pointer;
+		border-radius: 7px;
+		box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+		padding: 1px 40px 1px 40px !important;
+		border: 1px solid #DDDDDD;
+		font-size: 16px;
+		box-sizing: border-box;
+		background: #FFFFFF;
+		color: #000000;
+		margin-left: 10px;
+	}
+	
+	.afterFileSelect {
+		display: block;
+		margin-left: 10px;
+	}
+	
+	.afterFileSelect dl {
+		margin-bottom : 0px;
+	}
+	
+	.afterFileSelect dl dt {
+		display: inline-block;
+		min-height: 30px;
+		max-width: 640px;
+		vertical-align: middle;
+		word-wrap:break-word;
+	}
+	
+	.afterFileSelect dl dd {
+		display: inline-block;
+		padding-top: 2px;
+	}
+	
+	pre.large-strinig-body {
+		line-height: 1.5;
+		min-height: 100px;
+	}
+	
+	pre.modal-large-strinig-body {
+		height: 500px; 
+		overflow-x: auto; 
+		line-height: 1.5;
+	}
+	.margin-all {
+	   	margin: 14px !important;
+	}
+	
+	.route_item{
+		min-height:16px;
+	}
+	
+	#kyodaku_shohin_table td {
+	  	word-break: break-word;
+		white-space: normal;
+	}
+	
+	#plan_data td {
+	  	word-break: break-word;
+		white-space: normal;
+	}
+	
+	#kyodaku_shohin_table,#plan_data{
+		table-layout: fixed;
+	}
+	
+</style>
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+
+    <script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+
+	<imart type="workflowOpenPageCsjs" />
+  	<!-- workflow/csjs/greybox.jsの　showGreyBoxを変更 -->
+  	<script type="text/javascript" src="workflow/csjs/greybox_lo.js"></script>
+
+<style type="text/css">
+	/* 帳票印刷時スタイル */
+	@media print {
+		/* Bootstrap背景色対応 */
+		.table th {
+			background-color: #ffca80 !important;
+		}
+		
+		pre {
+			border: 0px none #ffffff !important;
+		}
+		
+		/* Bootstrap改ページくずれ対応 */
+		.row {
+			display: block;
+		}
+	}
+</style>
+
+
+	<!-- imart -->
+	<imart type="jsspRpc" name="jsspRpcPermissionDetail" page="lo/contents/screen/kyodaku/permission_product_detail"></imart>
+	<title><imart type="message" id="LO.TITLE.KYODAKU.PERMISSION_DETAIL" escapeXml="true" /></title>
+</imart>
+<imart type="workflowOpenPage"
+       name="workflowOpenPageForm"
+       id="workflowOpenPageForm"
+       method="POST"
+       target="_top"
+       imwUserDataId=$wf_data.imwUserDataId
+       imwSystemMatterId=$wf_data.imwSystemMatterId
+       imwAuthUserCode=$wf_data.imwAuthUserCode
+       imwApplyBaseDate=$wf_data.imwApplyBaseDate
+       imwNodeId=$wf_data.imwNodeId
+       imwFlowId=$wf_data.imwFlowId
+       imwCallOriginalParams=$wf_data.imwCallOriginalParams
+       imwNextScriptPath=$wf_data.imwCallOriginalPagePath
+       >
+	<!-- ノード設定用パラメータ-->
+	<imart type="hidden" imwNodeSetting=$wf_data.imwNodeSetting escapeJs="false" escapeXml="true"/>
+    <!-- ワークフロー用カスタムロパラメータ -->
+	<input type="hidden" name="imwCustomParam" id="imwCustomParam" >
+    <!-- 処理ステータス -->
+	<input type="hidden" name="item_proc_status" id="item_proc_status" value="">
+    <!-- 処理ステータスコード（DB設定用） -->
+	<input type="hidden" name="item_status_cd" id="item_status_cd" value="">
+    <!-- 処理ステータス名（ボタン名）-->
+	<input type="hidden" name="item_proc_name" id="item_proc_name" value="">
+	<!-- 契約担当ノード表示フラグ-->
+	<input type="hidden" name="keiyaku_node" id="keiyaku_node" value="0">
+    <!-- 案件名（許諾idを設定） -->
+	<IMART type="hidden" item_matterName=$kyodaku_data.kyodaku_id />
+    <!-- 差戻先 -->
+	<IMART type="hidden" imwBackNodeSetting=$wf_data.imwBackNodeSetting />
+
+<body id="body" style="display: none">
+	<!-- header -->
+	<div class="container-fluid">
+		<imart type="include" page="lo/contents/screen/header"></imart>
+	</div>
+	<!-- header -->
+
+	<div class="container">
+		<div class="row">
+
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<imart type="include" page="lo/contents/screen/sidemenu"></imart>
+				</div>
+			</div>
+			<!-- sidebar -->
+
+			<!-- main contents -->
+			<div class="main col">
+
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display:none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<div class="page-information row my-4">
+					<div class="col-12 col-lg-3">
+						<h1><imart type="message" id="LO.TITLE.KYODAKU.PERMISSION_DETAIL" escapeXml="true" /></h1>
+						<button type="button" onclick="history.back();return false;" class="brdr_orange txt_orange my-2" id="history_back_button">
+							<i class="fas fa-caret-left "></i><span>戻る</span>
+						</button>
+						<IMART type="condition" validity=$sairiyou_flg>
+						<button type="button" class="bg_orange txt_dark mb-2" id="btn_sairiyou">
+							<i class="fas fa-recycle"></i><span>再利用</span>
+						</button>
+						</IMART>
+					</div>
+				</div>
+				<div>
+					<article>
+						<section class="show">
+							<div class="container">
+								<imart type="condition" validity=$before_apply>
+									<div class="row" id="msg_before_teisyutu" style="display:none;">
+										<div class="col-1"></div>
+										<div class="col-10 pt-3 pb-3 lo-center border border-info text-info">
+											<b><imart type="message" id="IN01I003" escapeJs="true"></imart></b>
+										</div>
+										<div class="col-1"></div>
+									</div>
+								</imart>
+							</div>
+						</section>
+					</article>
+				</div>
+
+				<article class="print-area">
+					<div class="container show-print-area" style="display:none;">
+						<div class="row" style="display:flex;">
+							<div class="col-12 col-lg-4 text-left">
+								<h6 class="mt-1 mb-0"><imart type="message" id="LO.CAP.COMPANYNAME" escapeJs="true" escapeXml="true" /></h6>
+							</div>
+							<div class="col-12 col-lg-4 text-center">
+								<h5 class="">商品化許諾申請書</h5>
+							</div>
+							<div class="col-12 col-lg-4"></div>
+						</div>
+					</div>
+					<section class="show">
+						<div class="container">
+							<div class="col-12 row mt-2 mb-2">
+								<div class="col-5 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">許諾番号</div>
+								<div class="col-5 col-lg-3 t-header brdr_ltgray text-center">
+									<imart type="string" id="kyodaku_id" name="kyodaku_id" value=$kyodaku_data.kyodaku_id readonly="true" />
+									<imart type="imuiTextbox" id="kyodaku_id" name="kyodaku_id" class="form-control imui-text-readonly" value=$kyodaku_data.kyodaku_id hidden="true" />
+								</div>
+								<div class="col-5 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">許諾ステータス</div>
+								<div class="col-5 col-lg-3 t-header brdr_ltgray text-center">
+									<imart type="decision" value=$userInfo.licenseeFlg case="1">
+									<span class='kyodaku-status li<imart type="string" value=$kyodaku_data.kyodaku_status />'>
+										<imart type="string" value=$kyodaku_data.kyodaku_status_name />
+									</span>
+									</imart>
+									<imart type="decision" value=$userInfo.licenseeFlg case="0">
+									<span class='kyodaku-status pr<imart type="string" value=$kyodaku_data.kyodaku_status />'>
+										<imart type="string" value=$kyodaku_data.kyodaku_status_name />
+									</span>
+									</imart>
+								</div>
+							</div>
+							<div class="col-12 row mt-2 mb-2">
+								<div class="col-5 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">許諾種別</div>
+								<div class="col-5 col-lg-3 t-header brdr_ltgray text-center" name="kyodaku_cls_nm">
+									<imart type="string" id="kyodaku_cls_nm" name="kyodaku_cls_nm" value=$kyodaku_data.kyodaku_cls_nm readonly="true" />
+								</div>
+								<div class="col-5 col-lg-2 t-header bg_ltorange brdr_ltgray text-center">会社名</div>
+								<div class="col-5 col-lg-3 t-header brdr_ltgray text-left">
+									<imart type="string" value=$kyodaku_data.kaisha_nm />							
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 mt-2 mb-2 kyodaku-add-show">
+									<table id="moto_kyodaku_table" class="table table_border_radius brdr_ltgray tbl_row text-break" style="width: 100%">
+										<thead>
+											<tr role="row">
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													元許諾番号
+												</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													許諾名
+												</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													タイトル
+												</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													許諾期間(FROM)
+												</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													許諾期間(TO)
+												</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													ライセンシー<br>担当者
+												</th>
+												<th class="bg_ltorange brdr_ltgray text-center align-middle">
+													BNE担当者
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h2>企画番号</h2>
+								</div>
+								<div class="col-12 mt-2 mb-2 responsive-table-wrapper">
+									<table id="plan_data" class="table table_border_radius text-break">										
+										<thead>
+											<tr>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													企画番号
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_300 text-center align-middle">
+													企画名
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_200 text-center align-middle">
+													タイトル
+												</th>
+												<!--
+												<th class="bg_ltorange brdr_ltgray col_200 text-center align-middle">
+													会社名
+												</th>
+												-->
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													ライセンシー<br>担当者
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													BNE担当者
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-12">
+									<h2>基本情報</h2>
+								</div>
+								<div class="col-12">
+									<table class="table table_border_radius brdr_ltgray tbl_row text-break">
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">許諾名</th>
+											<td colspan="5" class="brdr_ltgray" name="kyodaku_nm"><imart type="string" value=$kyodaku_data.kyodaku_nm escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">申請日</th>
+											<td class="brdr_ltgray"><imart type="string" value=$kyodaku_data.shinsei_bi escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">確認日</th>
+											<td class="brdr_ltgray"><imart type="string" value=$kyodaku_data.kakunin_bi escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">BNE担当者</th>
+											<td class="brdr_ltgray"><imart type="string" value=$kyodaku_data.bne_tantou_sha escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">契約種別</th>
+											<td class="brdr_ltgray" name="keiyaku_cls_nm"><imart type="string" value=$kyodaku_data.keiyaku_cls_nm escapeJs="false" escapeXml="true" /></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+
+
+							<div class="row">
+								<div class="col-12 col-lg-9"><h2>許諾申請一覧</h2></div>
+								<div class="col-12 col-lg-3 text-right" style="padding-right: 0px;">
+									<div class="btn-group mt-3">
+										<button type="button" class="bg_ltblue" id="outputfile"><i class="fas fa-print fa-2x"></i><span>ファイル出力</span></button>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<!-- 
+								<div class="col-12">
+									<h2>許諾申請一覧</h2>
+								</div>
+								-->
+								<div class="col-12 mt-2 mb-2 responsive-table-wrapper">
+									<table id="kyodaku_shohin_table" class="table table_border_radius brdr_ltgray tbl_row text-break">
+										<thead>
+											<tr>
+												<th class="bg_ltorange brdr_ltgray col_50 text-center align-middle pl-2 pr-2">
+													No.
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_75 text-center align-middle">
+													商品/<br>販促物
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_300 text-center align-middle">
+													商品名
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_125 text-center align-middle">
+												<imart type="decision" value=$kyodaku_data.kyodaku_cls case="1">
+													発売日
+												</imart>
+												<imart type="decision" value=$kyodaku_data.kyodaku_cls case="2">
+													追加製造日
+												</imart>
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													上代<br>（税抜）
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_75 text-center align-middle">
+													料率
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													使用料<br>（単価）
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													最低保証数<br>（申請数）
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													最低保証料<br>（許諾料）
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_75 text-center align-middle">
+													証紙
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_100 text-center align-middle">
+													見本数量
+												</th>
+												<th class="bg_ltorange brdr_ltgray col_125 text-center align-middle">
+													地域
+												</th>
+											</tr>
+										</thead>
+										<tbody id="csvtable">
+										</tbody>
+									</table>			
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-12">
+									<h2>許諾情報</h2>
+								</div>
+								<div class="col-12">
+									<table class="table table_border_radius brdr_ltgray tbl_row text-break">
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">合計最低保証数（申請数）</th>
+											<td colspan="11" class="brdr_ltgray"><span id="sum_saiteihosho_su_shinseisu"></span>個</td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">合計最低保証料（許諾料）</th>
+											<td colspan="11" class="brdr_ltgray"><span id="sum_saiteihosho_su_kyodakuryo"></span>円</td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">素材費</th>
+											<td colspan="11" class="brdr_ltgray"><span id="sozai_hi"></span>円</td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">許諾期間</th>
+											<td colspan="11" class="brdr_ltgray"><imart type="string" value=$kyodaku_data.kyodaku_kikan_from escapeJs="false" escapeXml="true" /> 〜 <imart type="string" value=$kyodaku_data.kyodaku_kikan_to escapeJs="false" escapeXml="true" /></td>
+										</tr>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">最低保証料支払い期限</th>
+											<td colspan="11" class="brdr_ltgray"><imart type="string" value=$kyodaku_data.saiteihosho_kigen escapeJs="false" escapeXml="true" /></td>
+										</tr>
+									</table>
+									<div class="col-12 kikan-diff-show">
+										<div class="form-group row mt-2 mb-2">
+											<span class="col-12" style="color:red"><imart type="message" id="KY02C009" escapeJs="true" /></span>
+										</div>
+									</div>
+									<imart type="decision" value=$userInfo.licenseeFlg case="0">
+									<div id="sozaihi-alert-show" class="col-12 sozaihi-alert-show">
+										<div class="form-group row mt-2 mb-2">
+											<span class="col-12" style="font-weight:bold;"><imart type="message" id="KY02C019" escapeJs="true" /></span>
+										</div>
+									</div>
+									</imart>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-12">
+									<h2>海外販売の国名及び数量</h2>
+								</div>
+								<div class="col-12">
+									<table class="table table_border_radius brdr_ltgray tbl_row text-break">
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">許諾地域</th>
+											<td colspan="11" class="brdr_ltgray"><div><pre class="large-strinig-body"><imart type="string" value=$kyodaku_data.kyodaku_chiiki escapeJs="false" escapeXml="true" /></pre></div><imart type="condition"><div class="text-right"><i class="fas fa-expand-arrows-alt" data-column="kyodaku_chiiki" data-title="許諾地域"></i></div></imart></td>
+										</tr>
+									</table>
+									<div class="col-12 chiiki-diff-show">
+										<div class="form-group row mt-2 mb-2">
+											<span class="col-12" style="color:red"><imart type="message" id="KY02C010" escapeJs="true" /></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-12">
+									<h2>備考</h2>
+								</div>
+								<div class="col-12">
+									<table class="table table_border_radius brdr_ltgray tbl_row text-break">
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">詳細</th>
+											<td colspan="11" class="brdr_ltgray"><div><pre class="large-strinig-body"><imart type="string" value=$kyodaku_data.short_biko escapeJs="false" escapeXml="true" /></pre></div><imart type="condition" validity=$kyodaku_data.biko_large_flg><div class="text-right"><i class="fas fa-expand-arrows-alt" data-column="biko" data-title="詳細"></i></div></imart></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-12">
+									<h2>資料・素材費の提供</h2>
+								</div>
+								<div class="col-12">
+									<table class="table table_border_radius brdr_ltgray tbl_row text-break">
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">詳細</th>
+											<td colspan="11" class="brdr_ltgray"><div><pre class="large-strinig-body"><imart type="string" value=$kyodaku_data.short_sozai_biko escapeJs="false" escapeXml="true" /></pre></div><imart type="condition" validity=$kyodaku_data.sozai_biko_large_flg><div class="text-right"><i class="fas fa-expand-arrows-alt" data-column="sozai_biko" data-title="資料・素材費の提供"></i></div></imart></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-12">
+								<imart type="imuiTextbox" id="seikyusho_sofusaki_eda" name="seikyusho_sofusaki_eda" value=$kyodaku_data.seikyusho_sofusaki_id hidden="true" />
+								<h2 class="indent">請求書送付先</h2>
+								</div>
+								<div class="col-12">
+								<table id="seikyusho_sofusaki_table" class="table table_border_radius text-break" style="width: 100%;">
+									<colgroup>
+										<col style="width:30%;" />
+										<col style="width:20%;" />
+										<col style="width:20%;" />
+										<col style="width:15%;" />
+										<col style="width:15%;" />
+									</colgroup>
+									<thead>
+										<tr>
+											<th class="bg_ltorange brdr_ltgray text-center align-middle">
+												担当者・部署
+											</th>
+											<th class="bg_ltorange brdr_ltgray text-center align-middle">
+												E-Mail（To）
+											</th>
+											<th class="bg_ltorange brdr_ltgray text-center align-middle">
+												E-Mail（Cc1）
+											</th>
+											<th class="bg_ltorange brdr_ltgray text-center align-middle">
+												E-Mail（Cc2）
+											</th>
+											<th class="bg_ltorange brdr_ltgray text-center align-middle">
+												E-Mail（Cc3）
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+								</div>	
+							</div>
+
+							<div class="row">
+								<div class="col-12">
+									<h2>添付資料</h2>
+								</div>
+								<div class="col-12">
+									<imart type="repeat" list=$file_list item="item" index="idx">
+										<div class="mb-2">
+											<a class="" href='javascript:void(0);' onclick='fileDownload("<imart type="string" value=item.file_path/>","<imart type="string" value=item.file_name　escapeXml="true"/>");'>
+												<imart type="string" value=item.file_name escapeJs="false" escapeXml="true" />
+											</a>
+										</div>
+									</imart>
+								</div>
+							</div>
+
+							<imart type="decision" value=$userInfo.licenseProductionFlg case="1">
+								<div class="row">
+									<div class="col-12">
+										<h2>経路</h2>
+									</div>
+									<div class="col-10">
+										<table id="route_table" class="table table_border_radius brdr_ltgray tbl_row text-break" style="width:65%">
+											<tr>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">申請者</th>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">BNE担当</th>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">承認者1</th>
+												<imart type="decision" value=$kyodaku_data.keiyaku_cls case="2">
+												<imart type="decision" value=$kyodaku_data.kyodaku_cls case="1">
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">契約担当</th>
+												</imart>
+												</imart>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">承認者2</th>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">BNE担当(最終)</th>
+											</tr>
+											<tr>
+												<td class="brdr_ltgray <imart type="condition" validity=$keiroCpl.apply> back-color</imart>"><div class="route_item"><imart type="string" value=$keiro.apply.user_name escapeJs="false" escapeXml="true" /></div></td>
+												<td class="brdr_ltgray <imart type="condition" validity=$keiroCpl.appr_0> back-color</imart>"><div class="route_item"><imart type="string" value=$keiro.appr_0.user_name escapeJs="false" escapeXml="true" /></div></td>
+												<td class="brdr_ltgray <imart type="condition" validity=$keiroCpl.appr_1> back-color</imart>"><div class="route_item"><imart type="string" value=$keiro.appr_1.user_name escapeJs="false" escapeXml="true" /></div></td>
+												<imart type="decision" value=$kyodaku_data.keiyaku_cls case="2">
+												<imart type="decision" value=$kyodaku_data.kyodaku_cls case="1">
+												<td class="brdr_ltgray <imart type="condition" validity=$keiroCpl.keiyaku> back-color</imart>"><div class="route_item"><imart type="string" value=$keiro.keiyaku.user_name escapeJs="false" escapeXml="true" /></div></td>
+												</imart>
+												</imart>
+												<td class="brdr_ltgray <imart type="condition" validity=$keiroCpl.appr_2> back-color</imart>"><div class="route_item"><imart type="string" value=$keiro.appr_2.user_name escapeJs="false" escapeXml="true" /></div></td>
+												<td class="brdr_ltgray <imart type="condition" validity=$keiroCpl.appr_last> back-color</imart>"><div class="route_item"><imart type="string" value=$keiro.appr_last.user_name escapeJs="false" escapeXml="true" /></div></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12">
+										<h2>通知先</h2>
+									</div>
+									<div class="col-8">
+										<table class="table table_border_radius brdr_ltgray tbl_row text-break" style="width:65%">
+											<tr>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">起案時通知先</th>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">完了通知先</th>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">契約担当</th>
+												<th class="bg_ltorange brdr_ltgray text-center txt_dark cellwide">計上担当</th>
+											</tr>
+											<tr>
+												<td class="brdr_ltgray">
+													<ul class="mb-0">
+														<imart type="repeat" list=$tsuchisakiObj.mail_1 item="item" index="idx">
+															<li class="pt-1"><imart type="string" value=item.user_name escapeJs="false" escapeXml="true" /></li>
+														</imart>
+													</ul>
+												</td>
+												<td class="brdr_ltgray">
+													<ul class="mb-0">
+														<imart type="repeat" list=$tsuchisakiObj.mail_3 item="item" index="idx">
+															<li class="pt-1"><imart type="string" value=item.user_name escapeJs="false" escapeXml="true" /></li>
+														</imart>
+													</ul>
+												</td>
+												<td class="brdr_ltgray">
+													<ul class="mb-0">
+														<imart type="repeat" list=$tsuchisakiObj.mail_4 item="item" index="idx">
+															<li class="pt-1"><imart type="string" value=item.user_name escapeJs="false" escapeXml="true" /></li>
+														</imart>
+													</ul>
+												</td>
+												<td class="brdr_ltgray">
+													<ul class="mb-0">
+														<imart type="repeat" list=$tsuchisakiObj.mail_5 item="item" index="idx">
+															<li class="pt-1"><imart type="string" value=item.user_name escapeJs="false" escapeXml="true" /></li>
+														</imart>
+													</ul>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</imart>
+
+							<div id="commentArea" class="row border-bottom not-print-area">
+								<div class="col-12">
+									<h2>コメント</h2>
+									<div class="mt-2 mb-2">
+										<IMART type="include" page="lo/contents/screen/common/comment" ticketId=$kyodaku_data.kyodaku_id ></IMART>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-12 row mt-4 mb-2 not-print-area">
+								<div class="flex_btn">
+									<button type="button" id="btn_syusei" class="bg_orange txt_dark" style="display:none" onclick="location.href='./lo/contents/screen/kyodaku/permission_register?kyodaku_id=' + $('#kyodaku_id').val();"><i class="fas fa-pen fa-2x"></i><span>編集</span></button>
+									<imart type="condition" validity=$before_apply>
+										<button type="button" id="btn_teisyutu" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>提出</span></button>
+										<button type="button" id="btn_re_teisyutu" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>提出</span></button>
+									</imart>
+									<button type="button" id="shanai_shusei" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>編集</span></button>
+									<button type="button" id="btn_jitai" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>辞退</span></button>
+									<button type="button" id="btn_syusei_irai" class="bg_blue txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>修正依頼</span></button>
+									<button type="button" id="btn_kian" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>起案</span></button>
+									<button type="button" id="btn_hiketu" class="bg_blue txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>否決</span></button>
+									<button type="button" id="btn_sasimodosi" class="bg_blue txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>差戻</span></button>
+									<button type="button" id="btn_shonin" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>承認</span></button>
+									<button type="button" id="btn_kanryo" class="bg_orange txt_dark" style="display:none"><i class="fas fa-check-circle fa-2x"></i><span>完了</span></button>
+									<button type="button" id="btn_print" class="bg_orange txt_dark"><i class="fas fa-print fa-2x"></i><span>印刷画面表示</span></button>
+								</div>
+							</div>
+							
+							<imart type="decision" case="9" value=$kyodaku_data.kyodaku_status>
+							<div class="row border-bottom not-print-area">
+								<div class="col-12">
+									<h2>完了後コメント<span class="margin-all"><imart type="message" id="IN01I011"></imart></span></h2>
+									<div class="mt-2 mb-2">
+										<IMART type="include" page="lo/contents/screen/common/after_completed_comment" ticketId=$kyodaku_data.kyodaku_id ></IMART>
+									</div>
+								</div>
+							</div>
+							</imart>
+						
+						</div>
+					</section>
+				</article>
+				<div>
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="large-string-modal" tabindex="-1">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">タイトル</h4>
+	      </div>
+	      <div class="modal-body"><pre class="modal-large-strinig-body"></pre></div>
+	      <div class="modal-footer">
+	        <button type="button" class="brdr_orange txt_orange" data-dismiss="modal"><i class="far fa-window-close fa-2x"></i><span>閉じる</span></button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+<script>
+var kyodakuData;
+$(function (){
+	// 新規ウィンドウで開いた場合は、戻るボタンを非表示
+	<IMART type="condition" validity=$new_window_flg >
+		$('#history_back_button').hide();
+	</IMART>
+	$(".fa-expand-arrows-alt").click(function () {
+		var $this = $(this);
+		// 検索条件取得
+		var whereParam = {
+			"kyodaku_id":$.trim($("[name=kyodaku_id]").val())
+		};
+		var ret;
+		// 検索
+		try {
+			ret = jsspRpcPermissionDetail.retrieveKyodakuData(whereParam);
+	    } catch (ex) {
+	    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+	        return;
+	    }
+		if (ret.countRow == 0) {
+			return false;
+		}
+		kyodakuData = ret.data[0];
+		var column = $this.data("column");
+		var title = $this.data("title");
+		var value = kyodakuData[column];
+		var modal = $("#large-string-modal");
+		modal.find(".modal-title").text(title);
+		modal.find(".modal-large-strinig-body").text(value);
+		modal.modal('show');
+		
+	});
+});
+
+</script>
+
+
+<script type="text/javascript">
+var kyodaku_cls;
+var moto_kyodaku_id;
+var kyodaku_status;
+
+const emptySeikyushoSofusakiData = {
+	sofusaki_eda: ""
+	, seikyusho_sofusaki_nm: '<imart type="string" value=$kyodaku_data.seikyusho_sofusaki_nm />'
+	, email_address_to: '<imart type="string" value=$kyodaku_data.email_address_to />'
+	, email_address_cc1: '<imart type="string" value=$kyodaku_data.email_address_cc1 />'
+	, email_address_cc2: '<imart type="string" value=$kyodaku_data.email_address_cc2 />'
+	, email_address_cc3: '<imart type="string" value=$kyodaku_data.email_address_cc3 />'
+};
+	
+$(function () {
+	// 許諾種別取得
+	kyodaku_cls = <imart type="string" value=$kyodaku_data.kyodaku_cls />;
+	// 元許諾番号取得
+	moto_kyodaku_id = '<imart type="string" value=$kyodaku_data.moto_kyodaku_id />';
+	// 許諾ステータス取得
+	kyodaku_status = '<imart type="string" value=$kyodaku_data.kyodaku_status/>';
+	
+	
+	// 素材費取得
+	var sozai_hi = '<imart type="string" value=$kyodaku_data.sozai_hi />';
+	$("#sozai_hi").text(Number(sozai_hi).toLocaleString());	
+	
+	<imart type="decision" value=$userInfo.licenseeFlg case="0">
+	if($("#sozai_hi").text() !=="0" || !(kyodaku_status ==="2" || kyodaku_status ==="5")){
+		$("#sozaihi-alert-show").hide();
+	}
+	</imart>	
+
+	// 項目初期値
+	initItem();
+
+	// 検索条件取得
+	var whereParam = {
+		"kyodaku_id":$.trim($("[name=kyodaku_id]").val())
+	};
+	// 検索条件取得
+	var whereParamMoto = {
+		"kyodaku_id":moto_kyodaku_id
+	};
+	var ret;
+	// 検索
+	try {
+		ret = jsspRpcPermissionDetail.retrieveKikakuList(whereParam);
+    } catch (ex) {
+    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+        return;
+    }
+	var kikakuDataSet = [];
+	if (ret.countRow > 0) {
+		// data配列を順に処理
+		$.each(ret.data,function(index, elem) {
+			kikakuDataSet.push({
+				kikaku_id: elem.kikaku_id == null ? '' : elem.kikaku_id
+				, kikaku_nm: elem.kikaku_nm == null ? '' : elem.kikaku_nm
+				, title_nm: elem.title_nm == null ? '' : elem.title_nm
+				, kaisha_nm: elem.kaisha_nm == null ? '' : elem.kaisha_nm
+				, tantou_sha: elem.tantou_sha == null ? '' : elem.tantou_sha
+				, bne_tantou_sha: elem.bne_tantou_sha == null ? '' : elem.bne_tantou_sha
+			});
+		});
+	}	    
+
+	// 検索
+	try {
+		ret = jsspRpcPermissionDetail.retrieveShohinList(whereParam);
+    } catch (ex) {
+    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+        return;
+    }
+	var shohinDataSet = [];
+	var sum_saiteihosho_su_shinseisu = '';
+	var sum_saiteihosho_su_kyodakuryo = '';
+	if (ret.countRow > 0) {
+		// data配列を順に処理
+		$.each(ret.data,function(index, elem) {
+			shohinDataSet.push({
+				chk: false
+				, kyodaku_edaban: elem.kyodaku_edaban == null ? '' : elem.kyodaku_edaban
+				, shohin_hansokubutsu_hanbetsu_nm: elem.shohin_hansokubutsu_hanbetsu_nm == null ? '' : elem.shohin_hansokubutsu_hanbetsu_nm
+				, shohin_mei: elem.shohin_mei == null ? '' : elem.shohin_mei
+				, hatsubai_bi: elem.hatsubai_bi == null ? '' : elem.hatsubai_bi
+				, zeinuki_jodai: elem.zeinuki_jodai == null ? '' : elem.zeinuki_jodai
+				, ryoritsu: elem.ryoritsu == null ? '' : elem.ryoritsu
+				, siyoryo: elem.siyoryo == null ? '' : elem.siyoryo
+				, saiteihosho_su_shinseisu: elem.saiteihosho_su_shinseisu == null ? '' : elem.saiteihosho_su_shinseisu
+				, saiteihosho_su_kyodakuryo: elem.saiteihosho_su_kyodakuryo == null ? '' : elem.saiteihosho_su_kyodakuryo
+				, shoshi: elem.shoshi == null ? '' : elem.shoshi
+				, shoshi_nm: elem.shoshi_nm == null ? '' : elem.shoshi_nm
+				, mihon_suryo: elem.mihon_suryo == null ? '' : elem.mihon_suryo
+				, hanbai_chiiki: elem.hanbai_chiiki == null ? '' : elem.hanbai_chiiki
+				, hanbai_chiiki_nm: elem.hanbai_chiiki_nm == null ? '' : elem.hanbai_chiiki_nm
+			});
+			
+			if ($.isNumeric(elem.saiteihosho_su_shinseisu)) {
+				if (sum_saiteihosho_su_shinseisu == '') {
+					sum_saiteihosho_su_shinseisu = 0;
+				}
+				sum_saiteihosho_su_shinseisu += elem.saiteihosho_su_shinseisu;
+			}
+			if ($.isNumeric(elem.saiteihosho_su_kyodakuryo)) {
+				if (sum_saiteihosho_su_kyodakuryo == '') {
+					sum_saiteihosho_su_kyodakuryo = 0;
+				}
+				sum_saiteihosho_su_kyodakuryo += elem.saiteihosho_su_kyodakuryo;
+			}
+		});
+	}
+	if ($.isNumeric(sum_saiteihosho_su_shinseisu)) {
+		$("#sum_saiteihosho_su_shinseisu").text(Number(sum_saiteihosho_su_shinseisu).toLocaleString());
+	}
+	if ($.isNumeric(sum_saiteihosho_su_kyodakuryo)) {
+		$("#sum_saiteihosho_su_kyodakuryo").text(Number(sum_saiteihosho_su_kyodakuryo).toLocaleString());
+	}
+	$('#plan_data').DataTable({
+		data: kikakuDataSet,
+		// 件数切替機能 無効
+		lengthChange: false,
+		// 検索機能 無効
+		searching: false,
+		// ソート機能 無効
+		ordering: false,
+		// 情報表示 無効
+		info: false,
+		// ページング機能 無効
+		paging: false,
+		// 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+	    scrollX: false,
+		"language": {
+			"processing":   "処理中...",
+			"lengthMenu":   "_MENU_ 件表示",
+			"zeroRecords":  "データはありません。",
+			"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+			"infoEmpty":    " 0 件中 0 から 0 まで表示",
+			"infoFiltered": "（全 _MAX_ 件より抽出）",
+			"infoPostFix":  "",
+			"search":       "検索:",
+			"url":          "",
+			"paginate": {
+				"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+				"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+				"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+			}
+		},
+		autoWidth: false,
+		columns: [
+			{data: "kikaku_id",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    },
+				render:function(data, type, row, meta) {
+					return '<a href="lo/contents/screen/kikaku/planning_detail_new?new_window_flg=1&kikaku_id=' + data + '" target="_blank">' + data + '</a>';
+				}
+			},
+			{data: "kikaku_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    },
+			    render: $.fn.dataTable.render.text()
+			},
+			{data: "title_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			},
+			/*
+			{data: "kaisha_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			},
+			*/
+			{data: "tantou_sha",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			},
+			{data: "bne_tantou_sha",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			}
+		]
+	});
+	var datatable = $('#kyodaku_shohin_table').DataTable({
+		data: shohinDataSet,
+		// 件数切替機能 無効
+		lengthChange: false,
+		// 検索機能 無効
+		searching: false,
+		// ソート機能 無効
+		ordering: false,
+		// 情報表示 無効
+		info: false,
+		// ページング機能 無効
+		paging: false,
+		// 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+	    scrollX: false,
+		"language": {
+			"processing":   "処理中...",
+			"lengthMenu":   "_MENU_ 件表示",
+			"zeroRecords":  "データはありません。",
+			"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+			"infoEmpty":    " 0 件中 0 から 0 まで表示",
+			"infoFiltered": "（全 _MAX_ 件より抽出）",
+			"infoPostFix":  "",
+			"search":       "検索:",
+			"url":          "",
+			"paginate": {
+				"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+				"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+				"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+			}
+		},
+		autoWidth: false,
+		columns: [
+			{data: "kyodaku_edaban",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    }
+			},
+			{data: "shohin_hansokubutsu_hanbetsu_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-left");
+			    }
+			},
+			{data: "shohin_mei",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-left");
+			    },
+			    render: $.fn.dataTable.render.text()
+			},
+			{data: "hatsubai_bi",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-left");
+			    }
+			},
+			{data: "zeinuki_jodai",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    },
+				render:function(data, type, row, meta) {
+					if (data == null || data == "") {
+						return "\\0";
+					}
+					return "\\" + addComma(data);
+//					return Number(data).toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' });
+				}
+			},
+			{data: "ryoritsu",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    },
+				render:function(data, type, row, meta) {
+					if (data == null || data == "") {
+						return "0%";
+					}
+					return cngComma(data) + "%";
+//					return "" + data + "%";
+				}
+			},
+			{data: "siyoryo",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    }, 
+				render:function(data, type, row, meta) {
+					if (data == null || data == "") {
+						return "\\0";
+					}
+					return "\\" + cngComma(data);
+//					return Number(data).toLocaleString();
+				}
+			},
+			{data: "saiteihosho_su_shinseisu",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    },
+				render:function(data, type, row, meta) {
+					if (data == null || data == "") {
+						return "0個";
+					}
+					return cngComma(data) + "個";
+//					return Number(data).toLocaleString();
+				}
+			},
+			{data: "saiteihosho_su_kyodakuryo",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    },
+				render:function(data, type, row, meta) {
+					if (data == null || data == "") {
+						return "\\0";
+					}
+					return "\\" + cngComma(data);
+//					return Number(data).toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' });
+				}
+			},
+			{data: "shoshi_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-left");
+			    }
+			},
+			{data: "mihon_suryo",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray").addClass("text-right");
+			    },
+				render:function(data, type, row, meta) {
+					if (data == null || data == "") {
+						return "0個";
+					}
+					return cngComma(data) + "個";
+//					return Number(data).toLocaleString();
+				}
+			},
+			{data: "hanbai_chiiki_nm", 
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray").addClass("text-left");
+			    }
+			}
+		]
+	});
+
+//-------------------------------------------------------------------------------------------
+	// 元許諾検索
+	try {
+		ret = jsspRpcPermissionDetail.retrieveKyodakuData(whereParamMoto);
+	} catch (ex) {
+    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+        return;
+    }
+	var motoKyodakuDataSet = [];
+	if (ret.countRow > 0) {
+		// data配列を順に処理
+		$.each(ret.data,  function(index, elem) {
+			motoKyodakuDataSet.push({
+				kyodaku_id: elem.kyodaku_id == null ? '' : elem.kyodaku_id
+				, kyodaku_nm: elem.kyodaku_nm == null ? '' : elem.kyodaku_nm
+				, title_nm: elem.title_nm == null ? '' : elem.title_nm
+				, kyodaku_kikan_from: elem.kyodaku_kikan_from == null ? '' : elem.kyodaku_kikan_from
+				, kyodaku_kikan_to: elem.kyodaku_kikan_to == null ? '' : elem.kyodaku_kikan_to
+				, tantou_sha: elem.tantou_sha_nm == null ? '' : elem.tantou_sha_nm
+				, bne_tantou_sha: elem.bne_tantou_sha == null ? '' : elem.bne_tantou_sha
+			});
+		});
+	}	    
+	motoKyodakuDataTable = $('#moto_kyodaku_table').DataTable({
+		data: motoKyodakuDataSet,
+		// 件数切替機能 無効
+		lengthChange: false,
+		// 検索機能 無効
+		searching: false,
+		// ソート機能 無効
+		ordering: false,
+		// 情報表示 無効
+		info: false,
+		// ページング機能 無効
+		paging: false,
+		// 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+	    scrollX: false,
+	    autoWidth: false,
+	    responsive: false,
+		language: {
+			"processing": "処理中...",
+			"lengthMenu": "_MENU_ 件表示",
+			"zeroRecords": "選択ボタンから選択してください",
+			"info": "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+			"infoEmpty": " 0 件中 0 から 0 まで表示",
+			"infoFiltered": "（全 _MAX_ 件より抽出）",
+			"infoPostFix": "",
+			"search": "検索:",
+			"url": "",
+			"paginate": {
+				"first": "<i class='fas fa-backward' aria-hidden='true'></i>",
+				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+				"next": "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+				"last": "<i class='fas fa-forward' aria-hidden='true'></i>"
+			}
+		},
+		columns: [
+			{data: "kyodaku_id",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    },
+				render:function(data, type, row, meta) {
+					return '<input type="hidden" name="kyodaku_id" value="' + data + '"><a href="lo/contents/screen/kyodaku/permission_product_detail?new_window_flg=1&kyodaku_id=' + data + '" target="_blank">' + data + '</a>';
+				}
+			},
+			{data: "kyodaku_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    },
+			    render: $.fn.dataTable.render.text()
+			},
+			{data: "title_nm",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    },
+				render:function(data, type, row, meta) {
+					if (data == null) {
+						data = "";
+					}
+					return data;
+				}
+			},
+			{data: "kyodaku_kikan_from",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+			      $(cell).addClass("brdr_ltgray");
+			    }
+			},
+			{data: "kyodaku_kikan_to",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			},
+			{data: "tantou_sha",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			},
+			{data: "bne_tantou_sha",
+			    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+			    }
+			}
+		]
+	});
+
+	// 許諾追加時チェック
+	var chkKikan = true;
+	var chkChiiki = true;
+	if (kyodaku_cls　== "2") {
+		var kyodaku_kikan_from = '<imart type="string" value=$kyodaku_data.kyodaku_kikan_from />';
+		var moto_kyodaku_kikan_from = '<imart type="string" value=$moto_kyodaku_data.kyodaku_kikan_from />';
+		var kyodaku_kikan_to = '<imart type="string" value=$kyodaku_data.kyodaku_kikan_from />';
+		var moto_kyodaku_kikan_to = '<imart type="string" value=$moto_kyodaku_data.kyodaku_kikan_from />';
+		var kyodaku_chiiki = '<imart type="string" value=$kyodaku_data.kyodaku_chiiki_without_lf />';
+		var moto_kyodaku_chiiki = '<imart type="string" value=$moto_kyodaku_data.kyodaku_chiiki_without_lf />';
+
+		// 許諾期間の変更有無
+		if (kyodaku_kikan_from != moto_kyodaku_kikan_from || kyodaku_kikan_to != moto_kyodaku_kikan_to) {
+			// 許諾期間差異
+			chkKikan = false;
+		}
+		// 許諾地域の変更有無
+		if (kyodaku_chiiki != moto_kyodaku_chiiki) {
+			// 許諾地域差異
+			chkChiiki = false;
+		}
+	}
+	if (!chkKikan) {
+		$('.kikan-diff-show').show();
+	} else {
+		$('.kikan-diff-show').hide();
+	}
+	if (!chkChiiki) {
+		$('.chiiki-diff-show').show();
+	} else {
+		$('.chiiki-diff-show').hide();
+	}
+
+	$(".input-number").each(function(index, elem) {
+		var $elem = $(elem);
+		if ($elem.text()) {
+			$elem.text(cngComma($elem.text()));
+		}
+	});
+	
+	//  ボタンの非表示------------
+	var kyodaku_status ="<imart type="string" value=$kyodaku_data.kyodaku_status />";
+	// ライセンシー
+	<imart type="decision" value=$userInfo.licenseeFlg case="1"> <!-- プロダクションでない場合（ライセンシーの場合） -->
+		var msg = "まだ未提出の状態です。<br>内容確認後、「提出」ボタンを押してください。";
+		
+		if (kyodaku_status == "1"){
+			// 提出(新規)、修正ボタン非表示
+			$('#btn_syusei').show();
+			$('#btn_teisyutu').show();
+			$('#msg_before_teisyutu').show();
+			
+			// すこし遅延させないと、中央に表示されない
+			setTimeout(function(){				
+				imuiShowWarningMessage(msg, [], true, 10000, false);
+			},500);
+		}
+		if (kyodaku_status == "3"){
+			<imart type="condition" validity=$proc_user_flg>
+				// 提出（再申請）、修正ボタン非表示
+				$('#btn_syusei').show();
+				$('#btn_re_teisyutu').show();
+				$('#btn_jitai').show();
+				$('#msg_before_teisyutu').show();
+
+				// すこし遅延させないと、中央に表示されない
+				setTimeout(function(){
+					imuiShowWarningMessage(msg, [], true, 10000, false);
+				},500);
+				
+			</imart>
+		}
+	</imart>
+	
+	// ライセンスプロダクション
+	<imart type="decision" value=$userInfo.licenseProductionFlg case="1"> <!-- プロダクションの場合 -->
+		// 処理対象者か
+		<imart type="condition" validity=$proc_user_flg>
+			var node_id = '<IMART type="string" value=$wf_data.imwNodeId />';
+			// BNE担当者
+			if (node_id == "lo_node_appr_0"){
+				$('#btn_syusei_irai').show();
+				$('#btn_hiketu').show();
+				$('#btn_kian').show();
+				$('#shanai_shusei').show();
+				// 表示枠の幅調整
+				$('.flex_btn').css('width', '100%');
+			}
+			// 承認者
+			if (node_id == "lo_node_appr_1" || node_id == "lo_node_appr_2" || node_id == "lo_node_appr_3"
+				|| node_id == "lo_node_keiyaku" || node_id == "lo_node_keijou"){
+				$('#btn_sasimodosi').show();
+				$('#btn_shonin').show();
+				
+				if(node_id == "lo_node_keiyaku"){
+					$('#btn_shonin span').text("確認");
+				}
+			}
+			// 最終承認者
+			if (node_id == "lo_node_appr_last"){
+				$('#btn_kanryo').show();
+			}		
+		</imart>
+	</imart>
+	//  endボタンの非表示------------
+	
+     // 提出ボタン(新規時)
+	$('#btn_teisyutu').click(function(){
+		// 処理用ページを変更する
+        var nodeSetting = {};
+		nodeSetting.procPage = "im_workflow/common/proc/lo/apply/apply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+		$('#item_proc_status').val("apply");// 処理ステータス：申請(仮)
+		$('#item_proc_name').val($(this).text());
+		setStatusCd($(this).attr("id")); //ステータスコード設定
+		workflowOpenPage('0');
+		return false;
+    });
+ 	
+ 	// 提出ボタン(再提出時)
+	$('#btn_re_teisyutu').click(function(){
+		// 処理用ページを変更する
+        var nodeSetting = {};
+		nodeSetting.procPage = "im_workflow/common/proc/lo/reapply/reapply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+		$('#item_proc_status').val("reapply");// 処理ステータス：再申請(仮)
+		$('#item_proc_name').val($(this).text());
+		
+		if($("#imwWorkflowParams").val() != undefined){
+			var param = JSON.parse(decodeURIComponent($("#imwWorkflowParams").val().replace(/\+/g, '%20')));    		
+			param[3].processType = "2";// 2:再申請、3:取止め    		
+			$("#imwWorkflowParams").val(encodeURIComponent(JSON.stringify(param)));
+		}
+			
+		setStatusCd($(this).attr("id")); //ステータスコード設定
+		workflowOpenPage('3');
+		return false;
+    });
+ 	// 承認ボタン(起案、承認、完了)
+	$('#btn_kian,#btn_shonin,#btn_kanryo').click(function(){
+        // 処理用ページを変更する
+        var nodeSetting = {};
+		nodeSetting.procPage = "im_workflow/common/proc/lo/approve/approve"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+		$('#item_proc_status').val("approve");// 処理ステータス：承認(仮)
+		$('#item_proc_name').val($(this).text());
+		
+		
+		setStatusCd($(this).attr("id")); //ステータスコード設定
+		// 処理者設定
+		workflowOpenPage('4');
+		return false;
+    });
+ 	// 否決ボタン
+	$('#btn_hiketu').click(function(){
+        // 処理用ページを変更する
+        var nodeSetting = {};
+		nodeSetting.procPage = "im_workflow/common/proc/lo/approve/approve"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+		$('#item_proc_status').val("deny");// 処理ステータス：否決(仮)
+		$('#item_proc_name').val($(this).text());
+		setStatusCd($(this).attr("id")); //ステータスコード設定
+		// 処理者設定
+		workflowOpenPage('4');
+		return false;
+    });
+ 	
+ 	// 辞退ボタン
+	$('#btn_jitai').click(function(){
+        // 処理用ページを変更する
+        var nodeSetting = {};
+		nodeSetting.procPage = "im_workflow/common/proc/lo/reapply/reapply"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+		$('#item_proc_status').val("discontinue");// 処理ステータス：辞退(仮)
+		$('#item_proc_name').val($(this).text());
+		setStatusCd($(this).attr("id")); //ステータスコード設定
+		// 処理者設定
+		workflowOpenPage('3');
+		return false;
+    });
+ 	
+ 	// 差戻ボタン(修正依頼)
+	$('#btn_syusei_irai,#btn_sasimodosi').click(function(){
+        // 処理用ページを変更する
+        var nodeSetting = {};
+		nodeSetting.procPage = "im_workflow/common/proc/lo/approve/approve"; //申請画面をデフォルトから変更 WEB-INF\conf\routing-jssp-config\im_workflow.xmlにパスを設定しておく
+		$('#imwCustomParam').val(ImJson.toJSONString(nodeSetting));
+		$('#imwNextScriptPath').val("lo/contents/screen/common/wf_check");// 処理後遷移
+  		$('#item_proc_status').val("sendback");// 処理ステータス：差戻(仮)
+		$('#item_proc_name').val($(this).text());
+		setStatusCd($(this).attr("id")); //ステータスコード設定
+		// 処理者設定
+		workflowOpenPage('4');
+		return false;
+    });
+ 	
+	// 再利用
+ 	$('#btn_sairiyou').click(function(){
+ 		showIndicator();
+		// 許諾id取得
+	    var kyodaku_id = $.trim($("[name=kyodaku_id]").val());
+		var sendData = {};
+		sendData.kyodaku_id = kyodaku_id;
+
+	  	ret = jsspRpcPermissionDetail.sairiyou(sendData);
+		if (ret.error){
+			hideIndicator();
+			alert('<imart type="message" id="KY02E046" escapeJs="true"></imart>');
+			return;
+		}
+
+		alert(ret.msg + "\n" + ret.kyodaku_id);
+    	// 画面遷移
+    	location.href = "lo/contents/screen/kyodaku/permission_register?kyodaku_id=" + ret.kyodaku_id;
+ 	});
+ 	
+	// 印刷ボタン
+	$('#btn_print').click(function(){
+		// プリントしたいエリアの取得
+		var printArea = document.getElementsByClassName("print-area");
+		// プリント用の要素「#print」を作成し、上で取得したprintAreaをその子要素に入れる。
+		$('body').append('<div id="print" class="printBc"></div>');
+		$(printArea).clone().appendTo('#print');
+		$('#print .show-print-area').show();
+		// サイズ調整
+		$('#print').css('zoom','68%');
+		// プリントしたいエリア意外に、非表示のcssが付与されたclassを追加
+		$('body > :not(#print)').addClass('print-off');
+		$('.not-print-area').addClass('print-off');
+		// タイトル変更
+		var orgTitle = $('title').html();
+		var printTitle = "【" + $('[name="keiyaku_cls_nm"]').html() + "】" + $('[name="kyodaku_cls_nm"]').html().trim() +  "_" + $('[name="kyodaku_nm"]').html();
+		$('title').html(printTitle);
+		
+		// 印刷ダイアログ実行
+		window.print();
+		
+		// 後処理
+		$('title').html(orgTitle);
+		$('#print').remove();
+		$('#print').remove();
+		$('.print-off').removeClass('print-off');
+    });
+	
+	// 編集ボタン
+	$('#shanai_shusei').click(function(){
+		location.replace('lo/contents/screen/kyodaku/permission_register?kyodaku_id=' + "<imart type="string" value=$kyodaku_data.kyodaku_id />");
+	});
+
+	
+	// ファイル出力ボタン押下時（CSV出力）
+	$('#outputfile').click(function () {
+		if (shohinDataSet.length > 0){
+			var shohinList=[];　// 商品リスト情報（CSV出力用）
+			$.each(shohinDataSet, function(index, elem) {
+				// 商品情報の項目名をCSV用に変換
+				shohinList.push({
+					  'No.': elem.kyodaku_edaban
+					, '商品/販促物': elem.shohin_hansokubutsu_hanbetsu_nm
+					, '商品名': elem.shohin_mei
+					, '発売日': elem.hatsubai_bi
+					, '上代（税抜）': elem.zeinuki_jodai
+					, '料率': elem.ryoritsu
+					, '使用料（単価）': elem.siyoryo
+					, '最低保証数（申請数）': elem.saiteihosho_su_shinseisu
+					, '最低保証料（許諾料）': elem.saiteihosho_su_kyodakuryo
+					, '証紙': elem.shoshi_nm
+					, '見本数量': elem.mihon_suryo
+					, '地域': elem.hanbai_chiiki_nm
+				});
+			});
+			// CSV出力
+			var kyodaku_id = $.trim($("[name=kyodaku_id]").val());
+	    	createCsv(shohinList, '許諾申請一覧_' + kyodaku_id + '.csv');
+		}
+	});
+	
+	<imart type="decision" value=$kyodaku_data.keiyaku_cls case="2">
+	<imart type="decision" value=$kyodaku_data.kyodaku_cls case="1">
+	<imart type="condition" validity=$flowChangeFlg>
+		$('#keiyaku_node').val("1");
+	</imart>
+	</imart>
+	</imart>
+	
+	/****************************************
+	 * 請求書送付先情報設定
+	 ****************************************/ 		
+	$(document).on("change", '[name="seikyusho_sofusaki_eda"]', function(e) {
+		var $this = $(this);
+		seikyushoSofusakiEda = $this.val();
+		var seikyushoSofusakiDatas = seikyushoSofusakiData.filter(function(element, index, array){
+			return element.sofusaki_eda == seikyushoSofusakiEda;
+		});
+		if (seikyushoSofusakiDatas.length == 0) {
+			seikyushoSofusakiDatas.push(emptySeikyushoSofusakiData);
+		}
+		if (seikyushoSofusakiTable != null) {
+			seikyushoSofusakiTable.clear();
+		}
+		seikyushoSofusakiTable.rows.add(seikyushoSofusakiDatas).draw();
+	});
+	
+	refleshSeikyushoSofusakiTable($.trim($("#kaisha_id").val()));
+	$('[name="seikyusho_sofusaki_eda"]').val(seikyushoSofusakiEda);
+	$('[name="seikyusho_sofusaki_eda"]').trigger("change");
+});
+
+var seikyushoSofusakiTable = null;
+var seikyushoSofusakiEda = "<imart type="string" value=$kyodaku_data.seikyusho_sofusaki_id />";
+var seikyushoSofusakiData = [];
+
+function refleshSeikyushoSofusakiTable(kaisha_id) {
+	seikyushoSofusakiData = [];
+	if (kaisha_id) {
+		// 検索条件取得
+		var whereParamSeikyushoKaisha = {
+			"kaisha_id": kaisha_id
+		};
+		try {
+			ret = jsspRpcPermissionDetail.retrieveSeikyushoSofusakiList(whereParamSeikyushoKaisha);
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+			return;
+		}
+		
+		if (ret.countRow > 0) {
+			$.each(ret.data,  function(index, elem) {
+				seikyushoSofusakiData.push(mergeDeeply(emptySeikyushoSofusakiData, elem, {concatArray: true}));
+			});
+		}
+		
+	}
+	// 表のクリア
+	if ($.fn.dataTable.isDataTable('#seikyusho_sofusaki_table')) {
+		$('#seikyusho_sofusaki_table').DataTable().clear();
+		$('#seikyusho_sofusaki_table').DataTable().destroy();
+	}
+	seikyushoSofusakiTable = $('#seikyusho_sofusaki_table').DataTable({
+		data: [emptySeikyushoSofusakiData],
+		// 件数切替機能 無効
+		lengthChange: false,
+		// 検索機能 無効
+		searching: false,
+		// ソート機能 無効
+		ordering: false,
+		// 情報表示 無効
+		info: false,
+		// ページング機能 無効
+		paging: false,
+		// 横スクロールバー 無効 (scrollXはtrueかfalseで有効無効を切り替えます)
+		scrollX: false,
+		"language": {
+			"processing":   "処理中...",
+			"lengthMenu":   "_MENU_ 件表示",
+			"zeroRecords":  "データはありません。",
+			"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+			"infoEmpty":    " 0 件中 0 から 0 まで表示",
+			"infoFiltered": "（全 _MAX_ 件より抽出）",
+			"infoPostFix":  "",
+			"search":       "検索:",
+			"url":          "",
+			"paginate": {
+				"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+				"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+				"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+			}
+		},
+		autoWidth: false,
+		responsive: false,
+		columns: [				
+			{data: "seikyusho_sofusaki_nm",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+				},
+				render: $.fn.dataTable.render.text()
+			},
+			{data: "email_address_to",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+				},
+				render: $.fn.dataTable.render.text()
+			},
+			{data: "email_address_cc1",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+				},
+				render: $.fn.dataTable.render.text()
+			},
+			{data: "email_address_cc2",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+				},
+				render: $.fn.dataTable.render.text()
+			},
+			{data: "email_address_cc3",
+				createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass("brdr_ltgray");
+				},
+				render: $.fn.dataTable.render.text()
+			}
+		]
+	});
+};
+
+// 項目初期値
+function initItem() {
+	kyodaku_id = $.trim($("[name='kyodaku_id']").val());
+	if (kyodaku_cls == "2") {
+		$('.kyodaku-add-show').show();
+	} else {
+		$('.kyodaku-add-show').hide();
+		moto_kyodaku_id = "";
+	}
+	whereParam = {"kyodaku_id":kyodaku_id};
+	whereParamMoto = {"kyodaku_id":moto_kyodaku_id};
+}
+
+//押したボタン毎にステータスコードを設定
+function setStatusCd(btn_id){
+	var setCd ="2"
+	switch (btn_id){
+	  case 'btn_teisyutu':
+	  case 'btn_re_teisyutu':
+		    setCd = "2"; // 受付待ち
+	    	break;
+	  case 'btn_syusei_irai':
+		    setCd = "3"; // 修正依頼
+			break;
+	  case 'btn_kian':
+		  	setCd = "4"; // 審査中
+			break;
+	  case 'btn_sasimodosi':
+		    setCd = "5"; // 差戻
+			break;
+	  case 'btn_shonin':
+		    setCd = "6"; // 承認
+			break;
+	  case 'btn_jitai':
+		    setCd = "7"; // 辞退
+			break;
+	  case 'btn_hiketu':
+		    setCd = "8"; // 否決
+			break;
+	  case 'btn_kanryo':
+		    setCd = "9"; // 完了
+			break;
+	  default:
+	}
+	// ステータスコードを設定
+	$('#item_status_cd').val(setCd);
+}
+
+/**
+ * 数値カンマ付与関数
+ * (※本来は共通の関数を利用すべきだが、関数定義式のため、データ作成テーブルを作成時に動作しないため、こちらにも実装)
+ */
+function addComma(num) {
+	var s = String(num).split('.');
+	var ret = String(s[0]).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+	if (s.length > 1 && s[1].length > 0) {
+		ret += '.' + s[1];
+	}
+	return ret;
+}
+
+
+$(window).on("load", function() {
+	document.getElementById('body').style.display = 'block';
+});
+
+</script>
+</body>

@@ -1,0 +1,60 @@
+create table lo_t_kikaku_gakkyoku(
+ kikaku_id  varchar(20)
+,kikaku_edaban  smallint
+,gakkyoku_category  smallint
+,gakkyoku_nm  varchar(255)
+,single_albam  char(1)
+,hanbai_keitai_cd  char(1)
+,hanbai_keitai_digital  char(1)
+,hanbai_keitai_sonota char(1)
+,digital_haishin_kobetsuhaishin  char(1)
+,digital_haishin_cdtani  char(1)
+,digital_haishin_subscription  char(1)
+,kakaku_cd  integer
+,kakaku_digital  integer
+,shokaisyukka_mikomi  integer
+,mokuhyo_hambai_su  integer
+,mokuhyou_haishin_su  integer
+,chiiki  char(1)
+,hanbaiyoteikosu_nihon  integer
+,hanbaiyoteikosu_chugoku  integer
+,hanbaiyoteikosu_asia  integer
+,hanbaiyoteikosu_chunanbei  integer
+,hanbaiyoteikosu_europe  integer
+,hanbaikoku_shosai  varchar(4000)
+,hanbai_jiki  varchar(20)
+,jyouhou_syosyutu_jiki  varchar(20)
+,uriba_tempo  char(1)
+,uriba_event  char(1)
+,uriba_ecsite  char(1)
+,urikata_ippanryutsu  char(1)
+,urikata_juchuhambai  char(1)
+,urikata_senkohambai  char(1)
+,urikata_tempo_kaijogenteihambai  char(1)
+,hanro  varchar(4000)
+,jaketto_visual  char(1)
+,release_event  char(1)
+,asobistore  char(1)
+,genban_shiyoryo_mikomi  integer
+,chosakuken_shiyoro_mikomi  integer
+,character_shiyoryo_mikomi  integer
+,riyu_joken  varchar(4000)
+,gakkyoku_setsumei  varchar(4000)
+,syuroku_naiyo  varchar(4000)
+,kyokusu  integer
+,dramapart  char(1)
+,hunyu_tokuten  char(1)
+,tenpo_tokuten  char(1)
+,tokutei_naiyo  varchar(4000)
+,cdimage  varchar(1000)
+,comment  text
+,bikou  text
+,ok_ng  varchar(20)
+,royalty_kingaku integer
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+  , primary key (kikaku_id,kikaku_edaban)
+);

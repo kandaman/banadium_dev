@@ -1,0 +1,285 @@
+<style type="text/css">
+<!--
+#title_select_table td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+--> 
+</style>
+	<!-- IMART -->
+	<imart type="jsspRpc" name="jsspRpcIpSearch" page="lo/contents/screen/common/ip_search" callback="searchResultIp" onErrorCallback="searchErrorIp"></imart>
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<section class="show">
+							<div class="mt-2 mb-2">
+								<h2>IP選択</h2>
+							</div>
+							<div class="col-12 form-area mt-2 mb-2">
+								<div class="col-12 row"><h4 class="indent">検索条件</h4></div>
+								<form role="form" id="ipSearchForm">
+									<div class="form-group row mb-2">
+										<div class="col-2 t-header bg_ltorange brdr_dkgray text-center">IP</div>
+										<div class="col-4 left-justified">
+											<div class="input-group">
+												<input id="sub_ip_search_ip_nm" type="text" maxlength="1024" class="form-control ip_search_clear_target">
+											</div>
+										</div>
+										<div class="col-2"></div>
+										<div class="col-4">
+											<div class="input-group">
+												<!-- 以下のINPUTがないとENTER検索で遷移してしまう -->
+												<input id="dummy_input" type="text" style="display:none;">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="sub_ip_search_start"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+											<button type="button" class="brdr_dkgray txt_dark" id="sub_ip_search_clear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 border-bottom mt-2 mb-2">
+								<table id="sub_ip_search_result" class="table bnadium-table" style="width: 100%;">
+									<thead>
+										<tr role="row">
+											<th class="coL_50" style="width: 50px;"></th>
+											<th style="display: none;">IP(CD)</th>
+											<th class="coL_150" style="width: 500px;">IP</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="sub_ip_search_record_select" disabled><i class="fas fa-search fa-2x"></i><span>選択</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+
+						</section>
+					</div>
+				</div>
+			</div>
+<script type="text/javascript">
+$(function () {
+
+	function escapeStr(value) {
+	  return value.replace(/&/g, "&amp;")
+	    .replace(/"/g, "&quot;")
+	    .replace(/'/g, "&#039;")
+	    .replace(/</g, "&lt;")
+	    .replace(/>/g, "&gt;")
+	    .replace(/\n/g, "<br>");
+	}
+	
+	var changeSelectBtnDisabled = function () {
+		if($("[name=row_check_ip]:checked").val()) {
+			$("#sub_ip_search_record_select").prop('disabled', false);
+		} else {
+			$("#sub_ip_search_record_select").prop('disabled', true);
+		}
+	}
+	
+	// ENTERで検索
+	var enterPressFlg = false;
+	$('form#ipSearchForm input').keyup(function() {
+		if(event.keyCode == 13 && !enterPressFlg) {
+			enterPressFlg = true;
+			$('#sub_ip_search_start').click();
+		}
+	});
+
+	var ipSelectDataTable = null;
+	var checkedDataIndex = null;
+	$("#sub_ip_search_start").click(function() {
+
+		// 表のクリア
+	    if (ipSelectDataTable == null ) {
+			ipSelectDataTable = $('#sub_ip_search_result').DataTable({
+				data: [],
+				// 件数切替機能 無効
+				lengthChange: false,
+				// 検索機能 無効
+				searching: false,
+				// ソート機能 有効
+				ordering: true,
+				// 初期ソート 無効
+				order: [],
+				// 情報表示 無効
+				info: false,
+				// ページング機能 無効
+				paging: true,
+				// １ページあたりの表示件数
+	               pageLength: 5,
+	               pagingType: "full_numbers",
+	               // 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+			    scrollX: false,
+	               dom: "<tr><'row'<'col-4'i><'col-4 text-center'p><'col-4'>>",
+	       		"language": {
+	       			"processing":   "処理中...",
+	       			"lengthMenu":   "_MENU_ 件表示",
+	       			"zeroRecords":  "データはありません。",
+	       			"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+	       			"infoEmpty":    " 0 件中 0 から 0 まで表示",
+	       			"infoFiltered": "（全 _MAX_ 件より抽出）",
+	       			"infoPostFix":  "",
+	       			"search":       "検索:",
+	       			"url":          "",
+	       			"paginate": {
+	       				"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+	       				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+	       				"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+	       				"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+	       			}
+	       		},
+	               columns: [
+					{data: "selected", targets: 0,  visible: true,
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center align-middle").css("width","50px");
+					    },
+						render:function(data, type, row, meta) {
+							var html = '';
+							html += '<div class="input-group text-center align-middle">';
+							<imart type="condition" validity=$radio_mode negative>
+							html += '<input type="checkbox" name="row_check_ip" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							<imart type="condition" validity=$radio_mode>
+							html += '<input type="radio" name="row_check_ip" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							html += '</div>';
+							return html;
+
+						}
+					},
+					{data: "ip_cd", targets: 1,  visible: false,
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle");
+					    }
+					},
+					{data: "ip_nm", targets: 2,  visible: true, 
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle").css("width","500px");
+					    }
+					},
+				],
+				createdRow: function(row, data, dataIndex) {
+					$(row).attr('data-dataindex', dataIndex);
+				}
+			});
+	    } else {
+	    	ipSelectDataTable.rows().remove();
+	    }
+
+		// 検索条件取得
+		var whereParam = {
+			"ip_nm":$.trim($("#sub_ip_search_ip_nm").val())
+		};
+		
+		// 検索
+		jsspRpcIpSearch.searchIpList(whereParam);
+		// インジケータ表示
+		showIndicator();
+	});
+	
+	// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+	window.searchResultIp = function(ret) {
+		var dataSet = [];
+        if (ret.countRow > 0) {
+            // data配列を順に処理
+            $.each(ret.data,function(index, elem) {
+            	elem.selected = false;
+                dataSet.push(elem);
+        	});
+        }
+	    ipSelectDataTable.rows.add(dataSet).draw();
+	    $("#sub_ip_search_record_select").prop('disabled', true);
+	    checkedDataIndex = null;
+
+		// インジケータ非表示
+        hideIndicator();
+        enterPressFlg = false;
+    }
+	// 検索エラー後コールバック
+	window.searchErrorIp = function(res) {
+        hideIndicator();
+        enterPressFlg = false;
+		try {
+			imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+			return;
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		}
+    }
+	
+	<imart type="condition" validity=$radio_mode>
+	var radioMode = true;
+	</imart>
+	<imart type="condition" validity=$radio_mode negative>
+	var radioMode = false;
+	</imart>
+	
+	$(document).on("change", '#sub_ip_search_result [name="row_check_ip"]', function(){
+		var $this = $(this);
+		var $tr = $this.closest("tr");
+		var dataIndex = Number($tr.attr('data-dataindex'));
+		if (radioMode && checkedDataIndex != null) {
+			ipSelectDataTable.data()[checkedDataIndex].selected = false;
+		}
+		var titleData = ipSelectDataTable.data()[dataIndex];
+		titleData.selected = $this.prop('checked');
+		checkedDataIndex = dataIndex;
+		changeSelectBtnDisabled();
+	});
+
+	// 「選択」ボタン
+	$("#sub_ip_search_record_select").click(function() {
+		
+		var selectedRecords = [];
+		if (ipSelectDataTable != null) {
+			selectedRecords = ipSelectDataTable.rows(function(index, data, node) {
+		        return data.selected;
+		    }).data().toArray();
+		}
+		console.log(selectedRecords);
+		
+		// ポップアップを閉じるので後始末しておく
+		initializePopup();
+		
+		// 親画面のイベントを発火する
+		var $popup = $(this).closest(".popup");
+		$popup.trigger("ipSearchSelected", [selectedRecords]);
+	});
+
+	$("#sub_ip_search_clear").click(function() {
+		$(".ip_search_clear_target").val("");
+	});
+
+	var initializePopup = function() {
+		$("#sub_ip_search_clear").click();
+		if (ipSelectDataTable != null) {
+			ipSelectDataTable.rows().remove().draw();
+		}
+		$("#sub_ip_search_record_select").prop('disabled', true);
+	};
+
+	$(document).on("initializePopup", function(){
+		initializePopup();
+	});
+});
+</script>

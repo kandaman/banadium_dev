@@ -1,0 +1,12 @@
+create table public.lo_m_flow_comment_template (
+  comment_template_id integer not null
+  , comment_template_nm character varying(100) not null
+  , comment_template_content text not null
+  , sort_no integer not null
+  , sakujo_flg character varying(20) not null
+  , touroku_sha character varying(100) 
+  , touroku_bi timestamp(6) without time zone 
+  , koushin_sha character varying(100)  
+  , koushin_bi timestamp(6) without time zone
+  , primary key (comment_template_id)
+);

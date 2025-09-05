@@ -1,0 +1,182 @@
+<!-- キャラクタ情報入力 start ---------------------------------------------------------------------------------------------->
+<script>
+	// キャラクター検索子画面終了時の処理
+	function setCharacterData(dataObj) {
+
+		// 一覧を一度削除
+		$("#characterlist").children().remove();
+		//$("#charactertbl").find('tbody:visible').remove();
+
+		var honmoto_list = [];
+		var row = 0;
+		// キャラクタ検索画面からの戻り値を取得し一覧を作成
+		$.each(dataObj, function(key, data) {
+			//テンプレート行をコピー
+			var coln = $("#characterlisttmp").clone(true);
+			//id削除
+			coln.removeAttr('id');
+
+			//データを反映
+			//coln.find('.no').text(row);
+			//coln.find('.charId').text(character_cd);
+			coln.find('.charName').text(data.character_nm);
+			coln.find('.charCom').text(data.hanmoto_nm);
+			coln.find('.charCun').text(data.region_nm);
+			coln.find('.keyNo').val(data.keyno);
+			// hidden属性にデータ格納
+			coln.find('input[name="item_characterlistData"]').val(
+					ImJson.toJSONString(data));
+			coln.show();
+			//末尾に追加
+			coln.appendTo("#characterlist");
+
+			honmoto_list[row] = data.hanmoto_nm;// 版元名
+			row++;
+		});
+
+		// 一行もない場合空行作成
+		if (dataObj.length == 0) {
+			var coln = $("#characterlisttmp").clone(true);
+			coln.removeAttr('id');
+			coln.show();
+			coln.appendTo("#characterlist");
+			$('[name="characterList"]').val("");
+		} else {
+			$('[name="characterList"]').val("1");
+		}
+
+		// noセット
+		charactertbl_rowno();
+
+		// 版元セット
+		setHanmotoName();
+	}
+	// no振り直し
+	function charactertbl_rowno() {
+		$("#characterlist .no").each(function(i, elem) {
+			$(elem).text(i + 1);
+		});
+
+		// キャラクターを未設定に戻す
+		if($("#characterlist .no").length == 0) {
+			$('[name="characterList"]').val("");
+		}
+	}
+
+	// 経路設定に版元情報をセット
+	function setHanmotoName() {
+
+		// 版元+地域で重複除き取得
+		var arr = $("#characterlist .charCom").map(
+				function() {
+					if ($(this).text() == "") {
+						return '';
+					} else {
+						return $(this).text() + ' ('
+								+ $(this).next('.charCun').text() + ')';
+					}
+				}).get();
+		var arrnames = arr.filter(function(x, i, self) {
+			return self.indexOf(x) === i;
+		});
+
+		// 経路設定の版元を一度削除
+		$(".honmoto_list").remove();
+		$("#hanmoto_flow .hanmoto_nm").text("");
+		$("#hanmoto_flow .honmoto_row").attr("rowspan", 1);
+
+		// 版元名をセット
+		var nowObj = $("#hanmoto_flow");
+		$
+				.each(
+						arrnames,
+						function(i, nm) {
+							if (i == 0) {
+								$("#hanmoto_flow .hanmoto_nm").text(nm);
+							} else {
+								$("#hanmoto_flow .honmoto_row").attr("rowspan",
+										i + 1);
+								var str = '';
+								str += '<td>' + nm + '</td>';
+								str += '<td></td>';
+								str += '<td></td>';
+								str += '<td></td>';
+								str += '<td><button type="button" class="btn btn-hensyu center-block" herf="#dummy" disabled>編集</button></td>';
+								var thisObj = $(
+										'<tr class="honmoto_list"></tr>')
+										.append(str);
+								// 版元数分後ろに追加
+								nowObj.after(thisObj);
+								nowObj = thisObj;
+							}
+						});
+	}
+
+	$(function() {
+		// キャラクタ情報を取得
+		var dataObj = [];
+		var charaData = '<imart type="string" value=$form.item_characterlistDataJSON escapeJs="true"/>';
+		if (charaData != "")
+			dataObj = ImJson.parseJSON(charaData); // jsonで配列に戻す
+		setCharacterData(dataObj);
+
+		$("#btn_SearchCharacters").click(function() {
+			//リストに存在するキャラidを配列で取得
+			var arr = $("#characterlist .keyNo").map(function() {
+				return $(this).val();
+			}).get();
+
+			// キャラクター検索画面を開く
+			openSearchCharacterDialog(arr, setCharacterData);
+		});
+	});
+</script>
+
+
+<!-- キャラクタ一覧 -->
+<div class="form-group">
+	<div>
+		<label>■キャラクター</label>
+	</div>
+	<!-- <button type="button" class="btn" onclick="openSearchCharacterDialog(setCharacterData);">検索</button> -->
+	<button type="button" id="btn_SearchCharacters" class="btn btn-hensyu">検索</button>
+
+	<small><p>※検索ボタンから申請するキャラクターを選択してください。</p>
+		<p>※対象キャラクターが無い場合はメディア部に申請してください。</p></small>
+
+	<div class="panel">
+		<table class="table table-condensed table-striped" id="charactertbl">
+			<thead>
+				<tr>
+					<th  width="5%">No</th>
+					<th>キャラクター名 <img src="cactus_csjs/images/bikkuri.png"></th>
+					<th>版権元名</th>
+					<th>地域</th>
+					<th width="10%"></th>
+				<tr>
+			</thead>
+			<!-- テンプレート行 非表示-->
+			<tbody style="display: none">
+				<tr id="characterlisttmp">
+					<td class="no"></td>
+					<td class="charName"></td>
+					<td class="charCom"></td>
+					<td class="charCun"></td>
+					<td><div class="button btn_characterDel">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="delLine(this);charactertbl_rowno();setHanmotoName()">削除</button>
+						</div></td>
+					<input type="hidden" class="keyNo" value="" />
+					<input type="hidden" name="item_characterlistData" value="" />
+				</tr>
+			</tbody>
+			<!-- 表示行 -->
+			<tbody id=characterlist>
+
+			</tbody>
+			<!-- キャラクター設定済か判定 -->
+			<input type="hidden" name="characterList" class="required" value="" />
+		</table>
+	</div>
+</div>
+<!-- @end キャラクタ一覧 -->

@@ -1,0 +1,244 @@
+<IMART type="jsspRpc" name="jsspRpcAfterCompletedComment" page="lo/contents/screen/common/after_completed_comment"></IMART>
+<script type="text/javascript">
+
+var $fileList = []; // 編集時のファイル格納用
+var $tempUpFileCount = 0;
+var $tempUpFileSuccessCount = 0;
+var $tempUpFileErrotCount = 0;
+var $tempUpTempuFileCountCompComment = 0;
+var $tempUpTempuFileSuccessCountCompComment = 0;
+var $tempUpTempuFileErrotCountCompComment = 0;
+
+// アップロード削除
+function upFileDelCompComment(targetEl){
+	// TODO:確認メッセージを表示
+	var targetObj = $(targetEl).closest("div");
+	targetObj.remove();
+}
+
+// クリップ押下
+function openFileClip() {
+	var $form = $("#tempuFilesFormCompComment");
+	var $file = $form.find(".imui-fileupload-input");
+	$file.focus();
+	$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+};
+
+// ファイルアップロード前処理用
+function onBeforeSendTempuFilesCompComment(e, data) {
+	// ファイル数制限
+	var uploadedNum = $("#after_comp_comment_file_select_area .afterFileSelect").size() - 1;
+	var max_file_num = <imart type="string" value=$maxFileNum />;
+	if(uploadedNum + $tempUpTempuFileCountCompComment + data.files.length >= max_file_num) {
+		return false;
+	}
+	
+	var str = '<imart type="string" value=$extListstr />';
+	var max_file_size = <imart type="string" value=$maxFileSize />;
+	var acceptExt =str.split("/");
+	for (var fIdx = 0; fIdx < data.files.length; fIdx++) {
+		// ファイルサイズチェック
+		if(data.files[fIdx].size > max_file_size) {
+			alert('<imart type="message" id="ER01E005" escapeJs="true"></imart>');
+			return false;
+		}
+		
+		// 拡張子チェック
+		var ext = getFileExtension(data.files[fIdx].name);
+		if (!acceptExt.includes(ext)) {
+			var altstr = '<imart type="message" id="KK03E039" escapeJs="true"></imart>';
+			altstr = altstr.replace("{0}", data.files[fIdx].name);
+			alert(altstr);
+			return false;
+		}
+	}
+	
+	showIndicator();
+	// TODO:アップロードするファイルのサイズや拡張子をチェック
+	// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+	$tempUpTempuFileCountCompComment += data.files.length;
+	return true;
+}
+// ファイルアップロード成功時
+function onSuccessTempuFilesCompComment(e, data) {
+	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+	$tempUpTempuFileSuccessCountCompComment += data.result.length;
+
+	$.each(data.result, function(index, res) {
+		var src ="lo/contents/screen/ses_file_dl?filePath=" + res.physicalName + "&fileName=" + res.name;
+		var a_src = $('<a>').attr({'href':src, 'download':''});
+		var clon = $("#after_comp_comment_file_select_template > .afterFileSelect").clone(true);
+		clon.find(".upfilenametext").text(res.name);
+		clon.find('input[name="item_upFile_name"]').val(res.name);
+		clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+		clon.find(".upfilenametext").wrap(a_src);
+		clon.show();
+		clon.appendTo("#after_comp_comment_file_select_area");
+	});
+
+	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+	if ($tempUpTempuFileCountCompComment == $tempUpTempuFileSuccessCountCompComment + $tempUpTempuFileErrotCountCompComment) {
+		$tempUpTempuFileCountCompComment = 0;
+		$tempUpTempuFileSuccessCountCompComment = 0;
+		$tempUpTempuFileErrotCountCompComment = 0;
+		hideIndicator();
+	}
+}
+
+// アップロード失敗
+function onErrorTempuFilesCompComment(e, data) {
+	// TODO:失敗時の処理をいれる
+	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+	$tempUpTempuFileErrotCountCompComment += data.files.length;
+	if ($tempUpTempuFileCountCompComment == $tempUpTempuFileSuccessCountCompComment + $tempUpTempuFileErrotCountCompComment) {
+		$tempUpTempuFileCountCompComment = 0;
+		$tempUpTempuFileSuccessCountCompComment = 0;
+		$tempUpTempuFileErrotCountCompComment = 0;
+		hideIndicator();
+	}
+}
+
+// コメント登録
+function saveAfterCompleteComment() {
+	// 内容
+	let sendData = {};
+	sendData.ticket_id = '<imart type="string" value=$ticketId />';
+	sendData.naiyo = $("#after_completed_comment").val();
+	
+	if(sendData.naiyo.length > 0) {
+		// ローディング
+		showIndicator();
+		
+		// ファイル
+		let compCommentFileList = [];
+		$("#after_comp_comment_file_select_area > .afterFileSelect").each(function(index, element) {
+			let divElement = $(element);
+			let compCommentFile = {
+					fileName : divElement.find('input[name="item_upFile_name"]').val(),
+					uniquefileName : divElement.find('input[name="item_upFile_resname"]').val()
+			};
+			compCommentFileList.push(compCommentFile);
+		});
+		sendData.item_tempu_files = compCommentFileList;
+		
+		let ret = jsspRpcAfterCompletedComment.save(sendData);
+		if (ret.error){
+			hideIndicator();
+			alert('コメント登録に失敗しました');
+			return;
+		} else {
+			location.reload();
+		}
+	} else {
+		alert('コメントを入力してください');
+	}
+}
+
+</script>
+<imart type="condition" validity=$hasComment>
+<table class="form-group comment-table bnadium-table text-break" width="100%">
+	<colgroup>
+		<col style="width:14%;">
+		<col style="width:8%;">
+		<col style="width:40%;">
+		<col style="width:38%;">
+	</colgroup>
+	<thead class="form-group">
+		<tr>
+			<th>登録者</th>
+			<th>登録日時</th>
+			<th>コメント</th>
+			<th>添付ファイル</th>
+		</tr>
+	</thead>
+	<tbody class="form-group">
+	<imart type="repeat" list=$commentList item="record" index="idx">
+		<tr class="form-group">
+			<imart type="condition" validity=record.isLicenseProduction>
+				<td class="brdr_ltgray text-center license-production-color">
+			</imart>
+			<imart type="condition" validity=record.isLicenseProduction negative>
+				<td class="brdr_ltgray text-center licensee-color">
+			</imart>
+				<imart type="string" value=record.torokushaName />
+			</td>
+			<td class="brdr_ltgray text-center">
+				<imart type="string" value=record.torokuDt />
+			</td>
+			<td class="brdr_ltgray">
+				<imart type="string" value=record.naiyo escapeXml="true" nl2br="true"/>
+			</td>
+			<td class="brdr_ltgray">
+				<imart type="repeat" list=record.fileList item="file" index="fIdx">
+					<a href="javascript: void(0);" onclick='fileDownload("<imart type="string" value=file.filePath/>","<imart type="string" value=file.fileName/>");' oncontextmenu="return false;">
+						<imart type="string" value=file.fileName escapeXml="true" />
+						<span class='ml-1 fas fa-file-alt fa-1x'></span><br />
+					</a>
+				</imart>
+			</td>
+		</tr>
+	</imart>
+	</tbody>
+</table>
+</imart>
+<div id="after_completed_comment_open" class="form-group row not-print-area ml-2 mt-2">
+	<a href="javascript:void(0);" onclick="$('#after_completed_comment_open').hide();$('#after_completed_comment_area').show();">
+		コメントを入力する
+	</a>
+</div>
+<div class="col-12">
+	<div id="after_completed_comment_area" class="form-group row not-print-area" style="display:none">
+		<div class="col-1 bg_ltorange brdr_ltgray lo-center pt-2 pb-2">コメント</div>
+		<div class="col-5 brdr_ltgray text-center pt-2 pb-2">
+			<table width="100%">
+				<td><imart type="imuiTextArea" maxlength="1000" id="after_completed_comment" name="after_completed_comment" rows="4" width="100%" /></td>
+				<td class="pl-3 align-bottom" width="10px"><i class="fa fa-paperclip" style="cursor:pointer" onclick="openFileClip();"></i></td>
+			</table>
+		</div>
+		<div class="col-1 bg_ltorange brdr_ltgray lo-center p-1">
+			添付ファイル
+		</div>
+		<div class="col-4 brdr_ltgray text-left pt-2 pb-2 text-break">
+			<div class="mb-5">
+				<div id="after_comp_comment_file_select_area">
+					<div id="after_comp_comment_file_select_template">
+						<div class="afterFileSelect" style="display: none">
+							<dl>
+								<dt class="upfilename">
+									<span class="upfilenametext"><imart type="string" value="" /></span>
+								</dt>
+								<imart type="hidden" item_upFile_name="" />
+								<imart type="hidden" item_upFile_resname="" />
+								<dd>
+									<a href="javascript: void(0);" onclick="upFileDelCompComment(this)">
+										<span class="fas fa-trash-alt fa-1x"></span>
+									</a>
+								</dd>
+							</dl>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mark-req position-static row fixed-bottom">
+				<span class="col-12"><imart type="string" value=$extstr /></span>
+				<span class="col-12 mt-1"><imart type="message" id="IN01I007" escapeJs="true" /></span>
+			</div>
+		</div>
+		<div class="col-1 brdr_ltgray lo-center pt-2 pb-2"><button type="button" class="bg_orange txt_dark pl-4 pr-2" onclick="saveAfterCompleteComment();"><i class="fa fa-paper-plane-o"></i><span>登録</span></button></div>
+	</div>
+</div>
+
+<!-- ファイルアップロードエリア -->
+<form id="tempuFilesFormCompComment" name="tempuFilesFormCompComment" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+	<div style="display:none;">
+		<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+		<imart type="imuiFileUpload" storeTo="/lo/upload"
+			autoUpload="true" uniqueFileName="true" id="imui-upload-tempu"
+			onBeforeSend="onBeforeSendTempuFilesCompComment" 
+			onSuccess="onSuccessTempuFilesCompComment"
+			onError="onErrorTempuFilesCompComment" 
+			outerFormId="tempuFilesFormCompComment"
+			dropZone="#after_completed_comment_area" />
+	</div>
+</form>

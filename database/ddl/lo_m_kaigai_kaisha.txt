@@ -1,0 +1,10 @@
+create table public.lo_m_kaigai_kaisha (
+kaisha_id varchar(100) not null
+,kaisha_name character varying(1000) not null
+,sakujo_flg varchar(20) not null
+,touroku_sha varchar(100) not null
+,touroku_bi timestamp(6) without time zone not null
+,koushin_sha varchar(100) not null
+,koushin_bi timestamp(6) without time zone not null
+,primary key (kaisha_id)
+);

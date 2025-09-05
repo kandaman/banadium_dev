@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+
+	<title>ステータス　カラーサンプル</title>
+</imart>
+<style type="text/css">
+	.sts_color_ichiji_hozon {
+		color : #000000;
+		background : #cccccc;
+	}
+	.sts_color_licensee_shorityu {
+		color : #f3f3f3;
+		background : #a9a9a9;
+	}
+	
+	.sts_color_uketsukemachi {
+		color : #f3f3f3;
+		background : #4dc4ff;
+	}
+	.sts_color_uketsuketyu {
+		color : #000000;
+		background : #FFFF00;
+	}
+	
+	.sts_color_shusei_licensee {
+		color : #000000;
+		background : #ffa500;
+	}
+	.sts_color_shusei_license_production {
+		color : #f3f3f3;
+		background : #ffa500;
+	}
+	
+	.sts_color_shinsatyu {
+		color : #f3f3f3;
+		background : #7fff00;
+	}
+	.sts_color_shanai_shinsatyu {
+		color : #000000;
+		background : #7fff00;
+	}
+	.sts_color_sashimodoshi {
+		color : #000000;
+		background : #fa8072;
+	}
+	.sts_color_shanai_ok {
+		color : #000000;
+		background : #03af7a;;
+	}
+	.sts_color_shanai_ng {
+		color : #000000;
+		background : #ff6347;
+	}
+	
+	.sts_color_kanryo {
+		color : #f3f3f3;
+		background : #03af7a;;
+	}
+	.sts_color_hiketsu {
+		color : #f3f3f3;
+		background : #ff6347;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-1"></div>
+			<div class="col-4 text-center font-weight-bold">【画面左上】　※ログイン者ごとの表示されるステータス</div>
+			<div class="col-1"></div>
+			<div class="col-4 text-center font-weight-bold">【一覧】　※ログイン者ごとの表示されるステータス</div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center licensee-color">ライセンシー</div>
+			<div class="col-2 brdr_ltgray text-center license-production-color">ライセンスプロダクション</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center licensee-color">ライセンシー</div>
+			<div class="col-2 brdr_ltgray text-center license-production-color">ライセンスプロダクション</div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_ichiji_hozon">一時保存</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_licensee_shorityu">ライセンシー様処理中</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_ichiji_hozon">一時保存</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_licensee_shorityu">ライセンシー様処理中</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_uketsukemachi">受付待ち</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_uketsuketyu">受付中</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_uketsukemachi">受付待ち</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_uketsuketyu">受付</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shusei_licensee">修正依頼</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shusei_license_production">修正依頼</div>
+			<div class="col-1"></div>
+			<div class="col-2  brdr_ltgray text-center"><span class="badge badge-pill sts_color_shusei_licensee">修正依頼</span></div>
+			<div class="col-2  brdr_ltgray text-center"><span class="badge badge-pill sts_color_shusei_license_production">修正依頼</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shinsatyu">審査中</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shanai_shinsatyu">社内審査中</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shinsatyu">審査中</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shanai_shinsatyu">社内審査中</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shinsatyu">審査中</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_sashimodoshi">差戻</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shinsatyu">審査中</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_sashimodoshi">差戻</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shinsatyu">審査中</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shanai_ok">社内承認OK</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shinsatyu">審査中</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shanai_ok">社内承認OK</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shinsatyu">審査中</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_shanai_ng">社内承認NG</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shinsatyu">審査中</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_shanai_ng">社内承認NG</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_kanryo">完了</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_kanryo">完了</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_kanryo">完了</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_kanryo">完了</span></div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_hiketsu">否決</div>
+			<div class="col-2 brdr_ltgray text-center font-weight-bold sts_color_hiketsu">否決</div>
+			<div class="col-1"></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_hiketsu">否決</span></div>
+			<div class="col-2 brdr_ltgray text-center"><span class="badge badge-pill sts_color_hiketsu">否決</span></div>
+		</div>
+	</div>
+</body>

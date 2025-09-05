@@ -1,0 +1,433 @@
+
+<IMART type="jsspRpc" name="searchCharacterObject"
+	page="cactus/contents/screen/searchCharacter"></IMART>
+
+<script>
+
+//画面終了時(データ選択時)のコールバック関数
+var $searchCharacterEndFunction;
+
+//ページ情報
+var $searchCharacterPageInfo={
+	maxRow: 20 //１ページの最大行数
+	,MaxLinks:5 //リンク表示の最大数
+	//,nowPage:1 /現在のページ
+	//,totalCount:1 //データ数
+	,totalPage:1 //ページ数（件数/最大行数）
+};
+
+/*
+*  検索ダイアログを開く
+*/
+//function openSearchCharacterDialog(returnid) {
+function openSearchCharacterDialog(arrKeyNo,returnFunction) {
+
+	// IEだとデフォルト引数に不具合があるようなのでundefined判定で空文字入れる
+	if (returnFunction === undefined) returnFunction="";
+
+	// 選択したときの処理を格納
+	$searchCharacterEndFunction = returnFunction;
+
+
+	//$("#searchCharacterResultTable").hide();
+	//検索結果一覧をクリア
+	$("#searchCharacterList").children().remove();
+	$("#charaChkAll1").prop("checked",false);
+	$("#charaChkAll2").prop("checked",false);
+
+	//ページャクリア
+	$("#searchCharacterPager").children().remove();
+	$("#searchCharacterPager2").children().remove();
+	//件数クリア
+	$("#searchCharacterDataCount").text("");
+
+	//追加一覧をクリア
+	$("#addCharacterList").children().remove();
+	//追加一覧 初期表示
+	addCharacterlist(arrKeyNo);
+
+	// 画面を開く
+	$('#searchCharacter_dialog').imuiDialog('open');
+}
+
+//コールバック関数実行用
+var searchCharacterCallback = function(func) {
+	func();
+};
+
+
+//追加情報を設定
+function addCharacterlist(arrKeyNo) {
+
+	//$addCharacterData=[];
+	if (arrKeyNo.length > 0){
+		// デフォルトの検索
+		var ret = searchCharacterObject.getCharacterListInit(arrKeyNo);
+
+		// 行番号順に格納
+		if (ret.countRow > 0){
+			var sortdata = [];
+			$.each(ret.data,function(index, elem) {
+				var i= arrKeyNo.indexOf(elem.keyno);
+				if (i > -1){
+					sortdata[i] = elem;
+				}
+			});
+
+			// data配列を順に処理
+			$.each(sortdata,function(index, elem) {
+				var str = '';
+				str += '<td class="c_chk check-box"><input type="checkbox" value="'+ index +'"></td>';
+				str += '<td class="c_no listno"></td>';
+				str += '<td class="c_char">'+ compactFullText(elem.character_nm) +'</td>';
+				str += '<td class="c_hanmoto">'+ compactFullText(elem.hanmoto_nm) +'</td>';
+				str += '<td class="c_region" align="center">'+ compactFullText(elem.region_nm) +'</td>';
+				str += '<input type="hidden" class="keyNo" value="'+ elem.keyno +'">';
+				str += '<input type="hidden" class="addflg" value="0">';
+				str += '<input type="hidden" class="chara_data" value="">';
+				// 末尾に追加
+				var obj = $('<tr></tr>').append(str);
+				obj.find('.chara_data').val(ImJson.toJSONString(elem)); // データをjsonで変換して格納
+				obj.appendTo('#addCharacterList');
+			});
+			// no振り直し
+			$("#addCharacterList").children().each(function(i, elem) {
+				$(elem).find('.listno').html(i+1);
+			});
+		}
+	}
+}
+
+$(function() {
+	// ページャークリック
+	$(document).on("click",'#searchCharacterPager li,#searchCharacterPager2 li',function(event){
+		var pageNum =$(this).attr('page');
+		// ページャー移動
+		onPagerMove('searchCharacterPager',pageNum);
+		onPagerMove('searchCharacterPager2',pageNum);
+		// 表示データ
+		onPagerlistDraw("searchCharacterList",pageNum,$searchCharacterPageInfo.maxRow);
+	});
+
+
+	/*
+	*  検索ボタンクリック処理
+	*/
+	$("#btn_searchCharacter").click(function() {
+		// リストの中身をクリア
+		$("#searchCharacterList").children().remove();
+
+		// 検索条件設定
+		var where = {
+			"character_nm": $.trim($("#searchCharacter_name").val())
+		};
+
+		//検索
+		var ret = searchCharacterObject.getCharacterList(where);
+
+		if (ret.countRow > 0){
+			//$searchCharacterData = ret.data;
+			$searchCharacterPageInfo.totalPage = Math.ceil(ret.countRow / $searchCharacterPageInfo.maxRow);
+			clreatePager('searchCharacterPager',$searchCharacterPageInfo.totalPage,$searchCharacterPageInfo.MaxLinks);
+			clreatePager('searchCharacterPager2',$searchCharacterPageInfo.totalPage,$searchCharacterPageInfo.MaxLinks);
+			//$("#searchCharacterResultTable").show();
+		}else{
+			clreatePager('searchCharacterPager',0,$searchCharacterPageInfo.MaxLinks);
+			clreatePager('searchCharacterPager2',0,$searchCharacterPageInfo.MaxLinks);
+		}
+		if (ret.countRow > 0){
+			// data配列を順に処理
+			$.each(ret.data,function(index, elem) {
+
+				var str = '';
+				str += '<td class="c_chk check-box"><input type="checkbox" value="'+ index +'"></td>';
+				str += '<td class="c_char">'+ compactFullText(elem.character_nm) +'</td>';
+				str += '<td class="c_hanmoto">'+ compactFullText(elem.hanmoto_nm) +'</td>';
+				str += '<td class="c_region" align="center">'+ compactFullText(elem.region_nm) +'</td>';
+				str += '<input type="hidden" class="keyNo" value="'+ elem.keyno +'">';
+				str += '<input type="hidden" class="addflg" value="0">';
+				str += '<input type="hidden" class="chara_data" value="">';
+
+				// 末尾に追加
+				var obj = $('<tr></tr>').append(str);
+				if (index >= $searchCharacterPageInfo.maxRow){
+					obj.hide(); //最大表示数以上のデータは隠しておく
+				}
+				obj.find('.chara_data').val(ImJson.toJSONString(elem)); // データをjsonで変換して格納
+				obj.appendTo('#searchCharacterList');
+			});
+		}
+
+		// 追加済みチェック
+		chkSearchCharacterAdd();
+
+		// 件数表示
+		$("#searchCharacterDataCount").text("検索結果 ： " + ret.countRow + "件");
+	});
+
+	/*
+	*  追加済みチェック
+	*/
+	function chkSearchCharacterAdd() {
+    	// 検索リストに追加リストと同一のidが存在したらグレーアウトする
+		$("#addCharacterList").find('.keyNo').each(function(i, elem) {
+			var list = $("#searchCharacterList").find('.keyNo[value="'+ $(elem).val() + '"]').closest('tr');
+			if ($(list).length){
+				$(list).css({"background":"#C0C0C0"});
+				$(list).find('.addflg').val("1");
+			}
+		});
+	}
+
+	/*
+	*  追加ボタン処理
+	*/
+	$("#btn_searchCharacterList_Add").click(function() {
+		//子要素ループ
+		$("#searchCharacterList").children(':visible').each(function(i, elem) {
+			// チェックボックスがチェックされていたら移動
+			if ($(elem).find('.addflg').val()=="0" && $(elem).find('input[type="checkbox"]').prop("checked")){
+
+				$(elem).find('input[type="checkbox"]').prop("checked",false)
+				var coln = $(elem).clone(true);
+				coln.find('.check-box').after('<td class="c_no listno"></td>')
+				coln.appendTo("#addCharacterList");
+				// グレーアウト
+				$(elem).css({"background":"#C0C0C0"});
+				$(elem).find('.addflg').val("1");
+			}
+		});
+		// チェッククリア
+		$("#charaChkAll1").prop("checked",false);
+
+		// no振り直し
+		$("#addCharacterList").children().each(function(i, elem) {
+			$(elem).find('.listno').html(i+1);
+		});
+	});
+
+	/*
+	*  削除ボタン処理
+	*/
+	$("#btn_searchCharacterList_Del").click(function() {
+		//子要素ループ
+		$("#addCharacterList").children(':visible').each(function(i, elem) {
+			// チェックボックスがチェックされていたら削除
+			if ($(elem).find('input[type="checkbox"]').prop("checked")){
+				var keyNo = $(elem).find('.keyNo').val();
+				// 元リストの同一idを復活させる
+				var list = $("#searchCharacterList").find('.keyNo[value="' + keyNo + '"]').closest('tr');
+				if ($(list).length){
+					list.css({"background":"#FFF"});
+					list.find('input[type="checkbox"]').prop("checked",false);
+					list.find('.addflg').val("0");
+				}
+				$(elem).remove();
+			}
+		});
+		$("#charaChkAll2").prop("checked",false);
+
+		// no振り直し
+		$("#addCharacterList").children().each(function(i, elem) {
+			$(elem).find('.listno').html(i+1);
+		});
+	});
+
+
+	/*
+	*  チェックボックス オールチェック処理
+	*/
+	$("#charaChkAll1").click(function() {
+		if($("#charaChkAll1").prop("checked")){
+			$("#searchCharacterList").find('tr:visible').find('input[type="checkbox"]').prop("checked",true)
+		}else{
+			$("#searchCharacterList").find('tr:visible').find('input[type="checkbox"]').prop("checked",false)
+		}
+	});
+	/*
+	*  チェックボックス オールチェック処理
+	*/
+	$("#charaChkAll2").click(function() {
+		if($("#charaChkAll2").prop("checked")){
+			$("#addCharacterList").find('tr:visible').find('input[type="checkbox"]').prop("checked",true)
+		}else{
+			$("#addCharacterList").find('tr:visible').find('input[type="checkbox"]').prop("checked",false)
+		}
+	});
+
+	/*
+	*  選択ボタン処理
+	*/
+	$("#btn_selectCharacterList").click(function() {
+
+		if ($searchCharacterEndFunction !=""){
+			var returndata=[];
+			// 行番号順にデータを入れる
+			$("#addCharacterList").find('.chara_data').each(function(i, elem) {
+				returndata[i] = ImJson.parseJSON($(elem).val());
+			});
+
+			if (returndata.length == 0){
+				alert("対象データが選択されてません");
+				return false;
+			} else if (returndata.length > ADD_ROW_MAX){
+				alert("対象データが" + ADD_ROW_MAX + "件を越えています");
+				return false;
+			}
+
+			// コールバック関数に追加データをバインドし実行
+			searchCharacterCallback($searchCharacterEndFunction.bind(this, returndata));
+		}
+
+		$('#searchCharacter_dialog').imuiDialog('close');
+	});
+
+
+});
+
+</script>
+
+<!-- ***************************************** ↓ 子画面 ↓ ***************************************** -->
+<!-- キャラクタ索子画面 -->
+<imart type="imuiDialog"
+		autoOpen="false"
+		id="searchCharacter_dialog"
+		name="CharacterForm"
+		position="center"
+		title="キャラクター検索"
+		resizable="false"
+		width="1650"
+		height="930">
+		<!-- resizable="false" width="1650" height="980"> -->
+
+<!-- <h4 class="title">キャラクター検索子画面（サンプル）</h4> -->
+
+<!-- 検索条件 -->
+<div class="form-group" style="width: 75%; margin-top:30px;">
+	<div class="panel panel-default">
+		<table class="table table-bordered table-condensed search-form">
+			<tr>
+				<!-- <th>キャラクタID</th>
+								<td><input type="text" class="form-control input-sm" id="searchCharacter_id"></td>
+								 -->
+                <th style="width:20%">キャラクター名</th>
+				<td><input type="text" class="form-control input-sm"
+					id="searchCharacter_name"></td>
+				<!-- <th>版権元名</th>
+								<td><input type="text" class="form-control input-sm" id="searchCharacter_copyright"></td> -->
+			</tr>
+		</table>
+	</div>
+	<button type="button" class="btn btn-hensyu" id="btn_searchCharacter">検索</button>
+	<p><small>※対象キャラクターが無い場合はメディア部に申請してください。</small></p>
+
+</div>
+<!-- @end 検索条件 -->
+
+<hr>
+
+<!-- 下部分 --> <!-- 検索結果表示 -->
+<div class="row">
+	<!-- 検索結果画面 -->
+	<div class="col-lg-5">
+		<div class="form-group" style="width: 100%">
+			<div style="float: left;">
+				<label id="searchCharacterDataCount"></label>
+			</div>
+			<!-- ページャーー -->
+			<div id="searchCharacterPager" style="float: right;"></div>
+			<br><br>
+			<p><small>※混載である場合は複数選択してください。</small></p>
+			<p><small>※追加するキャラクターにチェックをいれて追加ボタンを押してください。</small></p>
+            <p><small>※1ページごとにキャラクターを追加してください。</small></p>
+
+			<!-- <div style="max-height: 600px; overflow: auto; clear: both;"> -->
+			<div style="clear: both;">
+				<div class="panel">
+					<!-- <table class="table table-bordered table-hover character-table table-condensed  frozen-header"
+							id="table-char-left"
+							border="1" >-->
+                    <table class="table table-condensed table-striped character-table"
+                            id="table-char-left">
+
+						<thead>
+							<tr>
+								<th class="c_chk check-box" width="5%">
+									<input type="checkbox" id="charaChkAll1">
+								</th>
+								<th class="c_char" width="35%">キャラクター名</th>
+								<th class="c_hanmoto" width="40%">版権元名</th>
+								<th class="c_region" width="20%">地域</th>
+							</tr>
+						</thead>
+						<tbody id="searchCharacterList">
+							<!-- tbodyはJavaScriptからDOMを生成 -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- ページャーー -->
+			<div id="searchCharacterPager2" style="float: right;"></div>
+		</div>
+	</div>
+	<!-- @end 検索結果画面 -->
+
+	<!-- 移動ボタン -->
+	<div class="col-lg-1">
+        <div style="margin-top: 120px">
+			<div style="margin-bottom: 10px">
+				<button type="button" class="btn btn-hensyu center-block"
+					id="btn_searchCharacterList_Add">追加 &gt;</button>
+			</div>
+			<div style="margin-top: 10px">
+				<button type="button" class="btn btn-hensyu center-block"
+					id="btn_searchCharacterList_Del">&lt; 削除</button>
+			</div>
+		</div>
+	</div>
+	<!-- @end 移動ボタン -->
+
+	<!-- 追加一覧 -->
+	<div class="col-lg-6">
+		<label>追加情報 </label>
+		<p><small>※削除する場合は削除するキャラクターにチェックを入れて削除ボタンを押してください。</small></p>
+		<div class="form-group" style="width: 100%; padding-top: 60px;">
+			<div class="panel panel-default table-outer-panel">
+				<!--<table class="table table-bordered table-hover table-condensed frozen-header"
+						id="table-char-right"
+						border="1">-->
+				<table class="table table-condensed table-striped"
+					id="table-char-right">
+					<thead>
+						<tr>
+							<th class="c_chk check-box" width="5%">
+								<input type="checkbox" id="charaChkAll2">
+							</th>
+							<th class="c_no" width="5%">No</th>
+							<th class="c_char" width="33%">キャラクター名</th>
+							<th class="c_hanmoto" width="39%">版権元名</th>
+							<th class="c_region" width="18%">地域</th>
+						</tr>
+					</thead>
+					<tbody id="addCharacterList">
+						<!-- tbodyはJavaScriptからDOMを生成 -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- @end 追加一覧 -->
+</div>
+<!-- @end 検索結果表示 --> <!-- @end 下部分 -->
+
+<hr>
+	<div class="button">
+		<button type="button" class="btn btn-hensyu"
+			id="btn_selectCharacterList" onclick="clearSearchForm()" style="width: 20%">選択</button>
+		<button type="button" class="btn btn-hensyu btn_dialog_close" onclick="clearSearchForm()" style="width: 20%">閉じる</button>
+	</div>
+
+
+
+<!-- @end 検索結果表示 --> <!-- @end ユーザ検索子画面 --> <!-- ***************************************** ↑ 子画面 ↑ ***************************************** -->
+</imart>

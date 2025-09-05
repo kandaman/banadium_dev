@@ -1,0 +1,626 @@
+<imart type="head">
+<html lang="jp">
+
+	<meta charset="utf-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" href="lo_csjs/cform.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="im_workflow_csjs/commentForm.css">
+	
+	<script type="text/javascript" src="lo_csjs/popper.min.js" ></script>
+	<script type="text/javascript" src="lo_csjs/moment.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/ja.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/tempusdominus-bootstrap-4.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.maskMoney.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/index.js"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/dataset.js"></script>
+	<script type="text/javascript" src="lo_csjs/selectize.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/custom.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js"></script>
+	
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js"></script>
+
+    <imart type="imACMSearchDialog" librariesVersion="iap-8.0.11" noscript="false" />
+	<IMART type="jsspRpc" name="jsspRpcKeiyakuComment" page="lo/contents/screen/keiyaku_naiyo/keiyaku_naiyo_comment"></IMART>
+
+<!-- https://www.it-swarm.jp.net/ja/jquery/jqueryui%E3%83%A2%E3%83%BC%E3%83%80%E3%83%AB%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%81%AB%E9%96%89%E3%81%98%E3%82%8B%E3%83%9C%E3%82%BF%E3%83%B3%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%AA%E3%81%84%EF%BC%88x%EF%BC%89/940825731/ -->
+<style>
+.ui-dialog-titlebar-close {
+  background: url("http://code.jquery.com/ui/1.10.3/themes/smoothness/images/ui-icons_888888_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+  border: medium none;
+}
+.ui-dialog-titlebar-close:hover {
+  background: url("http://code.jquery.com/ui/1.10.3/themes/smoothness/images/ui-icons_222222_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+}
+.route-item {
+    width: calc(60% - 8px);
+    margin-right: 8px;
+}
+h2 {
+	margin: 0px;
+}
+.filesSelect.imui-fileupload-area {
+	height: 75px;
+}
+</style>
+    <script type="text/javascript">
+    
+    	var parentParams = <imart type="string" value=$parentParams />;
+    
+        $(function() {
+
+        	$("#comment_template_id").on("change", function() {
+				var $this = $(this);
+				var params = {comment_template_id : $this.val()};
+				var ret = null;
+    	    	try {
+        	    	ret = jsspRpcKeiyakuComment.retrieveCommentTemplateContent(params);
+    		    } catch (ex) {
+    		    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+    		        return;
+    		    }
+    		    if(ret.error) {
+    		    	imuiShowErrorMessage(ret.message, [], true, 5000, true);
+    		    	return;
+    		    }
+    		    $("#comment_area").val(ret.data);
+        	});
+        	
+        	$("#preset_id").on("change", function() {
+				var $this = $(this);
+    		    $("#mail_to").empty();
+    		    $("#mail_cc").empty();
+				if ($this.val()) {
+					var params = {
+							preset_id : $this.val()
+							, keiyaku_naiyo_id : $("#keiyakuNaiyoId").val()
+						};
+						var ret = null;
+		    	    	try {
+		        	    	ret = jsspRpcKeiyakuComment.retrieveCommentDestinationPresetTargetUserData(params);
+		    		    } catch (ex) {
+		    		    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		    		        return;
+		    		    }
+		    		    if(ret.error) {
+		    		    	imuiShowErrorMessage(ret.message, [], true, 5000, true);
+		    		    	return;
+		    		    }
+		    		    targetid = "mail_to";
+		    		    setUserList(ret.data.mail_to);
+		    		    targetid = "mail_cc";
+		    		    setUserList(ret.data.mail_cc);
+				}
+    		    if ($("#mail_to").find('input[name="userCd"]').length == 0){
+                	$("#mail_to").append(userTag("", "指定なし"));
+    		    }
+    		    if ($("#mail_cc").find('input[name="userCd"]').length == 0){
+                	$("#mail_cc").append(userTag("", "指定なし"));
+    		    }
+        	});
+        	
+        	
+			// 戻るボタン押下
+			$("#comment_close").click(function(){
+				
+				parent.$("button.ui-dialog-titlebar-close", parent.document).trigger('click');
+/*				$("#comment-dialog", parent.document).dialog('close'); */
+				return false;
+			});
+
+        	// 処理ボタン押下
+        	$("#comment_proc").click(function(){
+        		
+        	    // 通知先設定取得
+        		var mailuserList = {};
+        		var arr = ['mail_to','mail_cc'];
+        		$.each(arr, function(index, objId) {
+        			var user = [];
+        		   	$('#'+objId).find('input[name="userCd"]').each(function() {
+        		   		if ($(this).val()) {
+            		   		user.push($(this).val());
+        		   		}
+        			});
+        		   	mailuserList[objId] = user;
+        		});
+
+        	    // ファイル
+        		var tempushiryoList = [];
+        		$("#after_tempu_file_select_area > .afterFileSelect").each(function(index, element) {
+        			var divElement = $(element);
+        			var tempushiryo = {
+        					fileName : divElement.find('input[name="item_upFile_name"]').val(),
+        					uniquefileName : divElement.find('input[name="item_upFile_resname"]').val()
+        			};
+        			tempushiryoList.push(tempushiryo);
+        		});
+
+        		var params = {
+        			keiyakuNaiyoId : $("#keiyakuNaiyoId").val()
+        			, koushinBi : $("#koushinBi").val()
+        			, taskId : $("#taskId").val()
+        			, taskKoushinBi : $("#taskKoushinBi").val()
+        			, comment : $("#comment_area").val()
+        			, tempu_file_list : tempushiryoList
+        			, mail_user_list : mailuserList
+        		};
+
+        		<imart type="condition" validity=$isEnchoExtend>
+    			params.keiyaku_encho_cls  = parentParams.keiyaku_encho.keiyaku_encho_cls;
+    			params.tsuika_seisan_cls  = parentParams.keiyaku_encho.tsuika_seisan_cls;
+        		</imart>
+
+        		var msg = "送信します。よろしいですか？";
+        		
+        	    $.imuiFormUtil.confirm(msg, '送信', function() {
+        	    	var ret;
+        	    	try {
+            	    	ret = jsspRpcKeiyakuComment.sendMail(params);
+        		    } catch (ex) {
+        		    	imuiShowErrorMessage(ex.message, [], true, 5000, true);
+        		        return;
+        		    }
+        		    if(ret.error) {
+        		    	imuiShowErrorMessage(ret.message, [], true, 5000, true);
+        		    	return;
+        		    }
+        	    	parent.$(parent.document).trigger('sentMail',[ret.message])
+        	    });
+        	    
+        	    
+        		
+        		// imworkflow側のボタンと連動
+        		//$("#proc").click();
+        		return false;
+            });
+        	
+        	// ファイル選択ボタンをクリック
+        	$("#tempu_file_upload_btn").on("click", function() {
+        		var $form = $("#tempuFilesForm");
+        		var $file = $form.find(".imui-fileupload-input");
+        		$file.focus();
+        		$file.click(); //imartのファイルアップロード選択ボタンをクリックしてやる
+        	});
+
+		    if ($("#mail_to").find('input[name="userCd"]').length == 0){
+            	$("#mail_to").append(userTag("", "指定なし"));
+		    }
+		    if ($("#mail_cc").find('input[name="userCd"]').length == 0){
+            	$("#mail_cc").append(userTag("", "指定なし"));
+		    }
+        });
+
+        var $fileList = []; // 編集時のファイル格納用
+        var $tempUpFileCount = 0;
+        var $tempUpFileSuccessCount = 0;
+        var $tempUpFileErrotCount = 0;
+        var $tempUpTempuFileCount = 0;
+        var $tempUpTempuFileSuccessCount = 0;
+        var $tempUpTempuFileErrotCount = 0;
+
+        // ---- ファイルアップロード共通 -------
+        // アップロード削除
+        function upFileDel(targetEl){
+        	// TODO:確認メッセージを表示
+        	var targetObj = $(targetEl).closest("div");
+        	targetObj.remove();
+        }
+        // ---- ファイルアップロード共通 -------
+
+        // ファイルアップロード前処理用
+        function onBeforeSendTempuFiles(e, data) {
+        	// ファイル数制限
+        	var uploadedNum = $("#after_file_select .afterFileSelect").size();
+        	var max_file_num = <imart type="string" value=$maxFileNum />;
+        	if(uploadedNum + $tempUpTempuFileCount + data.files.length >= max_file_num) {
+        		return false;
+        	}
+        	
+        	var str = '<imart type="string" value=$extListstr />';
+        	var max_file_size = <imart type="string" value=$maxFileSize />;
+        	var acceptExt =str.split("/");
+        	for (var fIdx = 0; fIdx < data.files.length; fIdx++) {
+        		// ファイルサイズチェック
+        		if(data.files[fIdx].size > max_file_size) {
+        			alert('<imart type="message" id="ER01E005" escapeJs="true"></imart>');
+        			return false;
+        		}
+        		
+        		// 拡張子チェック
+        		var ext = getFileExtension(data.files[fIdx].name);
+        		if (!acceptExt.includes(ext)) {
+        			var altstr = '<imart type="message" id="KK03E039" escapeJs="true"></imart>';
+        			altstr = altstr.replace("{0}", data.files[fIdx].name);
+        			alert(altstr);
+        			return false;
+        		}
+        	}
+        	showIndicator();
+        	// TODO:アップロードするファイルのサイズや拡張子をチェック
+        	// TODO:複数ファイルのアップロードをしたときに、途中のファイルがfalseを返却した場合は、後続は続行されるか確認
+        	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+        	$tempUpTempuFileCount += data.files.length;
+        	return true;
+        }
+        // ファイルアップロード成功時
+        function onSuccessTempuFiles(e, data) {
+        	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+        	$tempUpTempuFileSuccessCount += data.result.length;
+
+        	$.each(data.result, function(index, res) {
+        		var src ="lo/contents/screen/ses_file_dl?filePath=" + res.physicalName + "&fileName=" + res.name;
+        		var a_src = $('<a>').attr({'href':src, 'download':''});
+        		var clon = $("#after_tempu_file_select_template > .afterFileSelect").clone(true);
+        		clon.find(".upfilenametext").text(res.name);
+        		clon.find('input[name="item_upFile_name"]').val(res.name);
+        		clon.find('input[name="item_upFile_resname"]').val(res.physicalName);
+        		clon.find(".upfilenametext").wrap(a_src);
+        		clon.show();
+        		clon.appendTo("#after_tempu_file_select_area");
+        	});
+
+        	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+        	if ($tempUpTempuFileCount == $tempUpTempuFileSuccessCount + $tempUpTempuFileErrotCount) {
+        		$tempUpTempuFileCount = 0;
+        		$tempUpTempuFileSuccessCount = 0;
+        		$tempUpTempuFileErrotCount = 0;
+        		//$("body",parent.document).imuiIndicator("destroy");
+        		hideIndicator();
+        	}
+        }
+
+        // アップロード失敗
+        function onErrorTempuFiles(e, data) {
+        	// TODO:失敗時の処理をいれる
+        	// TODO:インジケータ表示のために、アップロードされたファイルをカウントする仮実装
+        	$tempUpTempuFileErrotCount += data.files.length;
+        	if ($tempUpTempuFileCount == $tempUpTempuFileSuccessCount + $tempUpTempuFileErrotCount) {
+        		$tempUpTempuFileCount = 0;
+        		$tempUpTempuFileSuccessCount = 0;
+        		$tempUpTempuFileErrotCount = 0;
+        		//$("body",parent.document).imuiIndicator("destroy");
+        		hideIndicator();
+
+        	}
+        }
+        
+        function getImACMSearchParameter() {
+            var parameter = {
+                tabs : [
+					{
+					    id    : "jp.co.intra_mart.master.app.search.tabs.user.list_user",
+					    title : "ユーザ検索"
+					},
+					/*
+                    {
+                        id    : "jp.co.intra_mart.master.app.search.tabs.user.tree_department",
+                        title : "ユーザ検索"
+                    },
+                    */
+                ],
+                prop : {
+                    'jp.co.intra_mart.master.app.search.tabs.user.tree_user' : ['user_cd', 'user_name'],
+                },
+                callback_function           : 'setUserList',
+                basic_area                  : 'jp.co.intra_mart.master.app.search.headers.readonly',
+                wnd_title                   : "ユーザ検索",
+                message                     : "ユーザ検索",
+                wnd_close                   : true,
+                type                        : 'multiple',
+                deleted_data                : false,
+                target_locale               : 'ja',
+                additional_disp             : true,
+                additional_user_search_name : true,
+                additional_dept             : true
+            };
+            if (parentParams == null) {
+            	return parameter;
+            }
+            if (parentParams.criteria) {
+            	parameter.criteria = parentParams.criteria;
+            }
+			// parameter.criteria = {"company" : [ { "company_cd" : "3001" } , { "company_cd" :  "4007" }]};
+            return parameter;
+            
+        }
+
+        function userTag(userCd, userNm){
+        	return	'<li><input type="hidden" name="userCd" value="'+userCd+'"/>'+userNm+'</li>';	
+        }
+        function userTagWithCheckBox(userCd, userNm){
+        	return	'<li><input type="checkbox" name="userCd" value="'+userCd+'"/>'+userNm+'</li>';	
+        }
+
+        var targetid = "";
+        /**
+         * open関数
+         */
+        function openSearchDialog(id) {
+        	targetid = id;
+        	var parameter = getImACMSearchParameter();
+            // 検索画面を開く
+            imACMSearchDialog.open(parameter);
+        }
+        /**
+         * ユーザ追加(複数)(callback関数)
+         */
+        function setUserList(object){
+            var objId = '#'+targetid;
+        	//既存ユーザ取得
+        	var users=[];
+           	$(objId).find('input:checkbox[name="userCd"]').each(function() {
+           		users.push($(this).val());
+        	});
+           	// 一件もなければ指定なしを消す
+        	if(users.length == 0 && object.length > 0){
+        		$(objId).empty();
+        	}
+           	// 選択したユーザを追加
+            for (var i = 0; i < object.length; i++) {
+
+                var usernm = "";
+                var usercd = "";
+                if (object[i].data) {
+                	usernm = object[i].data.user_name;
+                	usercd = object[i].data.user_cd;
+                } else {
+                	usernm = object[i].user_name;
+                	usercd = object[i].user_cd;
+                }
+                if (users.indexOf(usercd) == -1){ //まだ設定されていいないユーザのみ追加
+                    $(objId).append(userTagWithCheckBox(usercd, usernm));
+                }
+            }
+        }
+
+        //ユーザクリア
+        function clearUser(delid){
+            var objId = '#'+delid;
+            
+        	imuiConfirm('ユーザ指定なしにします。よろしいですか？', '確認', function() {
+           		$(objId).empty();
+        	    $(objId).append(userTag("", "指定なし"));
+        	});
+        }
+
+        // ユーザ削除
+        function delUser(delid){
+            var objId = '#'+delid;
+        	
+        	// 削除対象ユーザ取得
+           	var delobj = $(objId).find('input:checkbox[name="userCd"]:checked');
+           	
+           	// 一件も選択されてない
+        	if(delobj.length == 0){
+        		imuiAlert('削除ユーザが選択されていません。', '警告');
+        		return false;
+        	}
+        	
+           	// 削除
+        	imuiConfirm('選択ユーザを削除します。よろしいですか？', '確認', function() {
+        		delobj.each(function() {
+        	   		$(this).parent().remove();
+        		});
+        	   	//削除の結果一件もなければ指定なし追加
+        	   	if ($(objId).find('input:checkbox[name="userCd"]').length == 0){
+        	        $(objId).append(userTag("", "指定なし"));
+        	   	}
+        	});
+        }
+    </script>
+</imart>
+<body>
+<form id="tempuFilesForm" name="tempuFilesForm" action="ui/filer/upload" method="POST" enctype="multipart/form-data">
+	<div style="display:none;">
+		<!-- ストレージサービスへのファイルのアップロード（IM標準） -->
+		<imart type="imuiFileUpload" storeTo="/lo/upload"
+			autoUpload="true" uniqueFileName="true" id="imui-upload-tempu"
+			onBeforeSend="onBeforeSendTempuFiles" 
+			onSuccess="onSuccessTempuFiles"
+			onError="onErrorTempuFiles" 
+			outerFormId="tempuFilesForm"
+			dropZone="#before_tempu_file_select" />
+	</div>
+</form>
+<imart type="imuiTextbox" id="keiyakuNaiyoId" name="keiyakuNaiyoId" value=$keiyakuNaiyoId hidden="true" />
+<imart type="imuiTextbox" id="koushinBi" name="koushinBi" value=$koushinBi hidden="true" />
+<imart type="imuiTextbox" id="taskId" name="taskId" value=$taskId hidden="true" />
+<imart type="imuiTextbox" id="taskKoushinBi" name="taskKoushinBi" value=$taskKoushinBi hidden="true" />
+<div class="modal-dialog modal-xl" id="pr" >
+	<div class="modal-content" id="pr2">
+		<form id="modalComment">
+			<div class="row">
+				<div class="col-1"></div>
+				<div class="col-10">
+					<div class="row mt-2">
+						<div class="col-4">
+							<h2>
+								<imart type="string" value=$label_comment />
+							</h2>
+						</div>
+						<imart type="decision" value=$userInfo.bneFlg case="0">
+						<div class="col-8"></div>
+						</imart>
+						<imart type="decision" value=$userInfo.bneFlg case="1">
+							<div class="col-3 t-header bg_ltorange brdr_dkgray text-center">テンプレート読み込み</div>
+							<div class="col-5 align-items-center pr-2"><imart type="imuiSelect" class="form-control licensee-disabled" id="comment_template_id" name="comment_template_id"  list=$comment_template_list width="350" /></div>
+						</imart>
+					</div>
+					<div class="col-12 mt-2 mb-2">
+						<imart type="imuiTextArea" id="comment_area" name="comment_area" class="form-control" value="" rows="15" maxlength="500"></imart>
+						<p class="small"><imart type="string" value=$annotation_comment /></p>
+					</div>
+				</div>
+				<div class="col-1"></div>
+			</div>
+		</form>
+		<div class="row mt-2">
+			<div class="col-1"></div>
+			<div class="col-10">
+				<h2>
+					添付資料
+					<span class="notice margin-top"><imart type="message" id="KK02I020" escapeJs="true"></imart></span>
+				</h2>
+				<div class="col-12 mt-2 mb-2">
+					<div class="fileupload-area">
+						<div class="filesSelect imui-fileupload-area" id="before_tempu_file_select">
+							<div class="fileupload-input-caption">ファイルをドラッグ&ドロップしてください</div>
+							<label id="tempu_file_upload_btn" for="file_upload" class="filesUploadLabel">ファイルを選択</label>
+						</div>
+						<div class="form-group row mt-2 mb-2">
+							<span class="col-12"><imart type="string" value=$extstr /></span>
+							<span class="col-12"><imart type="message" id="IN01I007" escapeJs="true" /></span>
+						</div>
+						<div id="after_tempu_file_select_area">
+							<div id="after_tempu_file_select_template">
+								<div class="afterFileSelect" style="display: none">
+									<dl>
+										<dt class="upfilename">
+											<span class="upfilenametext"><imart type="string" value="" /></span>
+											<imart type="hidden" item_upFile_name="" />
+											<imart type="hidden" item_upFile_resname="" />
+										</dt>
+										<dd>
+											<a href="javascript: void(0);" onclick="upFileDel(this)">
+												<span class="fas fa-trash-alt fa-1x"></span>
+											</a>
+										</dd>
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-1"></div>
+		</div>
+
+		<form role="form" id="sendMailUsersForm">
+			<div class="row  mt-2">
+				<div class="col-1"></div>
+				<div class="col-10">
+					<div class="row">
+						<div class="col-4">
+							<h2>宛先</h2>
+						</div>
+						<imart type="decision" value=$userInfo.bneFlg case="0">
+						<div class="col-8"></div>
+						</imart>
+						<imart type="decision" value=$userInfo.bneFlg case="1">
+						<div class="col-3 t-header bg_ltorange brdr_dkgray text-center">プリセット読み込み</div>
+						<div class="col-5 left-justified align-items-center pr-2"><imart type="imuiSelect" class="form-control licensee-disabled" id="preset_id" name="preset_id"  list=$preset_list width="350" /></div>
+						</imart>
+					</div>
+				</div>
+			</div>
+			<div class="row  mt-3">
+				<div class="col-2"></div>
+				<div class="col-5">
+					<div class="row">
+						<imart type="decision" value=$userInfo.bneFlg case="1">
+						<h2>Toとなる担当者を選択	</h2>
+						</imart>
+						<div class="form-group col-12 row ml-2">
+							<div class="route-item">
+								<imart type="decision" value=$userInfo.bneFlg case="1">
+									<div class="route-item-control">
+										<a href="javascript:openSearchDialog('mail_to')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+										<a href="javascript:delUser('mail_to');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+									</div>
+								</imart>
+								<h4>To担当者</h4>
+								<ul id="mail_to">
+									<IMART type="repeat" list=$mailDefUsers.mail_to item="item" index="idx">
+										<li>
+											<imart type="decision" case="1" value=$userInfo.bneFlg>
+												<imart type="imuiCheckbox" name="userCd" value=item.user_cd />
+											</imart>
+											<imart type="decision" case="0" value=$userInfo.bneFlg>
+												<imart type="imuiTextbox" name="userCd" value=item.user_cd hidden="true" />
+											</imart>
+											<imart type="string" value=item.user_nm />
+										</li>
+									</IMART>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-5">
+					<div class="row">
+						<imart type="decision" value=$userInfo.bneFlg case="1">
+						<h2>CCとなる担当者を選択	</h2>
+						</imart>
+						<div class="form-group col-12 row ml-2">
+							<div class="route-item">
+								<imart type="decision" value=$userInfo.bneFlg case="1">
+									<div class="route-item-control">
+										<a href="javascript:openSearchDialog('mail_cc')" class="mr-2"><span class="im-ui-icon-common-16-plus mr-2"></span>追加</a>
+										<a href="javascript:delUser('mail_cc');" class="mr-2"><span class="im-ui-icon-common-16-minus mr-2"></span>削除</a>
+									</div>
+								</imart>
+								<h4>CC担当者</h4>
+								<ul id="mail_cc">
+									<IMART type="repeat" list=$mailDefUsers.mail_cc item="item" index="idx">
+										<li>
+											<imart type="decision" case="1" value=$userInfo.bneFlg>
+												<imart type="imuiCheckbox" name="userCd" value=item.user_cd />
+											</imart>
+											<imart type="decision" case="0" value=$userInfo.bneFlg>
+												<imart type="imuiTextbox" name="userCd" value=item.user_cd hidden="true" />
+											</imart>
+											<imart type="string" value=item.user_nm />
+										</li>
+									</IMART>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-1"></div>
+				<imart type="decision" value=$userInfo.bneFlg case="1">
+				<div class="row mt-2 ml-2">
+					<div class="col-12">
+						<imart type="message" id="KE02I003" />
+					</div>
+				</div>
+				</imart>
+			</div>
+		</form>
+
+		<div class="row">
+			<div class="col-1"></div>
+			<div class="col-10"><hr></div>
+			<div class="col-1"></div>
+		</div>
+		<section class="show">
+			<div class="row">
+				<div class="flex_btn">
+					<div class="col-12">
+						<button type="button" class="center-block brdr_orange txt_orange" id="comment_close" data-dismiss="modal"><i class="fas fa-window-close fa-2x"></i><span>閉じる</span></button>
+						<button type="button" class="center-block bg_orange txt_dark" data-dismiss="modal" id="comment_proc"><i class="fas fa-check-circle fa-2x"></i><span>送信</span></button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+</body>

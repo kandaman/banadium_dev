@@ -1,0 +1,15 @@
+insert into public.lo_t_account_tanto_kakari(shinsei_id,shinsei_edaban,tanto_kakari_edaban,tanto_kakari_cd,sakujo_flg,touroku_sha,touroku_bi,koushin_sha,koushin_bi) values 
+ ('SS00000002',1,1,'lo_specific_group_1','0','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2024-04-26 13:57:21.785','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2024-04-26 13:57:21.785')
+,('SS00000002',2,1,'lo_specific_group_1','0','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2024-04-26 13:57:21.994','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2024-04-26 13:57:21.994')
+,('SS00000004',1,1,'lo_specific_group_4','0','Nina_Kato@bandainamcoent.co.jp',TIMESTAMP '2024-05-13 19:08:14.719','Nina_Kato@bandainamcoent.co.jp',TIMESTAMP '2024-05-13 19:08:14.719')
+,('SS00000010',1,1,'lo_specific_group_1','0','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2025-04-11 10:17:47.608','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2025-04-11 10:17:47.608')
+,('SS00000012',1,1,'lo_specific_group_2','0','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2025-05-07 18:54:19.429','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2025-05-07 18:54:19.429')
+,('SS00000012',1,2,'lo_specific_group_1','0','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2025-05-07 18:54:19.460','Takashi_Shinchi@bandainamcoent.co.jp',TIMESTAMP '2025-05-07 18:54:19.460')
+,('SS00000013',1,1,'lo_specific_group_1','0','Atsuya_Yamamoto@bandainamcoent.co.jp',TIMESTAMP '2025-05-07 19:08:17.891','Atsuya_Yamamoto@bandainamcoent.co.jp',TIMESTAMP '2025-05-07 19:08:17.891')
+,('SS00000017',1,1,'lo_specific_group_4','0','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-06-02 16:16:44.865','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-06-02 16:16:44.865')
+,('SS00000018',1,1,'lo_specific_group_1','0','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 11:19:13.328','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 11:19:13.328')
+,('SS00000018',1,2,'lo_specific_group_5','0','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 11:19:13.347','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 11:19:13.347')
+,('SS00000018',1,3,'lo_specific_group_6','0','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 11:19:13.365','Yuko_Koketsu@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 11:19:13.365')
+,('SS00000020',1,1,'lo_specific_group_1','0','Atsuya_Yamamoto@bandainamcoent.co.jp',TIMESTAMP '2025-07-31 19:44:26.515','Atsuya_Yamamoto@bandainamcoent.co.jp',TIMESTAMP '2025-07-31 19:44:26.515')
+,('SS00000021',1,1,'lo_specific_group_1','0','Atsuya_Yamamoto@bandainamcoent.co.jp',TIMESTAMP '2025-08-18 19:14:42.294','Atsuya_Yamamoto@bandainamcoent.co.jp',TIMESTAMP '2025-08-18 19:14:42.294')
+;

@@ -1,0 +1,16 @@
+insert into public.lo_m_comment_destination_preset(preset_id,owner_id,preset_nm,sakujo_flg,touroku_sha,touroku_bi,koushin_sha,koushin_bi) values 
+ ('PRESET-8g0lu5o8m3vtty9','tenant','ライセンシー担当者宛て','0','y16-takahashi@bnba.jp',TIMESTAMP '2021-05-31 18:17:27.823','y16-takahashi@bnba.jp',TIMESTAMP '2021-05-31 19:16:23.618')
+,('PRESET-8g0lwaygt3wnvy9','tenant','計上担当者宛て','0','y16-takahashi@bnba.jp',TIMESTAMP '2021-05-31 19:17:33.586','y16-takahashi@bnba.jp',TIMESTAMP '2021-05-31 19:17:33.586')
+,('PRESET-8g0lwbnff3womy9','tenant','IP担当者宛て','0','y16-takahashi@bnba.jp',TIMESTAMP '2021-05-31 19:18:05.933','y16-takahashi@bnba.jp',TIMESTAMP '2021-05-31 19:18:05.933')
+,('PRESET-8hn3tb788457xy9','Youko_Kubotera@bandainamcoent.co.jp','ML、765、スタマス、ぽぷマス、台所','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:36:32.760','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-08-19 10:40:16.031')
+,('PRESET-8hn3tmz1245rly9','Youko_Kubotera@bandainamcoent.co.jp','ヴイアライヴ','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:45:41.996','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:56:24.392')
+,('PRESET-8hn3tp57345uny9','Youko_Kubotera@bandainamcoent.co.jp','D3','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:47:23.301','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:57:32.584')
+,('PRESET-8hn3trz5j45wny9','Youko_Kubotera@bandainamcoent.co.jp','CG','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:49:35.437','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-26 09:03:26.011')
+,('PRESET-8hn3tu04z45zry9','Youko_Kubotera@bandainamcoent.co.jp','学園','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:51:10.025','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-19 09:40:47.630')
+,('PRESET-8hn3u4rr546mny9','Youko_Kubotera@bandainamcoent.co.jp','SideM','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 14:59:32.375','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-08-20 11:26:04.647')
+,('PRESET-8hn3u6tda46pey9','Youko_Kubotera@bandainamcoent.co.jp','SC','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 15:01:07.780','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 15:01:07.780')
+,('PRESET-8hn3u8a9446riy9','Youko_Kubotera@bandainamcoent.co.jp','IP混載','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 15:02:16.318','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-08-25 16:43:35.805')
+,('PRESET-8hn3u9p3y46uoy9','Youko_Kubotera@bandainamcoent.co.jp','テイルズ','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 15:03:22.228','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-08-25 16:18:58.935')
+,('PRESET-8hn3ubypu46y1y9','Emao_Naitou@bandainamcoent.co.jp','送付用','0','Emao_Naitou@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 15:05:08.001','Emao_Naitou@bandainamcoent.co.jp',TIMESTAMP '2025-06-13 15:06:26.547')
+,('PRESET-8hp8ri8qe7w70y9','Youko_Kubotera@bandainamcoent.co.jp','アイナナ','0','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-08-06 11:04:17.612','Youko_Kubotera@bandainamcoent.co.jp',TIMESTAMP '2025-08-06 11:04:17.612')
+;

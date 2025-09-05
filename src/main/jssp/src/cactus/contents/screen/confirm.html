@@ -1,0 +1,84 @@
+
+<imart type="head">
+  <title>
+    新企画-確認
+  </title>
+  <imart type="workflowOpenPageCsjs" />
+  <script>
+    (function($) {
+      $(document).ready(function() {
+        
+        //formの２度押し登録防止
+        imuiDisableOnSubmit('form[name="doRegisterForm"]', 100);
+        
+        $('#submit_buttons').delegate('input', 'click', function() {
+          workflowOpenPage('5');
+        });
+      });
+    })(jQuery);
+  </script>
+</imart>
+<imart type="workflowOpenPage"
+    name="workflowOpenPageForm"
+    id="workflowOpenPageForm"
+    method="POST"
+    target="_top"
+    imwUserDataId=$data.imwUserDataId
+    imwSystemMatterId=$data.imwSystemMatterId
+    imwAuthUserCode=$data.imwAuthUserCode
+    imwApplyBaseDate=$data.imwApplyBaseDate
+    imwNodeId=$data.imwNodeId
+    imwFlowId=$data.imwFlowId
+    imwCallOriginalParams=$data.imwCallOriginalParams
+    imwNextScriptPath=$data.imwCallOriginalPagePath>
+
+  <!-- 画面上に表示されるタイトル -->
+  <div class="imui-title">
+    <h1>新企画-確認</h1>
+  </div>
+  <!-- ツールバー-->
+  <div class="imui-toolbar-wrap">
+    <div class="imui-toolbar-inner">
+    <!-- ツールバー左側 -->
+    <ul class="imui-list-toolbar">
+      <!-- 戻る -->
+      <li>
+      <a href="<imart type="string" value=$data.imwCallOriginalPagePath />" class="imui-toolbar-icon" title="戻る">
+        <span class="im-ui-icon-common-16-back"></span>
+      </a>
+      </li>
+    </ul>
+    </div>
+  </div>
+  <div class="imui-form-container-narrow">
+    <!-- 入力画面 -->
+    <header class="imui-chapter-title">
+    <h2>新企画-確認</h2> 
+    </header>
+    <table class="imui-form">
+      <tbody>
+      <tr>
+      <th><label>伝票番号</label></th>
+      <td>
+        <imart type="string" value=$form.denNo />
+      </td>
+      </tr>
+      <tr>
+      <th><label>入力者</label></th>
+      <td>
+        <imart type="string" value=$form.userame />
+      </td>
+      </tr>
+      <tr>
+      <th><label>入力部署</label></th>
+      <td>
+        <imart type="string" value=$form.userbusho />
+      </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="imui-operation-parts" id="submit_buttons">
+      <imart type="imuiButton" value="確認" id="openPage0" name="openPage0" class="imui-large-button" escapeXml="true" escapeJs="false" />
+    </div>
+  </div>
+</imart>

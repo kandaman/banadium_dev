@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ja">
+<imart type="head">
+
+	<meta charset="UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<!-- IMART -->
+	<IMART type="jsspRpc" name="jsspRpcPermissionList" page="lo/contents/screen/kyodaku/permission_list"></IMART>
+	<IMART type="jsspRpc" name="jsspRpcPermissionSearch" page="lo/contents/screen/kyodaku/permission_list" callback="searchResult" onErrorCallback="searchError"></IMART>
+	<IMART type="jsspRpc" name="jsspRpcPermissionCsv" page="lo/contents/screen/kyodaku/permission_list" callback="csvResult" onErrorCallback="csvError"></IMART>
+
+	<link rel="stylesheet" type="text/css" href="lo_csjs/reset.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/all.min.css">
+	<link rel="stylesheet" href="lo_csjs/selectize.default.css">
+	<!-- link rel="stylesheet" href="lo_csjs/cform.css" -->
+	<link rel="stylesheet" type="text/css" href="lo_csjs/selectize.default.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/progress-tracker.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/checkbox.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/basetype.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/udcolor_sample.css">
+	<link href="lo_csjs/jquery.fileuploader.min.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/tabulator_materialize.css">
+	<link rel="stylesheet" type="text/css" href="lo_csjs/lo_common.css">
+	
+	<script type="text/javascript" src="lo_csjs/tabulator.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+
+	<script type="text/javascript" src="lo_csjs/lo_common.js?version=20210714"></script>
+
+<style type="text/css">
+<!--
+	footer .bne-information {
+	    margin-bottom: 20px;
+	}
+
+#kyodaku_table{
+	table-layout: fixed;
+}
+#kyodaku_table thead .kyodaku-col0{
+	width: 100px;
+	min-width: 100px;
+}
+/* 許諾ステータス */
+#kyodaku_table thead .kyodaku-col1{
+	width: 100px;
+	min-width: 50px;
+}
+/* 申請日 */
+#kyodaku_table thead .kyodaku-col2{
+	width: 100px;
+    min-width: 100px;
+}
+/* 許諾番号 */
+#kyodaku_table thead .kyodaku-col3{
+	width: 100px;
+    min-width: 100px;
+}
+/* 許諾名 */
+#kyodaku_table thead .kyodaku-col4{
+	width: 180px;
+	min-width: 180px;
+}
+/* ライセンシー名 */
+#kyodaku_table thead .kyodaku-col5{
+	width: 150px;
+	min-width: 150px;
+}
+/* IP */
+#kyodaku_table thead .kyodaku-col6{
+	width: 100px;
+	min-width: 100px;
+}
+/* タイトル */
+#kyodaku_table thead .kyodaku-col7{
+	width: 150px;
+	min-width: 150px;
+}
+/* 申請種別 */
+#kyodaku_table thead .kyodaku-col9{
+	width: 64px;
+    min-width: 64px;
+}
+#kyodaku_table thead .kyodaku-col10{
+	width: 100px;
+	min-width: 100px;
+}
+/* 契約種別 */
+#kyodaku_table thead .kyodaku-col11{
+	width: 64px;
+    min-width: 64px;
+}
+#kyodaku_table thead .kyodaku-col12{
+	width: 100px;
+	min-width: 100px;
+}
+/* 契約ステータス */
+#kyodaku_table thead .kyodaku-col13{
+	width: 98px;
+	min-width: 98px;
+}
+/* 担当者 */
+#kyodaku_table thead .kyodaku-col14{
+	width: 100px;
+	min-width: 100px;
+}
+#kyodaku_table thead th,
+#kyodaku_table tbody td{
+	padding-left: 8px;
+    padding-right: 8px;
+}
+
+#kyodaku_table_wrapper {
+	width: calc(100% - 1px);
+}
+
+table.dataTable td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+--> 
+</style>
+
+	<script src="https://kit.fontawesome.com/b5f0d7b6c6.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+	<imart type="include" page="lo/contents/screen/footer"></imart>
+
+    <script type="text/javascript" src="lo_csjs/jquery.fileuploader.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="lo_csjs/popup.js" type="text/javascript"></script>
+
+
+	<title><imart type="message" id="LO.TITLE.KYODAKU.PERMISSION_LIST" escapeXml="true" /></title>
+	
+</imart>
+<body id="body" style="display: none">
+
+	<!-- header -->
+	<div class="container-fluid">
+		<IMART type="include" page="lo/contents/screen/header"></IMART>
+	</div>
+	<!-- header -->
+
+	<div class="container">
+		<div class="row">
+
+			<!-- sidebar -->
+			<div id="lo_sidebar">
+				<div class="sidebar_fixed">
+					<IMART type="include" page="lo/contents/screen/sidemenu"></IMART>
+				</div>
+			</div>
+			<!-- sidebar -->
+
+			<!-- main contents -->
+			<div class="main col">
+
+				<!-- sidebar show -->
+				<a id="show-sidebar" class="btn" style="display: none">
+					<i class="fas fa-share-square"></i>
+				</a>
+				<!-- sidebar show -->
+
+				<!-- contents custom -->
+				<article id="page-upper-part">
+					<div class="page-information row my-4">
+						<div class="col-3">
+							<h1>
+								<imart type="message" id="LO.TITLE.KYODAKU.PERMISSION_LIST" escapeXml="true" />
+							</h1>
+						</div>
+						<div class="col-6 mt-3">
+							<imart type="message" id="KY01I001" escapeJs="true"></imart>
+						</div>
+						<div class="col-3 d-flex align-items-end">
+							<div class="text-right" style="width: 100%;">
+								<span id="condition_hide"><i class="far fa-caret-square-up"></i>検索条件非表示</span>
+								<span id="condition_show" style="display: none;"><i class="far fa-caret-square-down"></i>検索条件表示</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="container">
+
+						<div class="row">
+							<div class="col-12 form-area search_condition mt-2 mb-2">
+								<div class="col-12 row">
+									<h4 class="indent">検索条件</h4>
+								</div>
+								<form role="form" id="inputForm">
+									<div class="form-group row mb-2">
+										<div
+											class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">IP</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="1024" id="ip_nm" name="ip_nm" class="form-control" value=$form.ip_nm />
+												<div class="input-group-append">
+													<button type="button" id="btn_ip_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+												</div>
+											</div>
+										</div>
+										<div
+											class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">タイトル名</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="1024" id="title_nm" name="title_nm" class="form-control" value=$form.title_nm />
+												<div class="input-group-append">
+													<button type="button" id="btn_title_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<div
+											class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">許諾申請名</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<imart type="imuiTextbox" maxlength="100" id="kyodaku_nm" name="kyodaku_nm" class="form-control" value=$form.kyodaku_nm />
+										</div>
+										<div
+											class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">許諾ステータス</div>
+										<div class="col-4 col-lg-2 left-justified">
+											<span class="input-group" aria-label="">
+												<imart type="imuiSelect" class="custom-select" id="kyodaku_status" name="kyodaku_status" list=$form.kyodaku_status_list />
+											</span>
+										</div>
+										<div class="col-3 col-lg-2 align-middle inputRadio mt-2">
+											<ul class="infl">
+												<li class="list_item"><imart type="imuiCheckbox" id="not_finish" name="not_finish" label="完了以外" value=true checked=$form.not_finish /></li>
+											</ul>
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<IMART type="decision" value=$userInfo.licenseeFlg case="0"> <!-- プロダクションの場合 -->
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">許諾商品名</div>
+											<div class="col-6 col-lg-4 left-justified">
+												<imart type="imuiTextbox" maxlength="100" id="kyodaku_shohin_nm" name="kyodaku_shohin_nm" class="form-control" value=$form.kyodaku_shohin_nm />
+											</div>
+										</IMART>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">許諾番号</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<imart type="imuiTextbox" maxlength="100" id="kyodaku_id" name="kyodaku_id" class="form-control" value=$form.kyodaku_id />
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<div
+											class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">申請日</div>
+										<div class="infl col-6 col-lg-4 left-justified">
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" id="shinsei_bi_from" name="shinsei_bi_from" class="form-control" value=$form.shinsei_bi_from escapeXml="true" />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#shinsei_bi_from" showMonthAfterYear="true" />
+												<span class="input-group-append">
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</span>
+											</div>
+											<span class="text-center blanc">～</span>
+											<div class="input-group">
+												<imart type="imuiTextbox" maxlength="10" id="shinsei_bi_to" name="shinsei_bi_to" class="form-control" value=$form.shinsei_bi_to escapeXml="true" />
+												<imart type="imuiCalendar" changeYear="true" changeMonth="true" floatable="true" altField="#shinsei_bi_to" showMonthAfterYear="true" />
+												<span class="input-group-append"> 
+													<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+												</span>
+											</div>
+										</div>
+										<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">
+											<IMART type="decision" value=$userInfo.licenseeFlg case="1">ライセンシー担当者</IMART>
+											<IMART type="decision" value=$userInfo.licenseeFlg case="0">BNE担当者</IMART>
+										</div>
+										<div class="col-6 col-lg-4 left-justified">
+											<span class="input-group" aria-label="">
+												<IMART type="decision" value=$userInfo.licenseeFlg case="1">
+													<imart type="imuiTextbox" maxlength="255" id="tantou_sha" name="tantou_sha" class="form-control" value=$form.tantou_sha escapeXml="true" />
+												</IMART>
+												<IMART type="decision" value=$userInfo.licenseeFlg case="0">
+													<imart type="imuiTextbox" maxlength="1024" id="tantou_sha" name="tantou_sha" class="form-control" value=$form.tantou_sha escapeXml="true" />
+													<div class="input-group-append">
+														<button type="button" id="btn_bne_user_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+													</div>
+												</IMART>
+												<div class="input-group-append">
+													<button type="button" id="my_charge" class="btn btn-outline-secondary searchbtn fa fa-portrait fa-1x">私が担当</button>
+												</div>
+											</span>
+										</div>
+									</div>
+									<div class="form-group row mb-2">
+										<!-- ユーザの権限で表示項目を変える -->
+										<IMART type="decision" value=$userInfo.licenseeFlg case="0">
+											<!-- プロダクションの場合 -->
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">ライセンシー名</div>
+											<div class="col-6 col-lg-4 left-justified">
+												<div class="input-group">
+													<imart type="imuiTextbox" maxlength="255" id="kaisha_nm" name="kaisha_nm" class="form-control" value=$form.kaisha_nm escapeXml="true" />
+													<div class="input-group-append">
+														<button type="button" id="btn_kaisha_search" class="btn btn-outline-secondary searchbtn fa fa-search fa-1x"></button>
+													</div>
+												</div>
+											</div>
+											<div class="col-4 col-lg-2 t-header bg_ltorange brdr_dkgray text-center">契約種別</div>
+											<div class="col-4 col-lg-2 left-justified">
+												<div class="input-group">
+													<imart type="imuiSelect" class="custom-select form-control" id="keiyaku_cls" name="keiyaku_cls"  list=$form.keiyaku_cls_list />
+												</div>
+											</div>
+											<div class="col-4 col-lg-2 left-justified">
+												<div class="input-group">
+													<imart type="imuiSelect" class="custom-select form-control" id="kyodaku_cls" name="kyodaku_cls"  list=$form.kyodaku_cls_list />
+												</div>
+											</div>
+										</IMART>
+									</div>
+									<div class="form-group row mb-2">
+										<div class="flex_btn">
+											<div class="col-12">
+												<input type="hidden" id="show_column_def" name="show_column_def" value="<imart type="string" value=$showColumnDef />">
+												<button type="button" class="bg_orange txt_dark" id="tblsearch"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+												<button type="button" class="brdr_dkgray txt_dark" id="tblclear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="row" id="list_title">
+						<div class="col-12 col-lg-9">
+							<h4>商品化権許諾申請一覧</h4>
+						</div>
+						<div class="col-12 col-lg-3 text-right"
+							style="padding-right: 0px;">
+							<div class="btn-group">
+								<button type="button" id="outputfile"
+									class="bg_ltblue txt_dark" disabled>
+									<i class="fas fa-print fa-2x"></i><span>ファイル出力</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12 col-lg-9">
+							<div class="scrollbar" id="scrollbar">
+								<div class="scroll-inner" id="scroll-inner"></div>
+							</div>
+						</div>
+					</div>
+				</article>
+				<article>
+					<section class="show">
+						<div class="container">
+							<div class="row">
+								<div id="kyodaku_table"></div>
+							</div>
+						</div>
+					</section>
+				</article>
+				<div id="page-footer-part">
+					<article>
+						<section class="show">
+							<footer class="text-center mt-4 mb-2"></footer>
+						</section>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="popup" id="js-popup">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn">
+				<i class="fas fa-times"></i>
+			</div>
+			<br>
+			<imart type="include" page="lo/contents/screen/common/ip_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg"></div>
+	</div>
+
+	<div class="popup" id="js-popup2">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn2">
+				<i class="fas fa-times"></i>
+			</div>
+			<br>
+			<imart type="include" page="lo/contents/screen/common/title_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg2"></div>
+	</div>
+
+	<div class="popup" id="js-popup3">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn3">
+				<i class="fas fa-times"></i>
+			</div>
+			<br>
+			<imart type="include" page="lo/contents/screen/common/kaisha_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg3"></div>
+	</div>
+
+	<div class="popup" id="js-popup4">
+		<div class="popup-inner2">
+			<div class="close-btn" id="js-close-btn4">
+				<i class="fas fa-times"></i>
+			</div>
+			<br>
+			<imart type="include" page="lo/contents/screen/common/user_search" mode="radio"></imart>
+		</div>
+		<div class="black-background" id="js-black-bg4"></div>
+	</div>
+
+
+	<script type="text/javascript">
+
+$(window).on('load', function() {
+	document.getElementById('body').style.display = 'block';
+	// IMUI Calendar のデフォルトのアイコンを非表示
+	$(".imui-calendar").next("img").hide();
+});	
+
+var tableUtil = null;
+
+$(function () {
+	$("body").css("zoom","80%");
+	
+	var showColumnMap = <imart type="string" value=$form.show_column_map />;
+
+	var licenseProductionFlg = ('<imart type="string" value=$userInfo.licenseeFlg />' == "0" ? true : false);
+
+	if (licenseProductionFlg) {
+		$("#kyodaku_table thead tr th.licensee_hide").show();
+	}
+	
+	// カレンダーアイコンをクリック
+	$(document).on("click", "span.input-group-append:has(span.input-group-text > i.fa.fa-calendar)", function(){
+		$(this).closest(".input-group").find("img").click();
+	});
+
+	$("#my_charge").on("click", function(){
+		var myName = '<imart type="string" value=$userInfo.userName />';
+		$("#tantou_sha").val(myName);
+	});
+
+	// 項目押下時のソートアイコン切り替え
+	$('#kyodaku_table th').on('click', function () {
+		var classlist = $(this).attr('class').split(' '); 
+		// クリックした項目のasc,descを切り替え
+		if (classlist.indexOf('asc') > -1){
+			$(this).removeClass('asc');
+			$(this).addClass('desc');
+		}else if (classlist.indexOf('desc') > -1){
+			$(this).removeClass('desc');
+			$(this).addClass('asc');
+		}else{
+			$(this).addClass('asc');
+		}
+		// クリック項目以外はどっちも外す
+		$(this).siblings().removeClass('asc desc');
+	});
+
+	$("#tblclear").click(function () {
+		$('#ip_nm').val('');
+		$('#title_nm').val('');
+		$('#kyodaku_nm').val('');
+		$('#kyodaku_status').val('');
+		$('#kyodaku_shohin_nm').val('');
+		$('#kyodaku_id').val('');
+		$('#shinsei_bi_from').val('');
+		$('#shinsei_bi_to').val('');
+		$('#tantou_sha').val('');
+		$('#kaisha_nm').val('');
+		$("#not_finish").prop("checked", true);
+		$('#keiyaku_cls').val('');
+		$('#kyodaku_cls').val('');
+	});
+	
+	// ファイル出力ボタン押下時
+	$('#outputfile').click(function () {
+		showIndicator();
+		jsspRpcPermissionCsv.getKyodakuCsvData();
+	});
+	// CSVデータ取得コールバック
+	window.csvResult = function(ret) {
+		if (ret.error) {
+			try {
+				imuiShowErrorMessage(ret.errorMessage, [], true, 5000, true);
+			} catch (ex) {
+				imuiShowErrorMessage(ex.message, [], true, 5000, true);
+			}
+		} else {
+			if (ret.countRow > 0){
+				createCsv(ret.data, '許諾一覧.csv');
+		    }
+		}
+	    hideIndicator();
+	}
+	// CSVデータ取得エラー後コールバック
+	window.csvError = function(res) {
+        hideIndicator();
+		try {
+			imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+			return;
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		}
+    }
+
+	// 許諾ステータスと完了以外の整合性担保
+	$(document).on('change', '#kyodaku_status', function() {
+		if($(this).val() != '') {
+			$('#not_finish').prop('checked', false);
+		}
+	}).on('change', '#not_finish', function() {
+		if($(this).prop('checked') == true) {
+			$('#kyodaku_status').val('');
+		}
+	});
+	
+	// ENTERで検索
+	var enterPressFlg = false;
+	$('form#inputForm input').keyup(function() {
+		if(event.keyCode == 13 && !enterPressFlg) {
+			enterPressFlg = true;
+			$('#tblsearch').click();
+		}
+	});
+	
+	var getShowColumnFields = function() {
+		var showColumnFields = [];
+		//if (showColumnMap[$("#show_column_def").val()]) {
+		if (showColumnMap) {
+			showColumnFields = showColumnFields.concat(showColumnMap);
+		}
+		return showColumnFields;
+	};
+	
+	var activeStorageKey = {id: "", type: ""};
+	var getStorageKey = function(id, type) {
+		activeStorageKey.id = id;
+		activeStorageKey.type = type;
+		return id + "-" + type;
+	}
+	
+	var banadiumFormat = {banadium_format_version: <imart type="string" value=$banadiumFormatVersion />, show_column_defs:[]};
+
+	// Tabulator生成時にカラム情報を保存されないために制御するためのフラグ
+	var isInitializedTabulatorUtil = false;
+	
+	extendOptions = {
+			paginationSize: 100
+			, persistenceWriterFunc: function(id, type, data){
+				
+		        console.log("persistenceWriterFunc");
+		        // Tablator生成が完了していない場合は、カラム情報の保存を実施しない
+		        if (isInitializedTabulatorUtil == false) {
+		        	return;
+		        }
+				
+		        //id - tables persistence id
+		        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+		        //data - array or object of data
+
+		        var storageKey = getStorageKey(id, type);
+		        var show_column_def = $("#show_column_def").val();			        
+		        
+		        var storageStr = localStorage.getItem(storageKey);
+		        console.log(storageStr);
+		        if (storageStr) {
+		        	var storageData = JSON.parse(storageStr);
+		        	
+		        	if (storageData.banadium_format_version == banadiumFormat.banadium_format_version) {
+		        		var hitIndex = storageData.show_column_defs.findIndex(function(elem){
+		        			if ('show_column_def' in elem) {
+			        			return elem.show_column_def === show_column_def;
+		        			}
+		        			return false;
+		        		});
+		        		if (hitIndex >= 0) {
+		        			storageData.show_column_defs[hitIndex].columns = data;
+		        		} else {
+		        			storageData.show_column_defs.push({show_column_def: show_column_def, columns: data});
+		        		}
+				        localStorage.setItem(storageKey, JSON.stringify(storageData));
+				        return;
+		        	}
+		        }
+		        
+		        var base = mergeDeeply({}, banadiumFormat)
+		        base.show_column_defs.push({show_column_def: show_column_def, columns: data});
+		        localStorage.setItem(storageKey, JSON.stringify(base));
+			}
+			, persistenceReaderFunc: function(id, type){
+
+		        console.log("persistenceReaderFunc");
+
+		        //id - tables persistence id
+		        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+
+		        var storageKey = getStorageKey(id, type);
+		        //var show_column_def = $("#show_column_def").val();
+		        var show_column_def = $("#show_column_def").val();
+
+		        var storageStr = localStorage.getItem(storageKey);
+
+		        if (storageStr) {
+		        	var storageData = JSON.parse(storageStr);
+		        	if (storageData.banadium_format_version == banadiumFormat.banadium_format_version) {
+		        		var hitElem = storageData.show_column_defs.find(function(elem){
+		        			return elem.show_column_def === show_column_def;
+		        		});
+		        		if (hitElem) {
+		        			return hitElem.columns;
+		        		}
+		        	}
+		        }
+		        
+		        return false;
+			}
+		};
+	
+	// ツールチップ
+	var tooltipNullFunc = function(cell) {
+		if (!cell.getValue()) {
+			return "※登録なし";
+		}
+		return cell.getValue();
+	};
+	var defaultMaxWidth = 900;
+	var columns = [		
+       	{title:"許諾ステータス", field:"kyodaku_status_name", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth
+       		, formatter: function(cell, formatterParams, onRendered) {
+	   			var value = cell.getValue();
+	   			var data = cell.getData();
+	   			if (value == null) {
+	   				return "";
+	   			}
+	   			return '<span class="' + data.kyodaku_status_style + '">' + value + '</span>';
+   			}
+       		, sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
+	       	    //a, b - the two values being compared
+	       	    //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+	       	    //column - the column component for the column being sorted
+	       	    //dir - the direction of the sort ("asc" or "desc")
+	       	    //sorterParams - sorterParams object from column definition array
+
+       	    	return aRow.getData().kyodaku_status_order - bRow.getData().kyodaku_status_order; //you must return the difference between the two values
+       		}
+       	},
+       	{title:"申請日", field:"shinsei_bi", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+       	{title:"許諾番号", field:"kyodaku_id", visible: true, headerTooltip:true, tooltip:true, maxWidth:defaultMaxWidth
+       		, formatter: function(cell, formatterParams, onRendered) {
+       			var value = cell.getValue();
+   				var data = cell.getData();
+   				if (value == null) {
+   					return "";
+   				}
+				// ログインユーザーがライセンシーで、許諾ステータスが「一時保存」「修正依頼」の場合、許諾申請登録画面へ遷移	
+				if (licenseProductionFlg == false && (data.kyodaku_status == '1' || data.kyodaku_status == '3')) {	
+					return '<a href="lo/contents/screen/kyodaku/permission_register?kyodaku_id=' + value + '">' + value + '</a>';
+				}	
+				return '<a href="lo/contents/screen/kyodaku/permission_product_detail?kyodaku_id=' + value + '">' + value + '</a>';
+   			}
+       	},
+       	{title:"許諾申請名", field:"kyodaku_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+        <IMART type="decision" value=$userInfo.licenseeFlg case="0">
+		{title:"ライセンシー名", field:"kaisha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+		</IMART>
+       	{title:"IP", field:"ip_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+       	{title:"タイトル名", field:"title_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+       	{title:"申請種別", field:"kyodaku_cls_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+       	{title:"契約種別", field:"keiyaku_cls_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},	
+         <IMART type="decision" value=$userInfo.licenseeFlg case="1">
+		{title:"ライセンシー担当者", field:"tantou_sha_nm", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+		</IMART>
+         <IMART type="decision" value=$userInfo.licenseeFlg case="0">
+		{title:"BNE担当者", field:"bne_tantou_sha", visible: true, headerTooltip:true, tooltip:tooltipNullFunc, maxWidth:defaultMaxWidth},
+		</IMART>
+    ];		
+
+    tableUtil = new TabulatorUtil("#kyodaku_table", columns, "kyodaku_id", [
+    	{column:"kyodaku_status_name", dir:"asc"}
+    	, {column:"shinsei_bi", dir:"desc"}
+    	, {column:"kyodaku_id", dir:"asc"}
+    ],extendOptions);
+    
+ // Tablator生成済みとしてフラグをON
+    isInitializedTabulatorUtil = true;
+    
+	$("#show_column_def").on("change", function(){
+
+		var $this = $(this);
+		
+		// カラムの状態が保存されている場合は、並び替えは行わない為に、
+		// カラムの状態を変更する前に、保存データを取得する
+		// サーバー上のBANADIUMフォーマットバージョンと、クライアント上に保存されているBANADIUMフォーマットバージョンが異なる場合は
+		// この関数はfalse値を返す。
+		var storageData = extendOptions.persistenceReaderFunc(activeStorageKey.id, activeStorageKey.type);
+
+		// 非表示項目を表示する
+		var showColumnFields = getShowColumnFields();
+		var existsColumnOrder = [];
+		for (var showKey in showColumnFields) {
+			var showColumnName = showColumnFields[showKey];
+			var column = tableUtil.getColumn(showColumnName);
+			if (!column) {
+				continue;
+			}
+			existsColumnOrder.push(showColumnName);
+			if (!column.isVisible()) {
+				column.show();
+			}
+		}
+		// 表示項目を非表示にする
+		var columnDefinitions = tableUtil.getColumnDefinitions();
+		for (var defKey in columnDefinitions) {
+			var colDef = columnDefinitions[defKey];
+			var isHide = (showColumnFields.indexOf(colDef.field) == -1);
+			if (!isHide) {
+				continue;
+			}
+			var column = tableUtil.getColumn(colDef.field);
+			if (column.isVisible()) {
+				column.hide();
+			}
+		}
+
+		// カラムの表示順を変更すべきか判定
+		if (storageData) {
+			return;
+		}
+		for (var orderKey in existsColumnOrder) {
+			if (orderKey == 0) {
+				continue;
+			}
+			var columnOrder = existsColumnOrder[orderKey];
+			var column = tableUtil.getColumn(columnOrder);
+			column.move(existsColumnOrder[orderKey - 1], true);
+		}
+
+	});
+
+	//検索を行う
+	$('#tblsearch').click(function () {
+		
+		// 表のクリア
+	    if ($.fn.dataTable.isDataTable('#kyodaku_table')) {
+	        $('#kyodaku_table').DataTable().clear();
+	        $('#kyodaku_table').DataTable().destroy();
+	    }
+
+		// 検索条件取得
+		var whereParam = $('#inputForm').serializeInputValue();
+		if($.trim($("#kyodaku_status").val()) != "") {
+			whereParam.kyodaku_status = $.trim($("#kyodaku_status").val()).split(",");
+		}
+		if(!$("#not_finish").prop("checked")) {
+			whereParam.not_finish = "off";
+		}
+
+		if (licenseProductionFlg) {
+			whereParam.bne_tantou_sha = $.trim($("#tantou_sha").val())
+		} else {
+			whereParam.tantou_sha = $.trim($("#tantou_sha").val());
+		}
+		
+				
+		setUrlParam(whereParam);
+		// 検索
+		jsspRpcPermissionSearch.searchKyodakuList(whereParam);
+		// インジケータ表示
+		showIndicator();
+		
+	});
+	
+	// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+	window.searchResult = function(ret) {
+		
+	    if(ret.data.length > 0) {
+			$("#outputfile").prop('disabled', false);
+		} else {
+			$("#outputfile").prop('disabled', true);
+		}
+	    
+		// インジケータ非表示
+        hideIndicator();
+        enterPressFlg = false;
+
+        tableUtil.setData(ret.data);
+		$(document).trigger("resizeTabulator");
+		if (document.documentElement.clientHeight >= 1000) {
+			document.getElementById("kyodaku_table").style.height="696px";
+		} else if (document.documentElement.clientHeight >= 900) {
+			document.getElementById("kyodaku_table").style.height="546px";
+		}
+    }
+	// 検索エラー後コールバック
+	window.searchError = function(res) {
+        hideIndicator();
+        enterPressFlg = false;
+		try {
+			imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+			return;
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		}
+
+    }	
+	
+	
+	// IP 検索
+	$("#btn_ip_search").click(function(e, data){
+		$('#js-popup').addClass('is-show');
+	});
+	$("#js-popup").on("ipSearchSelected", function(e, selectedRecords) {
+		$('#js-popup').removeClass('is-show');
+		if (selectedRecords.length > 0) {
+			var selectedRecord = selectedRecords[0];
+			$("#ip_nm").val(selectedRecord.ip_nm);
+		}
+       });
+	
+	// タイトル検索
+	$("#btn_title_search").click(function(e, data){
+		$('#js-popup2').addClass('is-show');
+	});
+	$("#js-popup2").on("selectedTitleDatas", function(e, selectedTitleDatas) {
+		$('#js-popup2').removeClass('is-show');
+		if (selectedTitleDatas.length > 0) {
+			var selectedTitleData = selectedTitleDatas[0];
+			$("#title_nm").val(selectedTitleData.title_nm);
+			$("#ip_nm").val(selectedTitleData.ip_nm);
+		}
+       });
+	// ライセンシー検索
+	$("#btn_kaisha_search").click(function(e, data){
+		$('#js-popup3').addClass('is-show');
+	});
+	$("#js-popup3").on("selectedkaishaDatas", function(e, selectedkaishaDatas) {
+		$('#js-popup3').removeClass('is-show');
+		if (selectedkaishaDatas.length > 0) {
+			$("#kaisha_nm").val(selectedkaishaDatas[0].kaisha_nm);
+		}
+    });
+	// ユーザー検索
+	$("#btn_bne_user_search").click(function(e, data){
+		$('#js-popup4').addClass('is-show');
+	});
+	$("#js-popup4").on("selecteduserDatas", function(e, selecteduserDatas) {
+		$('#js-popup4').removeClass('is-show');
+		if (selecteduserDatas.length > 0) {
+			$("#tantou_sha").val(selecteduserDatas[0].user_nm);
+		}
+    });
+
+	<imart type="condition" validity=$initialSearching>
+	$('#tblsearch').trigger("click");
+	</imart>
+	
+	$(document).on("click", "#condition_hide, #condition_show", function(){
+		var $this = $(this);
+		$this.hide();
+		if ($this.is("#condition_hide")) {
+			$(".search_condition").hide();
+			$("#condition_show").show();
+		} else {
+			$(".search_condition").show();
+			$("#condition_hide").show();
+		}
+		$(document).trigger("resizeTabulator");		
+	});
+
+	
+});
+
+$(window).on("load", function() {
+	$("#show_column_def").trigger("change");
+});
+
+</script>
+</body>
+</html>

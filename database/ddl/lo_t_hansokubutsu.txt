@@ -1,0 +1,25 @@
+create table lo_t_hansokubutu(
+hansokubutsu_id  varchar(20)
+,hansokubutsu_nm  varchar(20)
+,shiyo_jiki  varchar(20)
+,yotei_suryo  integer
+,siyo_haihu_yotei_basho  varchar(255)
+,shurui_su  integer
+,keitai  varchar(255)
+,senden_hansoku_keikaku  varchar(1000)
+,shiyo_sozai  varchar(255)
+,image_gazo  varchar(1000)
+,image_gazo_file_path  varchar(1000)
+,sonohoka_siryo  varchar(1000)
+,sonohoka_siryo_file_path  varchar(1000)
+,usho_flg  char(1)
+,shinsei_bi  varchar(20)
+,kakunin_bi  varchar(20)
+,bne_tantou_sha  varchar(1024)
+,sakujo_flg  varchar(20)
+,touroku_sha  varchar(100)
+,touroku_bi  timestamp(6) without time zone
+,koushin_sha  varchar(100)
+,koushin_bi  timestamp(6) without time zone
+,primary key (hansokubutsu_id)
+);

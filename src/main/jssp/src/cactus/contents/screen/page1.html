@@ -1,0 +1,400 @@
+
+<script>
+
+
+	// 事業部担当変更時コールバック処理
+	function setJigyouTantouData(dataObj) {
+		// 選択されたデータをセット
+		$('#id_tantou_user').html(dataObj.user_name +'<br>'+dataObj.shain_no);
+		$('#id_tantou_busyo').text(dataObj.department_inc_name);
+		$('input[name="item_tantou_user"]').val(dataObj.user_name);
+		$('input[name="item_tantou_busyo"]').val(dataObj.department_inc_name);
+
+		// 事業担当者データを格納
+		$('input[name="item_tantou_user_data"]').val(ImJson.toJSONString(dataObj));
+
+	}
+
+	//新商品紐付時のコールバック処理
+	function setRelationApplyData(dataObj) {
+
+		// 登録済み案申請番号
+		var arryNumber = [];
+
+		// 一覧から空行を削除
+		$('#relationApplylist input[name="item_relation_applyData"]').each(function(i, elem) {
+			if ($(elem).val()==""){
+				$(elem).closest('tr').remove();
+			}else{
+				// 申請番号を取得
+				arryNumber.push($(elem).closest('tr').find('.apply_number').text())
+			}
+		});
+
+		// 申請書検索画面からの戻り値を取得し一覧に追加
+		$.each(dataObj, function(key, data) {
+
+		   // 申請番号が既に登録されていれば飛ばす
+		　　　if(arryNumber.indexOf(data.number) > -1){
+				return;
+			}
+			arryNumber.push(data.number);
+		    //最大件数を超えていたら飛ばす
+		　　　if(arryNumber.length > ADD_ROW_MAX){
+				return;
+		　　　}
+
+			//テンプレート行をコピー
+			var coln = $("#relationApplylisttmp").clone(true);
+			//id削除
+			coln.removeAttr('id');
+			//データを反映
+			coln.find('.apply_number').text(data.number);
+			coln.find('.apply_number').attr("onclick", "onClickDetail('"+data.system_matter_id+"','"+data.user_data_id+"','6'); return false;");
+
+			coln.find('.apply_subject').text(data.subject);
+			coln.find('.apply_createDay').text(data.create_date);
+			coln.find('.apply_createUser').text(data.create_username);
+			coln.find('input[name="item_relation_applyData"]').val(ImJson.toJSONString(data));
+			coln.show();
+			//末尾に追加
+			coln.appendTo("#relationApplylist");
+		});
+		// 一行もない場合空行作成
+		if (dataObj.length == 0 && arryNumber.length == 0){
+			var coln = $("#relationApplylisttmp").clone(true);
+			coln.removeAttr('id');
+			coln.show();
+			coln.appendTo("#relationApplylist");
+			$('[name="relationApplyList"]').val("");
+		}else{
+			$('[name="relationApplyList"]').val("1");
+		}
+		// no振り直し
+		relationApplylist_row();
+
+		// no1のタイトルを件名に入れる
+		var subject = $("#relationApplylist .apply_subject").eq(0).text();
+		$("#itemNamePromo").val(subject);
+		$("#itemNameDL").val(subject);
+
+	    //最大件数を超えていた場合のメッセージ
+		if(arryNumber.length > ADD_ROW_MAX){
+			alert(ADD_ROW_MAX + "件を越えて追加できません");
+		}
+
+	}
+
+	//行番号振り直し
+	function relationApplylist_row() {
+		// no振り直し
+		$("#relationApplylist .no").each(function(i, elem) {
+			$(elem).text(i+1);
+		});
+
+		// 関連申請書を未設定に戻す
+		if($("#relationApplylist .no").length == 0) {
+			$('[name="relationApplyList"]').val("");
+		}
+	}
+
+	// 初期表示(一時保存、再作成時)
+	var applyInitFlg = "";
+	function applyInit() {
+		applyInitFlg = "1";
+		//コンボボックス設定
+		var division = '<imart type="string" value=$form.item_division />';
+		if (typeof division !== "undefined" && division != ""){
+			$("#Division").val(division).change();
+		}
+
+		// 関連文書設定
+		var dataObj = [];
+		var relationData = '<imart type="string" value=$form.item_relation_applyDataJSON escapeJs="true"/>';
+		if (relationData != "") dataObj = ImJson.parseJSON(relationData); // jsonで配列に戻す
+		setRelationApplyData(dataObj);
+
+		applyInitFlg = "";
+	}
+
+
+	$(function() {
+
+		$("#Division").change(function() {
+			// 申請書種類
+			var sheetType = '<IMART type="string" value=$form.item_sheetType />';
+			// 事業部取得
+		 	var selectVal = $("#Division option:selected").val();
+			// プラットフォームの紐付情報を取得
+			var platform = ImJson.parseJSON($("#form4JSON input[name='list_m_platform']").val());
+			// 選択された事業部のプラットフォームを取得
+			var pla_type=[];
+			if (selectVal in platform){
+				pla_type = platform[selectVal];
+			}else{
+				pla_type = [{label:"",value:""}];
+			}
+
+			//プラットフォームのコンボボックスを一度消して再生成
+			$('.id_platform').children().remove();
+	 		$.each(pla_type, function(i, elem) {
+				$('.id_platform').append($('<option>').val(elem.value).text(elem.label));
+	    	});
+			// その他のテキストボックスを隠す
+			$('.id_otherPlatform').hide();
+
+
+			/***** 初期化処理START（初期化不要な部分はコメントアウトしてください） *****/
+			if(applyInitFlg != "1") {
+				// 関連新商品クリア
+// 				$('#relationApplylist').children().remove();
+// 				setRelationApplyData([]);
+
+				// 事業部担当者初期化
+// 				setJigyouTantouData(<IMART type="string" value=$form.login_userData />);
+
+				// タイトル名クリア
+// 				$('[name=item_itemNameJap]').val('');
+// 				$('[name=item_itemNameEng]').val('');
+
+				// キャラクターをクリア
+// 				setCharacterData([]);
+
+				// 申請内容入力をクリア
+				switch(sheetType) {
+				case TYPE_APPLY_SINKIKAKU:
+					$('.newItemtbody_ne_copy').remove();
+					$('.newItemtbody_cs_copy').remove();
+					$('.newItemtbody_ot_copy').remove();
+					newItemContentInit(true);
+					break;
+				case TYPE_APPLY_HANSOKU:
+					$('.promotbody_copy').remove();
+					promoContentInit(true);
+					break;
+				default:
+					// ダウンロードコンテンツは事業部変更なし
+					break;
+				}
+				$('[name=item_genre]').val('');
+				$('input[name=item_dlc]:eq(1)').prop('checked', true);
+				$('[name=item_apply_note]').val('');
+
+				// 添付資料クリア
+// 				$('#filetmpList').children().remove();
+// 				var coln = $("#tmpfileup").clone(true);
+// 				coln.removeAttr('id');
+// 				coln.show();
+// 				coln.appendTo("#filetmpList");
+// 				$('[name="proposalList"]').val("");
+
+				// 関連文書クリア
+// 				$('#relationDoclist').children().remove();
+// 				setRelationDocData([]);
+
+				// 企画承認者初期化
+// 				$('#plan_auth_name').text("");
+// 				$('#plan_auth_dep').text("");
+// 				$('#plan_auth_post').text("");
+// 				$('[name=item_plan_auth_data]').val("");
+// 				$('#imwNodeSetting').text("");
+
+				// メール通知者初期化
+// 				setMailAddress([]);
+
+				// 社内向け共有事項初期化
+// 				$('[name=item_company_comment]').val("");
+			}
+			/***** 初期化処理END *****/
+
+			// 申請内容の表示制御と必須項目設定
+			dispApplyContents();
+			// ダウンロードコンテンツ有無
+			dispDownloadContents();
+		})
+
+		// 初期表示
+		applyInit();
+
+	});
+
+</script>
+
+<!-- 伝票番号・入力者・部署名 -->
+<div class="form-group">
+	<div class="panel" id="info">
+		<table class="table table-condensed" style="table-layout: fixed;">
+			<thead>
+				<tr>
+					<th>申請番号</th>
+					<th>起案者</th>
+					<th>起案部署</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="no"><imart type="string" value=$form.matter_number /></td>
+					<td class="no"><imart type="string"
+							value=$form.login_user /></td>
+					<td class="no"><imart type="string"
+							value=$form.login_user_busyo /></td>
+					<imart type="hidden" item_login_user_data=$form.login_userData
+						escapeXml="true" escapeJs="true" />
+					<imart type="hidden" item_matter_number=$form.matter_number
+						escapeXml="true" escapeJs="true" />
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- @end 伝票番号・入力者・部署名 -->
+
+<!-- 申請書種類　セレクトボックス -->
+<div class="form-group">
+	<label for="SheetType">■申請書種類</label>
+	<div for="SheetType">
+		<IMART type="string" value=$form.sheetType_name />
+	</div>
+	<imart type="hidden" item_sheetType=$form.item_sheetType />
+
+</div>
+<!-- @end 申請書種類 セレクトボックス -->
+
+<!-- 新商品紐付 -->
+<div class="form-group" id="relationApply" hidden>
+	<label>■関連する新商品企画申請書・申請番号</label>
+	<div>
+		<button class="btn btn-hensyu" type="button"
+			onclick="openSearchApplyDialog(this,setRelationApplyData,1);">検索</button>
+	</div>
+
+	<small>
+		<p>※販促対象となる新商品企画申請書を検索して選択してください。</p>
+		<p>※ダウンロードコンテンツが追加されるタイトルの新商品企画申請書を検索して選択してください。</p>
+	</small>
+
+	<div class="panel">
+		<table class="table table-condensed table-striped" id="shinapplytbl">
+			<thead>
+				<tr>
+					<th width="5%">No</th>
+					<th>申請番号</th>
+					<th>タイトル名</th>
+					<th>起案者</th>
+					<th>起案日時</th>
+					<th width="5%"></th>
+				</tr>
+			</thead>
+			<!-- テンプレート行 非表示-->
+			<tbody hidden>
+				<tr id="relationApplylisttmp">
+					<td class="no"></td>
+					<td><a class="apply_number" href="javascript: void(0);"></a></td>
+					<td class="apply_subject"></td>
+					<td class="apply_createUser"></td>
+					<td class="apply_createDay"></td>
+					<td>
+						<div class="button btnCharaDel">
+							<button type="button" class="btn btn-hensyu center-block"
+								onclick="delLine(this);relationApplylist_row()">削除</button>
+						</div>
+					</td>
+					<input type="hidden" name="item_relation_applyData" value="" escapeXml="true" escapeJs="true"/>
+				</tr>
+			</tbody>
+			<tbody id="relationApplylist">
+
+			</tbody>
+			<!-- 関連新商品企画申請書設定済か判定 -->
+			<input type="hidden" name="relationApplyList" class="" value="" />
+
+		</table>
+	</div>
+</div>
+<!-- @end 新商品紐付 -->
+
+<!-- 事業部select -->
+<div class="form-group">
+	<label for="Division">■事業部</label>
+	<imart class="form-control required" type="imuiSelect" id="Division"
+		name="item_division" list=$form.list_m_jigyobu width="auto" />
+
+</div>
+<!-- @end 事業部select -->
+
+<!-- 事業部担当 -->
+<div class="form-group">
+	<label>■事業部担当者</label>
+	<div>
+		<button type="button" class="btn btn-hensyu"
+			onclick="openSearchUserDialog('',setJigyouTantouData);">編集</button>
+	</div>
+	<small><p>※担当者が起案者・起案部署と異なる場合、編集ボタンを押して変更してください。</p></small>
+	<div class="panel" id="info">
+		<table class="table table-condensed" style="table-layout: fixed;">
+			<thead>
+				<tr>
+					<th>事業部担当者</th>
+					<th>事業部署</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="no" id="id_tantou_user"><imart
+							type="string" value=$form.tantou_user /></td>
+					<td class="no" id="id_tantou_busyo"><imart
+							type="string" value=$form.tantou_busyo /></td>
+					<imart type="hidden" item_tantou_user_data=$form.tantou_user_data
+						escapeXml="true" escapeJs="true" />
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- @end 事業部担当 -->
+
+<!-- タイトル名 -->
+<div class="form-group" id="itemNameJap" hidden>
+	<label for="TitleName">■タイトル名 <img
+		src="cactus_csjs/images/bikkuri.png"></label> <small><p>※プラットフォームは後述するため記載不要です。</p>
+		<p>※未定の場合は仮称を記入してください。</p>
+		<p>記入例)スーパーロボット大戦V</p></small>
+
+	<imart type="imuiTextbox" class="form-control count-down-length" name="item_itemNameJap"
+		value=$form.item_itemNameJap style="width: 100%" maxlength="140"
+		oninput="CountDownLength( '#itemNameJap_len' , value , 140 );" />
+	<p id="itemNameJap_len">残140文字</p>
+</div>
+<!-- タイトル名海外 -->
+<div class="form-group" id="itemNameEng" hidden>
+	<label for="TitleName">■タイトル名（海外名） <span
+		class="label label-info">任意</span></label> <small><p>記入例)SUPER
+			ROBOT WARS V</p></small>
+	<imart type="imuiTextbox" class="form-control count-down-length" name="item_itemNameEng"
+		value=$form.item_itemNameEng style="width: 100%" maxlength="140"
+		oninput="CountDownLength( '#itemNameEng_len' , value , 140 );" />
+	<p id="itemNameEng_len">残140文字</p>
+</div>
+<!-- 販促物名 -->
+<div class="form-group" id="itemNamePromo" hidden>
+	<label for="TitleName">■企画名/申請販促物 <img
+		src="cactus_csjs/images/bikkuri.png"></label> <small><p>※タイトル名は必ず記入してください。</p></small>
+	<imart type="imuiTextbox" class="form-control count-down-length" name="item_itemNameJap"
+		value=$form.item_itemNameJap style="width: 100%" maxlength="140"
+		oninput="CountDownLength( '#itemNamePromo_len' , value , 140 );" />
+	<p id="itemNamePromo_len">残140文字</p>
+</div>
+<!-- DL名 -->
+<div class="form-group" id="itemNameDL" hidden>
+	<label for="TitleName">■件名 <img
+		src="cactus_csjs/images/bikkuri.png"></label> <small><p>記入例)「タイトル名」DLCについて</p></small>
+	<imart type="imuiTextbox" class="form-control count-down-length" name="item_itemNameJap"
+		value=$form.item_itemNameJap style="width: 100%" maxlength="140"
+		oninput="CountDownLength( '#itemNameDL_len' , value , 140 );" />
+	<p id="itemNameDL_len">残140文字</p>
+</div>
+
+
+
+

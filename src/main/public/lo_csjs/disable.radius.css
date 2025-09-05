@@ -1,0 +1,92 @@
+.t-header {
+	border-radius: 0rem;
+}
+
+input[type="text"]:not([class*="imui-text-readonly"]), input[type="search"]:not([class*="imui-text-readonly"]), input[type="tel"]:not([class*="imui-text-readonly"]), input[type="url"]:not([class*="imui-text-readonly"]), input[type="email"]:not([class*="imui-text-readonly"]), input[type="password"]:not([class*="imui-text-readonly"]), input[type="date"]:not([class*="imui-text-readonly"]), input[type="datetime"]:not([class*="imui-text-readonly"]), input[type="month"]:not([class*="imui-text-readonly"]), input[type="week"]:not([class*="imui-text-readonly"]), input[type="time"]:not([class*="imui-text-readonly"]), input[type="datetime-local"]:not([class*="imui-text-readonly"]), input[type="number"]:not([class*="imui-text-readonly"]), input:not([type]):not([class*="imui-text-readonly"]), textarea:not([class*="imui-text-readonly"]) {
+	-webkit-border-top-left-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+select {
+	-webkit-border-top-left-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.input-group > .input-group-append > .btn, .input-group > .input-group-append > .input-group-text, .input-group > .input-group-prepend:not(:first-child) > .btn, .input-group > .input-group-prepend:not(:first-child) > .input-group-text, .input-group > .input-group-prepend:first-child > .btn:not(:first-child), .input-group > .input-group-prepend:first-child > .input-group-text:not(:first-child) {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.form-group > .col-1:not(.t-header), .form-group > .col-2:not(.t-header), .form-group > .col-3:not(.t-header), .form-group > .col-4:not(.t-header), .form-group > .col-5:not(.t-header) {
+	padding-left: 0px;
+}
+
+.custom-select {
+	border-radius: 0rem;
+}
+
+.form-control {
+	border-radius: 0rem;
+}
+
+.form-control-sm {
+	border-radius: 0rem;
+}
+
+.input-group-text {
+	border-radius: 0rem;
+}
+
+.table_border_radius table_border_radius_small {
+	border-radius: 0rem;
+}
+
+.r1:first-child {
+    border-top-left-radius: 0rem;
+}
+
+.r1:last-child {
+    border-top-right-radius: 0rem;
+}
+
+.r2:first-child {
+	border-bottom-left-radius: 0rem;
+}
+
+.r2:last-child {
+	border-bottom-right-radius: 0rem;
+}
+
+
+table > thead > tr > th, table > tbody > tr > td {
+	border: 1px solid #84919e;
+	position: relative;
+/*	font-weight: normal; */
+	height: 25px;
+	padding: 0.3rem;
+	max-width: 600px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

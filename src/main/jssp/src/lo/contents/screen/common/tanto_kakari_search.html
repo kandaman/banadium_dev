@@ -1,0 +1,310 @@
+<style type="text/css">
+<!--
+#title_select_table td {
+  	word-break: break-word;
+	white-space: normal;
+}
+table.dataTable td.dataTables_empty {
+	border: 1px solid #c8c8cb;
+}
+
+.modal-z-index{
+	z-index:99904 !important;
+}
+--> 
+</style>
+<script>
+function addForwardZ(){
+	$(".ui-datepicker").addClass("modal-z-index");
+}
+
+function removeForwardZ(){
+	$(".ui-datepicker").removeClass("modal-z-index");
+}
+
+//モーダル用にZ-indexを操作
+(function($){
+  window.onSelectCalenderModal = function(dateText, inst){
+	  removeForwardZ();
+	  window.onSelectCalender(dateText, inst);
+  };  
+
+})(jQuery);
+</script>
+	<!-- IMART -->
+	<imart type="jsspRpc" name="jsspRpcTantoKakariSearch" page="lo/contents/screen/common/tanto_kakari_search" callback="searchResultKanren" onErrorCallback="searchErrorKanren"></imart>
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<section class="show">
+							<div class="mt-2 mb-2">
+								<h2>完了通知先選択</h2>
+							</div>
+							<div class="form-group row mb-2">
+								<div class="flex_btn" style="display:none;">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="sub_tanto_kakari_search_start"><i class="fas fa-search fa-2x"></i><span>検索</span></button>
+											<button type="button" class="brdr_dkgray txt_dark" id="sub_tanto_kakari_search_clear"><i class="fas fa-eraser fa-2x"></i><span>クリア</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 border-bottom mt-2 mb-2">
+								<table id="sub_tanto_kakari_search_result" class="table bnadium-table">
+									<thead>
+										<tr role="row">
+											<th class="col_50"></th>
+											<th class="col_300">完了通知先グループ</th>
+											<th class="col_600">備考</th>											
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="form-group row mb-2">
+								<div class="flex_btn">
+									<div class="col-12">
+										<span class="blanc">
+											<button type="button" class="bg_orange txt_dark" id="sub_tanto_select"><i class="fas fa-search fa-2x"></i><span>選択</span></button>
+										</span>
+									</div>
+								</div>
+							</div>
+
+						</section>
+					</div>
+				</div>
+			</div>
+<script type="text/javascript">
+$(function () {
+
+	function escapeStr(value) {
+	  return value.replace(/&/g, "&amp;")
+	    .replace(/"/g, "&quot;")
+	    .replace(/'/g, "&#039;")
+	    .replace(/</g, "&lt;")
+	    .replace(/>/g, "&gt;")
+	    .replace(/\n/g, "<br>");
+	}
+	
+	var changeSelectBtnDisabled = function () {
+		if($("[name=row_check_tanto_kakari]:checked").val()) {
+			$("#sub_tanto_select").prop('disabled', false);
+		} else {
+			$("#sub_tanto_select").prop('disabled', true);
+		}
+	}
+	
+	// ENTERで検索
+	var enterPressFlg = false;
+	$('form#ipSearchForm input').keyup(function() {
+		if(event.keyCode == 13 && !enterPressFlg) {
+			enterPressFlg = true;
+			$('#sub_tanto_kakari_search_start').click();
+		}
+	});
+
+	var ipSelectDataTable = null;
+	var checkedDataIndex = null;
+	$("#sub_tanto_kakari_search_start").click(function() {
+
+		// 表のクリア
+	    if (ipSelectDataTable == null ) {
+			ipSelectDataTable = $('#sub_tanto_kakari_search_result').DataTable({
+				data: [],
+				// 件数切替機能 無効
+				lengthChange: false,
+				// 検索機能 無効
+				searching: false,
+				// ソート機能 有効
+				ordering: true,
+				// 初期ソート 無効
+				order: [],
+				// 情報表示 無効
+				info: false,
+				// ページング機能 無効
+				paging: true,
+				// １ページあたりの表示件数
+	               pageLength: 10,
+	               pagingType: "full_numbers",
+	               // 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+			    scrollX: false,
+	               dom: "<tr><'row'<'col-4'i><'col-4 text-center'p><'col-4'>>",
+	       		"language": {
+	       			"processing":   "処理中...",
+	       			"lengthMenu":   "_MENU_ 件表示",
+	       			"zeroRecords":  "データはありません。",
+	       			"info":         "全 _TOTAL_ 件中 _START_ 件から _END_ 件まで表示",
+	       			"infoEmpty":    " 0 件中 0 から 0 まで表示",
+	       			"infoFiltered": "（全 _MAX_ 件より抽出）",
+	       			"infoPostFix":  "",
+	       			"search":       "検索:",
+	       			"url":          "",
+	       			"paginate": {
+	       				"first":    "<i class='fas fa-backward' aria-hidden='true'></i>",
+	       				"previous": "<i class='fas fa-caret-left' aria-hidden='true'></i>",
+	       				"next":     "<i class='fas fa-caret-right' aria-hidden='true'></i>",
+	       				"last":     "<i class='fas fa-forward' aria-hidden='true'></i>"
+	       			}
+	       		},
+	               columns: [
+					{data: "selected", targets: 0,  visible: true,
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-center align-middle").css("width","30px");
+					    },
+						render:function(data, type, row, meta) {
+							var html = '';
+							html += '<div class="input-group text-center align-middle">';
+							<imart type="condition" validity=$radio_mode negative>
+							html += '<input type="checkbox" name="row_check_tanto_kakari" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							<imart type="condition" validity=$radio_mode>
+							html += '<input type="radio" name="row_check_tanto_kakari" ' + (data ? 'checked="checked"' : "") + '>';
+							</imart>
+							html += '</div>';
+							return html;
+
+						}
+					},
+					{data: "tanto_kakari", targets: 1,  visible: true, 
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle").css("width","60px");
+					    },
+					    render:function(data, type, row, meta) {							
+					    	return '<span class="' + row.mydoc_status_style + '">' + data + '</span>';
+		       			}					    
+					},
+					{data: "biko", targets: 1,  visible: true, 
+					    createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+					      $(cell).addClass("brdr_ltgray text-left align-middle").css("width","60px");
+					    },
+					    render:function(data, type, row, meta) {							
+					    	return '<span class="' + row.mydoc_status_style + '">' + data + '</span>';
+		       			}					    
+					}		
+				],
+				createdRow: function(row, data, dataIndex) {
+					$(row).attr('data-dataindex', dataIndex);
+				}
+			});
+	    } else {
+	    	ipSelectDataTable.rows().remove();
+	    }
+
+		// 検索条件取得
+		var whereParam = {
+			"doc_type":$.trim($("#sub_tanto_kakari_search_doc_type").val()),
+			"shinsei_nm":$.trim($("#sub_tanto_kakari_search_shinsei_nm").val()),
+			"shinsei_from":$.trim($("#sub_tanto_kakari_search_shinsei_from").val()),
+			"shinsei_to":$.trim($("#sub_tanto_kakari_search_shinsei_to").val()),
+			"status":$.trim($("#sub_tanto_kakari_search_status").val()),
+			"bunsho_id":$.trim($("#sub_tanto_kakari_search_bunsho_id").val()),
+			"kaisha_nm":$.trim($("#sub_tanto_kakari_search_kaisha_nm").val())
+		};
+		
+		// 検索
+		jsspRpcTantoKakariSearch.searchList(whereParam);
+		// インジケータ表示
+		showIndicator();
+	});
+	
+	// 検索後コールバック(jquery内関数を呼び出せるようにwindowに入れる)
+	window.searchResultKanren = function(ret) {
+		var dataSet = [];
+		
+		/*
+        if (ret.countRow > 0) {
+            // data配列を順に処理
+            $.each(ret.data,function(index, elem) {
+            	elem.selected = false;
+                dataSet.push(elem);
+        	});
+        }*/
+        if(ret.length > 0){
+        	$.each(ret,function(index, elem) {
+            	elem.selected = false;
+                dataSet.push(elem);
+        	});        	
+        }
+	    ipSelectDataTable.rows.add(dataSet).draw();
+	    $("#sub_tanto_select").prop('disabled', true);
+	    checkedDataIndex = null;
+
+		// インジケータ非表示
+        hideIndicator();
+        enterPressFlg = false;
+    }
+	// 検索エラー後コールバック
+	window.searchErrorKanren = function(res) {
+        hideIndicator();
+        enterPressFlg = false;
+		try {
+			imuiShowErrorMessage(res.toString(), [], true, 5000, true);
+			return;
+		} catch (ex) {
+			imuiShowErrorMessage(ex.message, [], true, 5000, true);
+		}
+    }
+	
+	<imart type="condition" validity=$radio_mode>
+	var radioMode = true;
+	</imart>
+	<imart type="condition" validity=$radio_mode negative>
+	var radioMode = false;
+	</imart>
+	
+	$(document).on("change", '#sub_tanto_kakari_search_result [name="row_check_tanto_kakari"]', function(){
+		var $this = $(this);
+		var $tr = $this.closest("tr");
+		var dataIndex = Number($tr.attr('data-dataindex'));
+		if (radioMode && checkedDataIndex != null) {
+			ipSelectDataTable.data()[checkedDataIndex].selected = false;
+		}
+		var titleData = ipSelectDataTable.data()[dataIndex];
+		titleData.selected = $this.prop('checked');
+		checkedDataIndex = dataIndex;
+		changeSelectBtnDisabled();
+	});
+
+	// 「選択」ボタン
+	$("#sub_tanto_select").click(function() {
+		var selectedRecords = [];
+		if (ipSelectDataTable != null) {
+			selectedRecords = ipSelectDataTable.rows(function(index, data, node) {
+		        return data.selected;
+		    }).data().toArray();
+		}		
+		
+		// ポップアップを閉じるので後始末しておく
+		initializePopup();
+		
+		// 親画面のイベントを発火する
+		var $popup = $(this).closest(".popup");
+		$popup.trigger("selectedTantoKakariDatas", [selectedRecords]);
+	});
+
+	$("#sub_tanto_kakari_search_clear").click(function() {
+		$(".tanto_kakari_search_clear_target").val("");
+	});
+
+	var initializePopup = function() {
+		$("#sub_tanto_kakari_search_clear").click();
+		if (ipSelectDataTable != null) {
+			ipSelectDataTable.rows().remove().draw();
+		}
+		$("#sub_tanto_select").prop('disabled', true);
+	};
+
+	$(document).on("initializePopup", function(){
+		initializePopup();
+	});
+	
+	<imart type="condition" validity=$initialSearching>
+	
+	</imart>
+
+});
+</script>
