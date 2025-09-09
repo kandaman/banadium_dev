@@ -25,17 +25,22 @@ function registerAccount(params) {
   var mng = new AccountInfoManager();
 
   try {
-    var info = new AccountInfo();
-    info.setUserCd(userCd);
+    // AccountInfo は userCd を取るコンストラクタのみ提供
+    var info = new AccountInfo(userCd);
     if (startStr) info.setValidStartDate(toDate(startStr));
     if (endStr)   info.setValidEndDate(toDate(endStr));
     if (password && password.length > 0) {
       info.setPassword(password);
       info.setLoginFailureCount(0);
     }
-    mng.addAccountInfo(info);
+    if (mng.contains(userCd)) {
+      mng.updateAccountInfo(info);
+    } else {
+      mng.addAccountInfo(info);
+    }
 
     if (doLicense) {
+      // SSJS API: registerAccountLicense(userCd)
       var lic = new UserLicense();
       lic.registerAccountLicense(userCd);
     }
