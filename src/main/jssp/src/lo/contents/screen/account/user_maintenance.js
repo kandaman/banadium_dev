@@ -48,6 +48,8 @@ function editUser(params) {
   var userCd = params.userCd;
   var userName = params.userName;
   var email1   = params.emailAddress1;
+  var startDate = params.startDate ? new Date(params.startDate) : null;
+  var endDate   = params.endDate ? new Date(params.endDate) : null;
   var locale   = params.locale || "ja";
 
   var um  = new IMMUserManager();
@@ -64,13 +66,19 @@ function editUser(params) {
     u = {
       userCd: userCd,
       termCd: null,
-      startDate: app.getSystemStartDate(),
-      endDate:   app.getSystemEndDate(),
+      startDate: startDate || app.getSystemStartDate(),
+      endDate:   endDate   || app.getSystemEndDate(),
       deleteFlag: false,
       locales: {}
     };
     created = true;
+  } else {
+    if (startDate) u.startDate = startDate;
+    if (endDate)   u.endDate   = endDate;
   }
+
+  if (!u.startDate) u.startDate = app.getSystemStartDate();
+  if (!u.endDate)   u.endDate   = app.getSystemEndDate();
 
   if (!u.locales) u.locales = {};
   if (!u.locales[locale]) u.locales[locale] = {};
