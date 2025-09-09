@@ -1,0 +1,61 @@
+<imart type="head">
+    <html lang="ja">
+    <meta charset="UTF-8">
+    <title>ユーザーメンテナンスサンプル</title>
+    <link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
+    <script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+    <script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+    <IMART type="jsspRpc" name="jsspRpcListUsers" page="lo/contents/screen/account/user_maintenance" callback="renderList"></IMART>
+    <IMART type="jsspRpc" name="jsspRpcEditUser" page="lo/contents/screen/account/user_maintenance" callback="editResult"></IMART>
+</imart>
+<body class="container mt-3">
+    <h1>ユーザーメンテナンスサンプル</h1>
+    <div class="mb-3">
+        <input type="text" id="query" class="form-control" placeholder="ユーザーID検索">
+        <button id="searchBtn" class="btn btn-primary mt-2">検索</button>
+    </div>
+    <table class="table" id="userTable">
+        <thead>
+            <tr><th>ユーザーID</th><th>表示名</th><th>削除</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <h2 class="mt-4">編集</h2>
+    <div class="mb-3">
+        <input type="text" id="editUserCd" class="form-control mb-1" placeholder="userCd">
+        <input type="text" id="editUserName" class="form-control mb-1" placeholder="userName">
+        <input type="text" id="editEmail" class="form-control mb-1" placeholder="emailAddress1">
+        <button id="saveBtn" class="btn btn-success">保存</button>
+    </div>
+    <script type="text/javascript">
+    function renderList(res) {
+        var tbody = $("#userTable tbody");
+        tbody.empty();
+        if (res && res.rows) {
+            res.rows.forEach(function(r){
+                var tr = $("<tr>");
+                tr.append($("<td>").text(r.userCd));
+                tr.append($("<td>").text(r.displayName));
+                tr.append($("<td>").text(r.deleted ? "◯" : ""));
+                tbody.append(tr);
+            });
+        }
+    }
+    function editResult(res) {
+        alert(res && res.ok ? "保存しました" : "失敗しました");
+    }
+    $("#searchBtn").on("click", function(){
+        IMART.call("jsspRpcListUsers", { q: $("#query").val() }, true);
+    });
+    $("#saveBtn").on("click", function(){
+        var p = {
+            userCd: $("#editUserCd").val(),
+            userName: $("#editUserName").val(),
+            emailAddress1: $("#editEmail").val(),
+            locale: "ja"
+        };
+        IMART.call("jsspRpcEditUser", p, true);
+    });
+    </script>
+</body>
+</html>
