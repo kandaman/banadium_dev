@@ -1,0 +1,64 @@
+<%
+/* 新規/編集フォーム表示 */
+var request  = IMRequest.getCurrentRequest();
+var userCd   = (request.getParameter("userCd") || "").trim();
+
+var AccountInfoManager = Packages.jp.co.intra_mart.foundation.admin.account.AccountInfoManager;
+var AccountInfo        = Packages.jp.co.intra_mart.foundation.admin.account.model.AccountInfo;
+var SystemValidDate    = Packages.jp.co.intra_mart.foundation.common.date.SystemValidDate;
+var mng = new AccountInfoManager();
+
+var mode  = "create";
+var model = new AccountInfo();  // 既定で最小/最大日付に初期化される
+// （AccountInfoはシステム最小/最大日付で初期化される仕様）
+
+if (userCd) {
+  var found = mng.getAccountInfo(userCd); // 8.0.13+ ではパスワードは取得できない（ハッシュ時）
+  if (found != null) { model = found; mode = "edit"; }
+}
+%>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>アカウント<%= mode === "edit" ? "編集" : "新規" %></title>
+<style>
+body{font-family:system-ui, sans-serif;margin:16px;max-width:800px}
+label{display:block;margin:8px 0 4px}
+input[type=text],input[type=password],input[type=datetime-local]{width:360px;padding:6px}
+.row{margin-bottom:10px}
+</style></head><body>
+<h1>アカウント<%= mode === "edit" ? "編集" : "新規" %></h1>
+
+<form method="post" action="account_save.jssp">
+  <div class="row">
+    <label>ユーザコード *</label>
+    <input name="userCd" value="<%= IMHtml.escape(model.getUserCd() || "") %>" <%= mode==="edit"?"readonly":"" %> required>
+  </div>
+
+  <div class="row">
+    <label>パスワード <%= mode==="edit"?"（変更時のみ入力）":"" %></label>
+    <input type="password" name="password" value="">
+  </div>
+
+  <div class="row">
+    <label>有効開始日</label>
+    <input type="datetime-local" name="validStartDate" value="<%= IMDate.format(model.getValidStartDate(),'yyyy-MM-dd\'T\'HH:mm') %>">
+  </div>
+
+  <div class="row">
+    <label>有効終了日</label>
+    <input type="datetime-local" name="validEndDate" value="<%= IMDate.format(model.getValidEndDate(),'yyyy-MM-dd\'T\'HH:mm') %>">
+  </div>
+
+  <div class="row">
+    <label>テーマ（pc）</label>
+    <input type="text" name="themePc" placeholder="例: im_theme_60_blue" value="">
+  </div>
+
+  <div class="row">
+    <label><input type="checkbox" name="registerLicense" value="1"> アカウントライセンスを登録する</label>
+  </div>
+
+  <input type="hidden" name="mode" value="<%= mode %>">
+  <button type="submit">保存</button>
+  <a href="account_list.jssp">戻る</a>
+</form>
+
+</body></html>

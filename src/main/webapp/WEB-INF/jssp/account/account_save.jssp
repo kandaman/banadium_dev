@@ -1,0 +1,80 @@
+<%
+/* 追加・更新・ライセンス登録処理（最小） */
+IMResponse.getCurrentResponse().setContentType("text/html; charset=UTF-8");
+
+var request  = IMRequest.getCurrentRequest();
+var mode     = request.getParameter("mode") || "create";
+var userCd   = (request.getParameter("userCd") || "").trim();
+var password = (request.getParameter("password") || "");
+var startStr = request.getParameter("validStartDate");
+var endStr   = request.getParameter("validEndDate");
+var themePc  = (request.getParameter("themePc") || "").trim();
+var doLic    = (request.getParameter("registerLicense") === "1");
+
+var AccountInfoManager = Packages.jp.co.intra_mart.foundation.admin.account.AccountInfoManager;
+var AccountInfo        = Packages.jp.co.intra_mart.foundation.admin.account.model.AccountInfo;
+var UserLicense        = Packages.jp.co.intra_mart.foundation.secure.license.UserLicense;
+
+var mng = new AccountInfoManager();
+
+/* 値の組み立て */
+function toDate(s){
+  if(!s) return null;
+  return IMDate.parse(s, "yyyy-MM-dd'T'HH:mm");
+}
+
+try {
+  var info;
+  if (mode === "edit") {
+    info = mng.getAccountInfo(userCd);
+    if (info == null) throw "対象ユーザが見つかりません: " + userCd;
+  } else {
+    info = new AccountInfo();
+    info.setUserCd(userCd);
+    // 初期化済みの最小/最大日付から、入力があれば上書き
+  }
+
+  if (startStr) info.setValidStartDate(toDate(startStr));
+  if (endStr)   info.setValidEndDate(toDate(endStr));
+
+  // パスワード：8.0.13+ のハッシュ保存環境では get できないので「設定したい時だけ set」
+  if (password && password.length > 0) {
+    info.setPassword(password);
+    info.setLoginFailureCount(0);
+  }
+
+  // テーマ設定（pcのみ簡易）※キーは "pc"
+  if (themePc) {
+    var HashMap = Packages.java.util.HashMap;
+    var themeIdMap = new HashMap();
+    themeIdMap.put("pc", themePc);
+    info.setThemeIds(themeIdMap);
+  }
+
+  if (mode === "edit") {
+    mng.updateAccountInfo(info);
+  } else {
+    mng.addAccountInfo(info);
+  }
+
+  // 必要ならライセンス登録（引数はユーザコード文字列）
+  if (doLic) {
+    var lic = new UserLicense();
+    lic.registerAccountLicense(userCd);
+  }
+
+  // 完了 → 一覧へ
+  IMResponse.getCurrentResponse().sendRedirect("account_list.jssp");
+  IMContext.complete();
+  return;
+
+} catch (e) {
+  %>
+  <!DOCTYPE html><html><head><meta charset="UTF-8"><title>保存エラー</title></head><body>
+  <h1>保存に失敗しました</h1>
+  <pre><%= IMHtml.escape(String(e)) %></pre>
+  <p><a href="account_edit.jssp<%= mode==='edit' ? ('?userCd='+IMUrl.encode(userCd)) : '' %>">戻る</a></p>
+  </body></html>
+  <%
+}
+%>

@@ -1,0 +1,71 @@
+<%
+/* 一覧 + 検索 + ページング（最小実装） */
+var request  = IMRequest.getCurrentRequest();
+var q        = (request.getParameter("q") || "").trim();
+var page     = parseInt(request.getParameter("page") || "1", 10);
+var perPage  = 20;
+var start    = (page - 1) * perPage;
+
+var AccountInfoManager = Packages.jp.co.intra_mart.foundation.admin.account.AccountInfoManager;
+var mng = new AccountInfoManager();
+
+/* 件数とデータ（search or full） */
+var list = [];
+var total = 0;
+if (q.length > 0) {
+  list  = mng.searchAccountInfos(q, start, perPage);   // ユーザコード部分一致
+  // ざっくり総数：次ページ有無だけわかればよい最小実装にする
+  // きちんと総数が必要なら search + ループ or 別途API/SQLを検討
+  total = (list.size() < perPage) ? (start + list.size()) : (start + perPage + 1);
+} else {
+  list  = mng.getAccountInfos(start, perPage);
+  // 同様に概算。厳密な総数が必要なら getAccountInfoCount() を利用
+  total = (list.size() < perPage) ? (start + list.size()) : (start + perPage + 1);
+}
+%>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>アカウント一覧</title>
+<style>
+body{font-family:system-ui, sans-serif;margin:16px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ddd;padding:8px}
+th{background:#f7f7f7;text-align:left}
+.actions a{margin-right:8px}
+form.search{margin:0 0 12px}
+.pager a{margin-right:8px}
+</style></head><body>
+<h1>アカウント一覧</h1>
+
+<form class="search" method="get">
+  <input type="text" name="q" value="<%= IMHtml.escape(q) %>" placeholder="ユーザコードで検索">
+  <button type="submit">検索</button>
+  <a href="account_edit.jssp">＋ 新規作成</a>
+</form>
+
+<table>
+  <tr><th>ユーザコード</th><th>有効開始</th><th>有効終了</th><th>ロック日</th><th>操作</th></tr>
+  <%
+  for (var i=0;i<list.size();i++){
+    var a = list.get(i);
+  %>
+  <tr>
+    <td><%= IMHtml.escape(a.getUserCd()) %></td>
+    <td><%= a.getValidStartDate() %></td>
+    <td><%= a.getValidEndDate() %></td>
+    <td><%= a.getLockDate() %></td>
+    <td class="actions">
+      <a href="account_edit.jssp?userCd=<%= IMUrl.encode(a.getUserCd()) %>">編集</a>
+    </td>
+  </tr>
+  <% } %>
+</table>
+
+<div class="pager">
+  <% if (page > 1) { %>
+    <a href="?q=<%= IMUrl.encode(q) %>&page=<%= page-1 %>">前へ</a>
+  <% } %>
+  <% if (list.size() >= perPage) { %>
+    <a href="?q=<%= IMUrl.encode(q) %>&page=<%= page+1 %>">次へ</a>
+  <% } %>
+</div>
+
+</body></html>
