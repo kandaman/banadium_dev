@@ -1,0 +1,65 @@
+<imart type="head">
+  <imart type="jsspRpc" name="jsspRpcAccountRegisterSample" page="lo/contents/screen/account/account_register_sample"></imart>
+  <html lang="ja">
+  <meta charset="UTF-8">
+  <title>アカウント登録サンプル</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</imart>
+<body id="body" class="container mt-3">
+  <h1>アカウント登録サンプル</h1>
+  <div class="mb-3">
+    <input type="text" id="userCd" class="form-control mb-1" placeholder="ユーザコード" required>
+    <input type="password" id="password" class="form-control mb-1" placeholder="パスワード">
+    <input type="datetime-local" id="validStart" class="form-control mb-1" placeholder="有効開始" required>
+    <input type="datetime-local" id="validEnd" class="form-control mb-1" placeholder="有効終了" required>
+    <div class="form-check mb-1">
+      <input type="checkbox" class="form-check-input" id="doLicense">
+      <label class="form-check-label" for="doLicense">ライセンス登録を行う</label>
+    </div>
+    <button id="registerBtn" class="btn btn-success">登録</button>
+  </div>
+  <script type="text/javascript">
+  function registerResult(res) {
+    var msg = (res && res.ok) ? "登録しました" : ("失敗しました: " + (res && res.message ? res.message : ""));
+    var type = (res && res.ok) ? "message" : "warning";
+    try {
+      $("<div>" + msg + "</div>").imuiMessageDialog({
+        iconType: 'im-ui-icon-common-24-confirmation',
+        title: (type === 'warning') ? '警告' : 'メッセージ',
+        modal: true
+      });
+    } catch (e) {
+      alert(msg);
+    }
+  }
+  $("#registerBtn").on("click", function(){
+    var p = {
+      userCd: $("#userCd").val(),
+      password: $("#password").val(),
+      validStart: $("#validStart").val(),
+      validEnd: $("#validEnd").val(),
+      doLicense: $("#doLicense").is(":checked")
+    };
+    var res = jsspRpcAccountRegisterSample.registerAccount(p);
+    registerResult(res);
+  });
+  </script>
+  <script>
+    (function($){
+      if ($.fn.imuiDropdown) {
+        $("#imui-nav-help-dropdown").imuiDropdown({ openOnMouseOver:false });
+      }
+    })(jQuery);
+
+    if ($.fn.imuiChangeFontSize) {
+      $('#imui-font-size-change').imuiChangeFontSize({
+        title: '文字サイズ',
+        isEnabledFontSizeChange: true,
+        isEnabledFontSizeChangePath: true
+      });
+    } else {
+      $('#imui-font-size-change').empty();
+    }
+  </script>
+</body>
+</html>
