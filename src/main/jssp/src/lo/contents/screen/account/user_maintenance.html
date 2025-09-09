@@ -1,5 +1,6 @@
 <imart type="head">
-    <html lang="ja">
+        <imart type="jsspRpc" name="jsspRpcUserMaintenance" page="lo/contents/screen/account/user_maintenance"></imart>
+<html lang="ja">
     <meta charset="UTF-8">
     <title>ユーザーメンテナンスサンプル</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -9,12 +10,8 @@
 
     <script src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-<IMART type="jsspRpc" name="jsspRpcListUsers" page="lo/contents/screen/account/user_maintenance" callback="renderList">
 <script type="text/javascript" src="lo_csjs/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="lo_csjs/lo_common.js"></script>
-</IMART>
-    <IMART type="jsspRpc" name="jsspRpcEditUser" page="lo/contents/screen/account/user_maintenance" callback="editResult"></IMART>
 </imart>
 <body id="body" class="container mt-3">
     <h1>ユーザーメンテナンスサンプル</h1>
@@ -53,7 +50,8 @@
         alert(res && res.ok ? "保存しました" : "失敗しました");
     }
     $("#searchBtn").on("click", function(){
-        IMART.call("jsspRpcListUsers", { q: $("#query").val() }, true);
+        var res = jsspRpcUserMaintenance.listUsers({ q: $("#query").val() });
+        renderList(res);
     });
     $("#saveBtn").on("click", function(){
         var p = {
@@ -62,7 +60,8 @@
             emailAddress1: $("#editEmail").val(),
             locale: "ja"
         };
-        IMART.call("jsspRpcEditUser", p, true);
+        var res = jsspRpcUserMaintenance.editUser(p);
+        editResult(res);
     });
     </script>
 </body>
