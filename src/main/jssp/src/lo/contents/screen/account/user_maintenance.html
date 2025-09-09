@@ -3,8 +3,15 @@
     <meta charset="UTF-8">
     <title>ユーザーメンテナンスサンプル</title>
     <link rel="stylesheet" type="text/css" href="lo_csjs/bootstrap.css">
-    <script type="text/javascript" src="lo_csjs/jquery_wrapper.js"></script>
+    <script type="text/javascript" src="lo_csjs/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="lo_csjs/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      window.IMART = window.IMART || {
+        call: function(name, params, async) {
+          console.warn('IMART.call stub invoked for', name, params);
+        }
+      };
+    </script>
     <IMART type="jsspRpc" name="jsspRpcListUsers" page="lo/contents/screen/account/user_maintenance" callback="renderList"></IMART>
     <IMART type="jsspRpc" name="jsspRpcEditUser" page="lo/contents/screen/account/user_maintenance" callback="editResult"></IMART>
 </imart>
