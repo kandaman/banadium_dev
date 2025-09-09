@@ -1,1 +1,3 @@
 target/
+.externalToolBuilders/edu.umd.cs.findbugs.plugin.eclipse.findbugsBuilder.launch
+.externalToolBuilders/
