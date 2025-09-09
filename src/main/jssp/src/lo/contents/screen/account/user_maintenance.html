@@ -32,6 +32,8 @@
         <input type="text" id="editRecordUserCd" class="form-control mb-1" placeholder="recordUserCd" required>
         <input type="datetime-local" id="editRecordDate" class="form-control mb-1" placeholder="recordDate" required>
         <input type="text" id="editEmail" class="form-control mb-1" placeholder="emailAddress1">
+        <input type="date" id="editStartDate" class="form-control mb-1" placeholder="startDate">
+        <input type="date" id="editEndDate" class="form-control mb-1" placeholder="endDate">
         <button id="saveBtn" class="btn btn-success">保存</button>
     </div>
     <script type="text/javascript">
@@ -82,7 +84,9 @@
             createDate: $("#editCreateDate").val(),
             recordUserCd: $("#editRecordUserCd").val(),
             recordDate: $("#editRecordDate").val(),
-            emailAddress1: $("#editEmail").val()
+            startDate: $("#editStartDate").val(),
+            endDate: $("#editEndDate").val(),
+            locale: "ja"
         };
         var res = jsspRpcUserMaintenance.editUser(p);
         editResult(res);
