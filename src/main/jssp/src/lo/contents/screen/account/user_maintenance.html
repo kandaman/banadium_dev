@@ -4,15 +4,44 @@
     <title>ユーザーメンテナンスサンプル</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
     <script src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
       window.IMART = window.IMART || {
         call: function(name, params, async) {
           console.warn('IMART.call stub invoked for', name, params);
-        }
+        },
+        showSuccessMessage: function(){ console.log('IMART.showSuccessMessage stub'); }
       };
       var IMART = window.IMART;
+
+      // Stubs for legacy IMUI plugins expected by bundled scripts
+      if (typeof jQuery !== 'undefined') {
+        if (!jQuery.fn.imuiDropdown) {
+          jQuery.fn.imuiDropdown = function(){ return this; };
+        }
+        if (typeof jQuery.widget === 'undefined') {
+          jQuery.widget = function(name){
+            var parts = name.split('.')
+            var fname = parts[parts.length-1];
+            jQuery.fn[fname] = jQuery.fn[fname] || function(){ return this; };
+          };
+        }
+        if (!jQuery.browser) {
+          jQuery.browser = { msie: false };
+        } else if (typeof jQuery.browser.msie === 'undefined') {
+          jQuery.browser.msie = false;
+        }
+        if (!jQuery.fn.fileupload) {
+          jQuery.fn.fileupload = function(){ return this; };
+        }
+      }
+      if (typeof window.imuiChangeFontSize === 'undefined') {
+        window.imuiChangeFontSize = function(){};
+      }
     </script>
     <IMART type="jsspRpc" name="jsspRpcListUsers" page="lo/contents/screen/account/user_maintenance" callback="renderList"></IMART>
     <IMART type="jsspRpc" name="jsspRpcEditUser" page="lo/contents/screen/account/user_maintenance" callback="editResult"></IMART>
