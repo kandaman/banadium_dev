@@ -19,8 +19,18 @@
     </table>
     <h2 class="mt-4">編集</h2>
     <div class="mb-3">
-        <input type="text" id="editUserCd" class="form-control mb-1" placeholder="userCd">
-        <input type="text" id="editUserName" class="form-control mb-1" placeholder="userName">
+        <input type="text" id="editUserCd" class="form-control mb-1" placeholder="userCd" required>
+        <input type="text" id="editLocaleId" class="form-control mb-1" placeholder="localeId" required>
+        <input type="text" id="editTermCd" class="form-control mb-1" placeholder="termCd" required>
+        <input type="date" id="editStartDate" class="form-control mb-1" placeholder="startDate" required>
+        <input type="date" id="editEndDate" class="form-control mb-1" placeholder="endDate" required>
+        <input type="text" id="editUserName" class="form-control mb-1" placeholder="userName" required>
+        <input type="text" id="editDeleteFlag" class="form-control mb-1" placeholder="deleteFlag" required>
+        <input type="number" id="editSortKey" class="form-control mb-1" placeholder="sortKey" required>
+        <input type="text" id="editCreateUserCd" class="form-control mb-1" placeholder="createUserCd" required>
+        <input type="datetime-local" id="editCreateDate" class="form-control mb-1" placeholder="createDate" required>
+        <input type="text" id="editRecordUserCd" class="form-control mb-1" placeholder="recordUserCd" required>
+        <input type="datetime-local" id="editRecordDate" class="form-control mb-1" placeholder="recordDate" required>
         <input type="text" id="editEmail" class="form-control mb-1" placeholder="emailAddress1">
         <input type="date" id="editStartDate" class="form-control mb-1" placeholder="startDate">
         <input type="date" id="editEndDate" class="form-control mb-1" placeholder="endDate">
@@ -60,10 +70,20 @@
         renderList(res);
     });
     $("#saveBtn").on("click", function(){
+        var deleteFlagStr = $("#editDeleteFlag").val();
         var p = {
             userCd: $("#editUserCd").val(),
+            locale: $("#editLocaleId").val(),
+            termCd: $("#editTermCd").val(),
+            startDate: $("#editStartDate").val(),
+            endDate: $("#editEndDate").val(),
             userName: $("#editUserName").val(),
-            emailAddress1: $("#editEmail").val(),
+            deleteFlag: deleteFlagStr === "1" || deleteFlagStr === "true",
+            sortKey: Number($("#editSortKey").val()),
+            createUserCd: $("#editCreateUserCd").val(),
+            createDate: $("#editCreateDate").val(),
+            recordUserCd: $("#editRecordUserCd").val(),
+            recordDate: $("#editRecordDate").val(),
             startDate: $("#editStartDate").val(),
             endDate: $("#editEndDate").val(),
             locale: "ja"

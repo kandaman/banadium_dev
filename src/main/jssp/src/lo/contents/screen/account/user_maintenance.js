@@ -38,19 +38,31 @@ function listUsers(params) {
 
 /**
  * ユーザー登録・更新
- * 入力: params = { userCd, userName?, emailAddress1?, locale? }
+ * 入力: params = { userCd, locale, termCd, startDate, endDate, userName,
+ *                  deleteFlag, sortKey, createUserCd, createDate,
+ *                  recordUserCd, recordDate, emailAddress1? }
  * 返り: { ok, created, termChanges }
  */
 function editUser(params) {
-  if (!params || !params.userCd) {
-    return { ok: false, error: "userCd is required." };
+  if (!params || !params.userCd || !params.locale || !params.termCd ||
+      !params.startDate || !params.endDate || !params.userName ||
+      typeof params.deleteFlag === "undefined" || typeof params.sortKey === "undefined" ||
+      !params.createUserCd || !params.createDate || !params.recordUserCd || !params.recordDate) {
+    return { ok: false, error: "required field missing." };
   }
   var userCd = params.userCd;
   var userName = params.userName;
   var email1   = params.emailAddress1;
-  var startDate = params.startDate ? new Date(params.startDate) : null;
-  var endDate   = params.endDate ? new Date(params.endDate) : null;
-  var locale   = params.locale || "ja";
+  var startDate = new Date(params.startDate);
+  var endDate   = new Date(params.endDate);
+  var locale   = params.locale;
+  var termCd = params.termCd;
+  var deleteFlag = !!params.deleteFlag;
+  var sortKey = Number(params.sortKey);
+  var createUserCd = params.createUserCd;
+  var createDate = new Date(params.createDate);
+  var recordUserCd = params.recordUserCd;
+  var recordDate = new Date(params.recordDate);
 
   var um  = new IMMUserManager();
   var app = new AppCommonManager();
@@ -65,16 +77,28 @@ function editUser(params) {
   if (!u) {
     u = {
       userCd: userCd,
-      termCd: null,
+      termCd: termCd,
       startDate: startDate || app.getSystemStartDate(),
       endDate:   endDate   || app.getSystemEndDate(),
-      deleteFlag: false,
+      deleteFlag: deleteFlag,
+      sortKey: sortKey,
+      createUserCd: createUserCd,
+      createDate: createDate,
+      recordUserCd: recordUserCd,
+      recordDate: recordDate,
       locales: {}
     };
     created = true;
   } else {
-    if (startDate) u.startDate = startDate;
-    if (endDate)   u.endDate   = endDate;
+    u.termCd = termCd;
+    u.startDate = startDate;
+    u.endDate   = endDate;
+    u.deleteFlag = deleteFlag;
+    u.sortKey = sortKey;
+    u.createUserCd = createUserCd;
+    u.createDate = createDate;
+    u.recordUserCd = recordUserCd;
+    u.recordDate = recordDate;
   }
 
   if (!u.startDate) u.startDate = app.getSystemStartDate();
